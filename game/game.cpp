@@ -21,6 +21,18 @@ public:
         );
 
         m_mesh = MeshBase(CreateBox({1.0f, 1.0f, 1.0f}), GL_TRIANGLES);
+
+        m_lines = MeshPositionOnly(
+                {
+                        {{0.0f, 0.0f, 0.0f}},
+                        {{2.0f, 0.0f, 0.0f}},
+                        {{0.0f, 0.0f, 0.0f}},
+                        {{0.0f, 2.0f, 0.0f}},
+                        {{0.0f, 0.0f, 0.0f}},
+                        {{0.0f, 0.0f, 2.0f}},
+                },
+                GL_LINES
+        );
     }
 
     void Shutdown() override {
@@ -48,6 +60,7 @@ public:
         m_renderer.SetDirectionalLight({1.0f, 2.0f, 3.0f}, 1.0f);
 
         m_renderer.DrawMesh(m_mesh, glm::mat4{1.0f});
+        m_renderer.DrawLines(m_lines, glm::vec4{1.0f, 0.0f, 0.0f, 0.0f});
 
         m_renderer.EndDraw();
     }
@@ -59,6 +72,7 @@ private:
     glm::mat4 m_projection{1.0f};
 
     MeshBase m_mesh;
+    MeshPositionOnly m_lines;
 };
 
 int main() {

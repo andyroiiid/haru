@@ -136,16 +136,46 @@ void main() {
 )GLSL") {
 }
 
+DeferredRenderer::ShaderLines::ShaderLines()
+        : Shader(R"GLSL(
+layout(std140, binding = 0) uniform ShaderGlobals {
+    mat4 uView;
+    mat4 uProjection;
+};
+)GLSL",
+                 R"GLSL(
+layout(location = 0) in vec3 aPosition;
+
+void main() {
+	gl_Position = uProjection * uView * vec4(aPosition, 1);
+}
+)GLSL",
+                 R"GLSL(
+layout(location = 0) out vec4 fColor;
+
+layout(location = 0) uniform vec4 uColor;
+
+void main() {
+    fColor = uColor;
+}
+)GLSL") {
+    m_colorLocation = GetUniformLocation("uColor");
+}
+
+void DeferredRenderer::ShaderLines::SetColor(const glm::vec4 &color) {
+    SetUniform(m_colorLocation, color);
+}
+
 DeferredRenderer::DeferredRenderer() {
     m_shaderGlobals.Bind(0);
     m_lightGlobals.Bind(1);
 
-    m_fullscreenQuad = Mesh<VertexPositionOnly>(
+    m_fullscreenQuad = MeshPositionOnly(
             {
-                    {{-1.0f, -1.0f}},
-                    {{1.0f,  -1.0f}},
-                    {{-1.0f, 1.0f}},
-                    {{1.0f,  1.0f}},
+                    {{-1.0f, -1.0f, 0.0f}},
+                    {{1.0f,  -1.0f, 0.0f}},
+                    {{-1.0f, 1.0f,  0.0f}},
+                    {{1.0f,  1.0f,  0.0f}},
             },
             GL_TRIANGLE_STRIP
     );
@@ -180,8 +210,9 @@ void DeferredRenderer::SetDirectionalLight(const glm::vec3 &lightDirection, cons
 }
 
 void DeferredRenderer::BeginDraw() {
-    m_pendingBaseDrawCalls.clear();
     m_pendingPointLightData.clear();
+    m_pendingBaseDrawCalls.clear();
+    m_pendingLinesDrawCalls.clear();
 }
 
 void DeferredRenderer::EndDraw() {
@@ -210,11 +241,21 @@ void DeferredRenderer::EndDraw() {
     glBindVertexArray(0);
     m_gBuffers.UnbindAllTextures();
     glUseProgram(0);
+
+    m_linesShader.Use();
+    for (const auto &linesDrawCall: m_pendingLinesDrawCalls) {
+        m_linesShader.SetColor(linesDrawCall.Color);
+        linesDrawCall.Mesh.BindAndDraw();
+    }
 }
 
 void DeferredRenderer::DrawPointLight(const glm::vec3 &position, const glm::vec3 &color, const float linear,
                                       const float quadratic) {
     m_pendingPointLightData.push_back({position, linear, color, quadratic});
+}
+
+void DeferredRenderer::DrawLines(const MeshPositionOnly &lines, const glm::vec4 &color) {
+    m_pendingLinesDrawCalls.push_back({lines, color});
 }
 
 void DeferredRenderer::DrawMesh(const MeshBase &mesh, const glm::mat4 &model) {

@@ -44,19 +44,23 @@ class DeferredRenderer final : public Renderer {
         GLint m_modelLocation = -1;
     };
 
-    struct VertexPositionOnly {
-        glm::vec2 Position;
-
-        static void SetupVertexArray(const GLuint vao) {
-            SetupVertexArrayFloatsAttrib(vao, 0, 0, 2, offsetof(VertexPositionOnly, Position));
-        }
-    };
-
     class ShaderGPass : public Shader {
     public:
         MOVE_ONLY(ShaderGPass)
 
         ShaderGPass();
+    };
+
+    class ShaderLines : public Shader {
+    public:
+        MOVE_ONLY(ShaderLines)
+
+        ShaderLines();
+
+        void SetColor(const glm::vec4 &color);
+
+    private:
+        GLint m_colorLocation = -1;
     };
 
 public:
@@ -78,6 +82,8 @@ public:
 
     void DrawPointLight(const glm::vec3 &position, const glm::vec3 &color, float linear, float quadratic) override;
 
+    void DrawLines(const MeshPositionOnly &lines, const glm::vec4 &color) override;
+
     void DrawMesh(const MeshBase &mesh, const glm::mat4 &model) override;
 
 private:
@@ -86,13 +92,17 @@ private:
     glm::ivec2 m_screenSize{};
 
     Framebuffer m_gBuffers;
+
     UniformBuffer<ShaderGlobals> m_shaderGlobals;
     UniformBuffer<LightGlobals> m_lightGlobals;
 
     ShaderBase m_baseShader;
     ShaderGPass m_gPassShader;
+    ShaderLines m_linesShader;
 
-    Mesh<VertexPositionOnly> m_fullscreenQuad;
+    MeshPositionOnly m_fullscreenQuad;
+
+    std::vector<PointLightData> m_pendingPointLightData;
 
     struct DrawCallBase {
         const MeshBase &Mesh;
@@ -101,5 +111,10 @@ private:
 
     std::vector<DrawCallBase> m_pendingBaseDrawCalls;
 
-    std::vector<PointLightData> m_pendingPointLightData;
+    struct DrawCallLines {
+        const MeshPositionOnly &Mesh;
+        glm::vec4 Color;
+    };
+
+    std::vector<DrawCallLines> m_pendingLinesDrawCalls;
 };
