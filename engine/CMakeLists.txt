@@ -4,6 +4,8 @@ add_library(engine
         include/haru/core/MoveOnly.h
         include/haru/core/Debug.h
 
+        include/haru/math/Transform.h
+
         include/haru/system/Window.h
         include/haru/system/Files.h
         include/haru/system/ImageFile.h
