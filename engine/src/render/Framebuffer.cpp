@@ -44,7 +44,7 @@ void Framebuffer::CreateColorAttachments(const std::initializer_list<GLenum> &fo
     }
 
     std::array<GLenum, MAX_NUM_COLOR_ATTACHMENTS> attachments{};
-    for (int                                      i = 0; i < m_numColorAttachments; i++) {
+    for (int i = 0; i < m_numColorAttachments; i++) {
         glNamedFramebufferTexture(m_fbo, GL_COLOR_ATTACHMENT0 + i, m_colorAttachments[i], 0);
         attachments[i] = GL_COLOR_ATTACHMENT0 + i;
     }
@@ -97,7 +97,7 @@ void Framebuffer::BindDefault() {
 
 void Framebuffer::Clear() {
     static constexpr GLfloat CLEAR_COLOR[4]{0.0f, 0.0f, 0.0f, 0.0f};
-    for (int                 i = 0; i < m_numColorAttachments; i++) {
+    for (int i = 0; i < m_numColorAttachments; i++) {
         glClearNamedFramebufferfv(m_fbo, GL_COLOR, i, CLEAR_COLOR);
     }
     glClearNamedFramebufferfi(m_fbo, GL_DEPTH_STENCIL, 0, 1.0f, 0);
@@ -125,4 +125,15 @@ void Framebuffer::UnbindAllTextures() {
     }
     if (m_depthIsTexture) return;
     glBindTextureUnit(m_numColorAttachments, 0);
+}
+
+void Framebuffer::BlitDepthStencilToScreen(const glm::ivec2 &screenSize) {
+    glBlitNamedFramebuffer(
+            m_fbo,
+            0,
+            0, 0, m_size->x, m_size->y,
+            0, 0, screenSize.x, screenSize.y,
+            GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+            GL_NEAREST
+    );
 }

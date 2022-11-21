@@ -36,6 +36,8 @@ public:
 
     void UnbindAllTextures();
 
+    void BlitDepthStencilToScreen(const glm::ivec2 &screenSize);
+
 private:
     void CreateColorAttachment(GLenum format);
 
@@ -44,14 +46,14 @@ private:
     void CreateDepthStencilAttachment();
 
     MoveOnly<glm::ivec2> m_size;
-    MoveOnly<GLuint>     m_fbo;
+    MoveOnly<GLuint> m_fbo;
 
     static constexpr int MAX_NUM_COLOR_ATTACHMENTS = 32;
     using ColorAttachmentsArray = std::array<MoveOnly<GLuint>, MAX_NUM_COLOR_ATTACHMENTS>;
 
-    MoveOnly<GLsizei>     m_numColorAttachments;
+    MoveOnly<GLsizei> m_numColorAttachments;
     ColorAttachmentsArray m_colorAttachments;
 
-    MoveOnly<bool>   m_depthIsTexture;
+    MoveOnly<bool> m_depthIsTexture;
     MoveOnly<GLuint> m_depthStencilAttachment;
 };

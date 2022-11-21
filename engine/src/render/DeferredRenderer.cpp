@@ -242,11 +242,17 @@ void DeferredRenderer::EndDraw() {
     m_gBuffers.UnbindAllTextures();
     glUseProgram(0);
 
+    m_gBuffers.BlitDepthStencilToScreen(m_screenSize);
+
+    glEnable(GL_DEPTH_TEST);
+
     m_linesShader.Use();
     for (const auto &linesDrawCall: m_pendingLinesDrawCalls) {
         m_linesShader.SetColor(linesDrawCall.Color);
         linesDrawCall.Mesh.BindAndDraw();
     }
+
+    glDisable(GL_DEPTH_TEST);
 }
 
 void DeferredRenderer::DrawPointLight(const glm::vec3 &position, const glm::vec3 &color, const float linear,
