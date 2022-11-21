@@ -7,11 +7,11 @@
 #include <glm/vec2.hpp>
 #include <glm/mat4x4.hpp>
 
-#include "haru/Framebuffer.h"
-#include "haru/UniformBuffer.h"
-#include "haru/Shader.h"
-#include "haru/Mesh.h"
-#include "haru/Renderer.h"
+#include "haru/render/Framebuffer.h"
+#include "haru/render/UniformBuffer.h"
+#include "haru/render/Shader.h"
+#include "haru/render/Mesh.h"
+#include "haru/render/Renderer.h"
 
 class DeferredRenderer final : public Renderer {
     struct ShaderGlobals {

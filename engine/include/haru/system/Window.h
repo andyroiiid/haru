@@ -7,7 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 
-#include "haru/MoveOnly.h"
+#include "haru/core/MoveOnly.h"
 
 class Window;
 

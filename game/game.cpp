@@ -4,13 +4,16 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <haru/Window.h>
-#include <haru/DeferredRenderer.h>
-#include <haru/MeshUtilities.h>
+#include <haru/system/Window.h>
+#include <haru/core/Debug.h>
+#include <haru/render/DeferredRenderer.h>
+#include <haru/render/MeshUtilities.h>
 
 class Game : public App {
 public:
     void Init() override {
+        DebugLog("Game init");
+
         m_view = glm::lookAt(
                 glm::vec3{3, 4, 5},
                 glm::vec3{0, 0, 0},
@@ -21,6 +24,7 @@ public:
     }
 
     void Shutdown() override {
+        DebugLog("Game shutdown");
     }
 
     void Resize(const glm::ivec2 &size) override {

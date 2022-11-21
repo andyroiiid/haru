@@ -2,7 +2,7 @@
 // Created by andyroiiid on 11/20/2022.
 //
 
-#include "haru/MeshUtilities.h"
+#include "haru/render/MeshUtilities.h"
 
 std::vector<VertexBase> CreateBox(const glm::vec3 &min, const glm::vec3 &max) {
     const glm::vec3 p000{min.x, min.y, min.z};

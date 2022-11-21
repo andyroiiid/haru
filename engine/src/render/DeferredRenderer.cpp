@@ -2,7 +2,7 @@
 // Created by andyroiiid on 11/20/2022.
 //
 
-#include "haru/DeferredRenderer.h"
+#include "haru/render/DeferredRenderer.h"
 
 DeferredRenderer::ShaderBase::ShaderBase()
         : Shader(R"GLSL(

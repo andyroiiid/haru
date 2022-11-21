@@ -7,7 +7,7 @@
 #include <string>
 #include <glm/vec2.hpp>
 
-#include "haru/MoveOnly.h"
+#include "haru/core/MoveOnly.h"
 
 class ImageFile {
 public:
@@ -22,6 +22,6 @@ public:
     [[nodiscard]] const unsigned char *Data() const { return m_data; }
 
 private:
-    MoveOnly<glm::ivec2>      m_size;
+    MoveOnly<glm::ivec2> m_size;
     MoveOnly<unsigned char *> m_data;
 };

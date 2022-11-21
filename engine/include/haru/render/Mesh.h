@@ -7,7 +7,7 @@
 #include <vector>
 #include <glad/gl.h>
 
-#include "haru/MoveOnly.h"
+#include "haru/core/MoveOnly.h"
 
 /* Here I want to ensure different types of meshes don't get mixed up.
  * That's why this whole class is a template.

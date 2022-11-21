@@ -9,7 +9,7 @@
 #include <glad/gl.h>
 #include <glm/vec2.hpp>
 
-#include "haru/MoveOnly.h"
+#include "haru/core/MoveOnly.h"
 
 class Texture {
 public:
@@ -49,5 +49,5 @@ public:
 
 private:
     MoveOnly<glm::ivec2> m_size;
-    MoveOnly<GLuint>     m_texture;
+    MoveOnly<GLuint> m_texture;
 };

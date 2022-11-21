@@ -11,7 +11,7 @@
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 
-#include "haru/MoveOnly.h"
+#include "haru/core/MoveOnly.h"
 
 class Shader {
 public:

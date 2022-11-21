@@ -7,7 +7,7 @@
 #include <glm/vec2.hpp>
 #include <glm/mat4x4.hpp>
 
-#include "haru/MeshBase.h"
+#include "haru/render/MeshBase.h"
 
 struct Renderer {
     MOVE_ONLY(Renderer)

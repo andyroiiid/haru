@@ -2,12 +2,12 @@
 // Created by andyroiiid on 11/20/2022.
 //
 
-#include "haru/Shader.h"
+#include "haru/render/Shader.h"
 
 #include <vector>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "haru/Debug.h"
+#include "haru/core/Debug.h"
 
 static GLuint CreateShader(GLenum type, const std::vector<const char *> &&source) {
     const GLuint shader = glCreateShader(type);

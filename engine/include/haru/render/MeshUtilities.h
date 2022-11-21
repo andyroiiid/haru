@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include "haru/MeshBase.h"
+#include "haru/render/MeshBase.h"
 
 std::vector<VertexBase> CreateBox(const glm::vec3 &min, const glm::vec3 &max);
 

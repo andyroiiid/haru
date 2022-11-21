@@ -2,11 +2,11 @@
 // Created by andyroiiid on 11/20/2022.
 //
 
-#include "haru/Window.h"
+#include "haru/system/Window.h"
 
 #include <glad/gl.h>
 
-#include "haru/Debug.h"
+#include "haru/core/Debug.h"
 
 static void ErrorCallback(int errorCode, const char *description) {
     DebugLog("GLFW error %d: %s", errorCode, description);

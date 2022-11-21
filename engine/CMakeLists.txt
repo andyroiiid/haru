@@ -1,29 +1,30 @@
 add_subdirectory(dependencies EXCLUDE_FROM_ALL)
 
 add_library(engine
-        include/haru/MoveOnly.h
-        include/haru/Debug.h
-        include/haru/Window.h
-        include/haru/Files.h
-        include/haru/Framebuffer.h
-        include/haru/UniformBuffer.h
-        include/haru/Mesh.h
-        include/haru/MeshBase.h
-        include/haru/MeshUtilities.h
-        include/haru/Shader.h
-        include/haru/ImageFile.h
-        include/haru/Texture.h
-        include/haru/Renderer.h
-        include/haru/DeferredRenderer.h
+        include/haru/core/MoveOnly.h
+        include/haru/core/Debug.h
 
-        src/Window.cpp
-        src/Files.cpp
-        src/Framebuffer.cpp
-        src/MeshUtilities.cpp
-        src/Shader.cpp
-        src/ImageFile.cpp
-        src/Texture.cpp
-        src/DeferredRenderer.cpp)
+        include/haru/system/Window.h
+        include/haru/system/Files.h
+        include/haru/system/ImageFile.h
+        src/system/Window.cpp
+        src/system/Files.cpp
+        src/system/ImageFile.cpp
+
+        include/haru/render/Framebuffer.h
+        include/haru/render/UniformBuffer.h
+        include/haru/render/Mesh.h
+        include/haru/render/MeshBase.h
+        include/haru/render/MeshUtilities.h
+        include/haru/render/Shader.h
+        include/haru/render/Texture.h
+        include/haru/render/Renderer.h
+        include/haru/render/DeferredRenderer.h
+        src/render/Framebuffer.cpp
+        src/render/MeshUtilities.cpp
+        src/render/Shader.cpp
+        src/render/Texture.cpp
+        src/render/DeferredRenderer.cpp)
 
 target_include_directories(engine PUBLIC include)
 

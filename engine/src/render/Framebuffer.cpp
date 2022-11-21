@@ -2,9 +2,9 @@
 // Created by andyroiiid on 11/20/2022.
 //
 
-#include "haru/Framebuffer.h"
+#include "haru/render/Framebuffer.h"
 
-#include "haru/Debug.h"
+#include "haru/core/Debug.h"
 
 Framebuffer::Framebuffer(
         const glm::ivec2 &size,

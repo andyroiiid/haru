@@ -7,7 +7,7 @@
 #include <glm/vec3.hpp>
 #include <glm/vec2.hpp>
 
-#include "haru/Mesh.h"
+#include "haru/render/Mesh.h"
 
 struct VertexBase {
     glm::vec3 Position;

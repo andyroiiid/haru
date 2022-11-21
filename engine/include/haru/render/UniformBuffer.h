@@ -6,7 +6,7 @@
 
 #include <glad/gl.h>
 
-#include "MoveOnly.h"
+#include "haru/core/MoveOnly.h"
 
 template<class T>
 class UniformBuffer {

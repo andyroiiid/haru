@@ -2,10 +2,10 @@
 // Created by andyroiiid on 11/20/2022.
 //
 
-#include "haru/Texture.h"
+#include "haru/render/Texture.h"
 
-#include "haru/Debug.h"
-#include "haru/ImageFile.h"
+#include "haru/core/Debug.h"
+#include "haru/system/ImageFile.h"
 
 Texture::Texture(const glm::ivec2 &size, const unsigned char *data, Wrap wrap, bool filter, bool mipmaps) {
     m_size = size;

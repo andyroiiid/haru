@@ -2,13 +2,13 @@
 // Created by andyroiiid on 11/20/2022.
 //
 
-#include "haru/ImageFile.h"
+#include "haru/system/ImageFile.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <stb_image.h>
 
-#include "haru/Files.h"
+#include "haru/system/Files.h"
 
 ImageFile::ImageFile(const std::string &filename) {
     stbi_set_flip_vertically_on_load(true);
