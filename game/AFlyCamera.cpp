@@ -97,7 +97,7 @@ void AFlyCamera::Draw(Renderer &renderer) {
         renderer.DrawPointLight(
                 GetTransform().GetPosition(),
                 {1.0f, 1.0f, 1.0f},
-                0.14f, 0.07f
+                64.0f
         );
     }
 }
