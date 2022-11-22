@@ -6,6 +6,7 @@ add_executable(game
         APhysBoxDynamic.cpp APhysBoxDynamic.h
         APhysBoxStatic.cpp APhysBoxStatic.h
         APointLight.cpp APointLight.h
+        ALevelGeom.cpp ALevelGeom.h
 
         Scene.cpp Scene.h
         Game.cpp Game.h

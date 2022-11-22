@@ -12,6 +12,7 @@
 #include "AFlyCamera.h"
 #include "APhysBoxStatic.h"
 #include "APhysBoxDynamic.h"
+#include "ALevelGeom.h"
 
 void Game::Init() {
     DebugLog("Game init");
@@ -89,6 +90,8 @@ void Game::Init() {
             glm::vec3{0.0f, 10.0f, -20.5f},
             glm::vec3{21.0f, 11.0f, 0.5f}
     );
+
+    m_scene.CreateActor<ALevelGeom>("data/hello.haru");
 }
 
 void Game::Shutdown() {

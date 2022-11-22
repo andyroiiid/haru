@@ -16,7 +16,7 @@ struct CameraConfig {
 
     float FieldOfViewDegrees = 90.0f;
     float NearPlane = 0.01f;
-    float FarPlane = 100.0f;
+    float FarPlane = 1000.0f;
 };
 
 class AFlyCamera final : public Actor {
