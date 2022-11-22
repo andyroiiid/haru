@@ -5,13 +5,14 @@
 #pragma once
 
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <glm/mat4x4.hpp>
 
+#include "haru/render/DeferredShaders.h"
 #include "haru/render/Framebuffer.h"
-#include "haru/render/UniformBuffer.h"
-#include "haru/render/Shader.h"
 #include "haru/render/Mesh.h"
 #include "haru/render/Renderer.h"
+#include "haru/render/UniformBuffer.h"
 
 class DeferredRenderer final : public Renderer {
     struct ShaderGlobals {
@@ -30,37 +31,6 @@ class DeferredRenderer final : public Renderer {
         glm::vec3 DirectionalLight;
         float DirectionalLightIntensity;
         PointLightData PointLightData[32];
-    };
-
-    class ShaderBase : public Shader {
-    public:
-        MOVE_ONLY(ShaderBase)
-
-        ShaderBase();
-
-        void SetModel(const glm::mat4 &model);
-
-    private:
-        GLint m_modelLocation = -1;
-    };
-
-    class ShaderGPass : public Shader {
-    public:
-        MOVE_ONLY(ShaderGPass)
-
-        ShaderGPass();
-    };
-
-    class ShaderLines : public Shader {
-    public:
-        MOVE_ONLY(ShaderLines)
-
-        ShaderLines();
-
-        void SetColor(const glm::vec4 &color);
-
-    private:
-        GLint m_colorLocation = -1;
     };
 
 public:
@@ -87,7 +57,11 @@ public:
     void DrawMesh(const MeshBase &mesh, const glm::mat4 &model) override;
 
 private:
+    void FlushUniformBuffers();
+
     void DrawToGBuffers();
+
+    void DrawForwardPass();
 
     glm::ivec2 m_screenSize{};
 
@@ -96,9 +70,9 @@ private:
     UniformBuffer<ShaderGlobals> m_shaderGlobals;
     UniformBuffer<LightGlobals> m_lightGlobals;
 
-    ShaderBase m_baseShader;
-    ShaderGPass m_gPassShader;
-    ShaderLines m_linesShader;
+    DeferredShaderBase m_baseShader;
+    DeferredShaderGPass m_gPassShader;
+    DeferredShaderLines m_linesShader;
 
     MeshPositionOnly m_fullscreenQuad;
 

@@ -22,11 +22,13 @@ add_library(engine
         include/haru/render/Shader.h
         include/haru/render/Texture.h
         include/haru/render/Renderer.h
+        include/haru/render/DeferredShaders.h
         include/haru/render/DeferredRenderer.h
         src/render/Framebuffer.cpp
         src/render/MeshUtilities.cpp
         src/render/Shader.cpp
         src/render/Texture.cpp
+        src/render/DeferredShaders.cpp
         src/render/DeferredRenderer.cpp
 
         include/haru/physics/PhysicsSystem.h
