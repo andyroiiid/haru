@@ -14,16 +14,14 @@ class APhysBoxDynamic final : public Actor {
 public:
     DEFINE_ACTOR_CLASS(APhysBoxDynamic)
 
-    static std::unique_ptr<APhysBoxDynamic> Create(
+    APhysBoxDynamic(
             PhysicsSystem *physics,
             const glm::vec3 &position,
             const glm::vec3 &halfSize,
             const glm::vec3 &velocity = {0.0f, 0.0f, 0.0f}
     );
 
-    void Awake() override;
-
-    void Cleanup() override;
+    ~APhysBoxDynamic() override;
 
     void Update(float deltaTime) override;
 

@@ -21,9 +21,9 @@ struct CameraConfig {
 
 class AFlyCamera final : public Actor {
 public:
-    DEFINE_ACTOR_CLASS(ACamera)
+    DEFINE_ACTOR_CLASS(AFlyCamera)
 
-    static std::unique_ptr<AFlyCamera> Create(
+    AFlyCamera(
             PhysicsSystem *physics,
             Window *window,
             Scene *scene,
@@ -31,10 +31,6 @@ public:
             float yaw = 0.0f,
             const CameraConfig &cameraConfig = {}
     );
-
-    void Awake() override;
-
-    void Cleanup() override;
 
     void Update(float deltaTime) override;
 

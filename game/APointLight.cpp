@@ -1,17 +1,8 @@
 ﻿#include "APointLight.h"
 
-std::unique_ptr<APointLight> APointLight::Create(const glm::vec3 &position, const Range range, const glm::vec3 &color) {
-    auto entity = std::make_unique<APointLight>();
-    entity->GetTransform().SetPosition(position);
-    entity->m_range = range;
-    entity->m_color = color;
-    return entity;
-}
-
-void APointLight::Awake() {
-}
-
-void APointLight::Cleanup() {
+APointLight::APointLight(const glm::vec3 &position, APointLight::Range range, const glm::vec3 &color)
+        : m_range(range), m_color(color) {
+    GetTransform().SetPosition(position);
 }
 
 void APointLight::Update(float deltaTime) {

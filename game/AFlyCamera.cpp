@@ -8,30 +8,15 @@
 #include "APhysBoxDynamic.h"
 #include "Scene.h"
 
-std::unique_ptr<AFlyCamera> AFlyCamera::Create(
+AFlyCamera::AFlyCamera(
         PhysicsSystem *physics,
         Window *window,
         Scene *scene,
-        const glm::vec3 &position,
-        const float yaw,
+        const glm::vec3 &position, float yaw,
         const CameraConfig &cameraConfig
-) {
-    auto entity = std::make_unique<AFlyCamera>();
-    entity->m_physics = physics;
-    entity->m_window = window;
-    entity->m_scene = scene;
-    entity->GetTransform()
-            .SetPosition(position)
-            .RotateY(yaw);
-    entity->m_cameraConfig = cameraConfig;
-    return entity;
-}
-
-void AFlyCamera::Awake() {
+) : m_physics(physics), m_window(window), m_scene(scene), m_cameraConfig(cameraConfig) {
+    GetTransform().SetPosition(position).RotateY(yaw);
     m_prevMousePos = m_window->GetMousePosition();
-}
-
-void AFlyCamera::Cleanup() {
 }
 
 void AFlyCamera::Update(const float deltaTime) {

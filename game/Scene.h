@@ -25,7 +25,7 @@ public:
 
     template<class T, class... Args, std::enable_if_t<!std::is_array_v<T>, int>  = 0>
     T *CreateActor(Args &&... args) {
-        std::unique_ptr<T> actor = T::Create(std::forward<Args>(args)...);
+        std::unique_ptr<T> actor = std::make_unique<T>(std::forward<Args>(args)...);
         T *actorRef = actor.get();
         m_pendingCreationActors.emplace_back(std::move(actor));
         return actorRef;

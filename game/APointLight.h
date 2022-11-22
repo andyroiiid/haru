@@ -23,15 +23,11 @@ public:
         R3250,
     };
 
-    static std::unique_ptr<APointLight> Create(
+    explicit APointLight(
             const glm::vec3 &position,
             Range range = Range::R20,
             const glm::vec3 &color = glm::vec3{1.0f, 1.0f, 1.0f}
     );
-
-    void Awake() override;
-
-    void Cleanup() override;
 
     void Update(float deltaTime) override;
 

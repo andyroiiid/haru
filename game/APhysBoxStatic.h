@@ -14,15 +14,9 @@ class APhysBoxStatic final : public Actor {
 public:
     DEFINE_ACTOR_CLASS(APhysBoxStatic)
 
-    static std::unique_ptr<APhysBoxStatic> Create(
-            PhysicsSystem *physics,
-            const glm::vec3 &position,
-            const glm::vec3 &halfSize
-    );
+    APhysBoxStatic(PhysicsSystem *physics, const glm::vec3 &position, const glm::vec3 &halfSize);
 
-    void Awake() override;
-
-    void Cleanup() override;
+    ~APhysBoxStatic() override;
 
     void Update(float deltaTime) override;
 

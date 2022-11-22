@@ -12,6 +12,7 @@
 #include <haru/render/Renderer.h>
 
 #define DEFINE_ACTOR_CLASS(className) \
+    MOVE_ONLY(className) \
     const std::string &GetActorClassName() const override { \
         static const std::string s_ClassName = #className; \
         return s_ClassName; \
@@ -39,10 +40,6 @@ public:
     bool IsClass() const {
         return ActorClassNameTraits<T>::value == GetActorClassName();
     }
-
-    virtual void Awake() = 0;
-
-    virtual void Cleanup() = 0;
 
     virtual void Update(float deltaTime) = 0;
 

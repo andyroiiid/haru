@@ -5,9 +5,9 @@
 #include "Scene.h"
 
 void Scene::Cleanup() {
-    for (const auto &actor: m_actors) {
-        actor->Cleanup();
-    }
+    m_actors.clear();
+    m_pendingCreationActors.clear();
+    m_pendingDestroyActors.clear();
 }
 
 void Scene::Update(const float deltaTime) {
@@ -17,7 +17,6 @@ void Scene::Update(const float deltaTime) {
 
     // awake all pending creation actors
     for (auto &actor: pendingCreationActorsFromLastFrame) {
-        actor->Awake();
         m_actors.push_back(std::move(actor));
     }
 
@@ -35,14 +34,9 @@ void Scene::Update(const float deltaTime) {
     }
     m_actors = std::move(aliveActors);
 
+    // pendingDestroyActorsFromLastFrame deconstructs and releases all pending destroy actors
     // destroy pending destroy actors from last frame
     // this strategy will give other actors one frame to cleanup their references
-    for (const auto &pendingDestroyActor: pendingDestroyActorsFromLastFrame) {
-        pendingDestroyActor->Cleanup();
-    }
-
-    // pendingCreationActorsFromLastFrame deconstructs and releases all pending destroy actors
-    // pendingDestroyActorsFromLastFrame deconstructs and releases all pending destroy actors
 }
 
 void Scene::Draw(Renderer &renderer) {

@@ -5,22 +5,12 @@
 #include <haru/physics/PhysicsSystem.h>
 #include <haru/render/MeshUtilities.h>
 
-std::unique_ptr<APhysBoxStatic> APhysBoxStatic::Create(
-        PhysicsSystem *physics,
-        const glm::vec3 &position,
-        const glm::vec3 &halfSize
-) {
-    auto entity = std::make_unique<APhysBoxStatic>();
-    entity->m_physics = physics;
-    entity->GetTransform().SetPosition(position);
-    entity->m_halfSize = halfSize;
-    return entity;
-}
+APhysBoxStatic::APhysBoxStatic(PhysicsSystem *physics, const glm::vec3 &position, const glm::vec3 &halfSize)
+        : m_physics(physics), m_halfSize(halfSize) {
+    GetTransform().SetPosition(position);
 
-void APhysBoxStatic::Awake() {
     m_mesh = MeshBase(CreateBox(m_halfSize), GL_TRIANGLES);
 
-    const glm::vec3 &position = GetTransform().GetPosition();
     const physx::PxTransform transform{position.x, position.y, position.z};
     const physx::PxBoxGeometry geometry{m_halfSize.x, m_halfSize.y, m_halfSize.z};
 
@@ -28,7 +18,7 @@ void APhysBoxStatic::Awake() {
     m_rigidbody->userData = this;
 }
 
-void APhysBoxStatic::Cleanup() {
+APhysBoxStatic::~APhysBoxStatic() {
     m_rigidbody->release();
 
     m_mesh = {};
