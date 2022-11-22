@@ -16,19 +16,16 @@ AFlyCamera::AFlyCamera(
         const CameraConfig &cameraConfig
 ) : m_physics(physics), m_window(window), m_scene(scene), m_cameraConfig(cameraConfig) {
     GetTransform().SetPosition(position).RotateY(yaw);
-    m_prevMousePos = m_window->GetMousePosition();
 }
 
 void AFlyCamera::Update(const float deltaTime) {
     Transform &transform = GetTransform();
 
-    const glm::vec2 currMousePos = m_window->GetMousePosition();
-    const glm::vec2 deltaMousePos = currMousePos - m_prevMousePos;
+    const glm::vec2 &deltaMousePos = m_window->GetMouseDeltaPosition();
     transform
             .RotateX(m_cameraConfig.MouseSpeed * -deltaMousePos.y)
             .RotateY(m_cameraConfig.MouseSpeed * -deltaMousePos.x)
             .ClampPitch();
-    m_prevMousePos = currMousePos;
 
     static constexpr glm::vec3 UP{0.0f, 1.0f, 0.0f};
     if (const glm::vec3 inputDirection =

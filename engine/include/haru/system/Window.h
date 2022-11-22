@@ -41,11 +41,11 @@ public:
 
     void MainLoop(App &app);
 
-    void SetCursorEnabled(bool enable);
-
     void Close();
 
     [[nodiscard]] glm::ivec2 GetSize() const;
+
+    void SetCursorEnabled(bool enable);
 
     [[nodiscard]] bool IsKeyDown(int key) const;
 
@@ -53,8 +53,19 @@ public:
 
     [[nodiscard]] glm::vec2 GetMousePosition() const;
 
-    [[nodiscard]] float GetKeyAxis(int posKey, int negKey) const;
+    [[nodiscard]] const glm::vec2 &GetMouseDeltaPosition() const {
+        return m_deltaMousePos;
+    }
+
+    [[nodiscard]] float GetKeyAxis(int posKey, int negKey) const {
+        float value = 0.0f;
+        if (IsKeyDown(posKey)) value += 1.0f;
+        if (IsKeyDown(negKey)) value -= 1.0f;
+        return value;
+    }
 
 private:
     MoveOnly<GLFWwindow *> m_window;
+
+    glm::vec2 m_deltaMousePos{};
 };

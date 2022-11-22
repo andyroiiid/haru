@@ -40,7 +40,6 @@ private:
     PhysicsSystem *m_physics = nullptr;
     Window *m_window = nullptr;
     Scene *m_scene = nullptr;
-    glm::vec2 m_prevMousePos{};
 
     CameraConfig m_cameraConfig;
 
