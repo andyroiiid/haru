@@ -4,10 +4,10 @@
 
 #include "Actor.h"
 
-class PhysicsSystem;
+class PhysicsScene;
 
 namespace physx {
-    class PxRigidDynamic;
+class PxRigidDynamic;
 }
 
 class APhysBoxDynamic final : public Actor {
@@ -15,7 +15,7 @@ public:
     DEFINE_ACTOR_CLASS(APhysBoxDynamic)
 
     APhysBoxDynamic(
-            PhysicsSystem *physics,
+            PhysicsScene *physicsScene,
             const glm::vec3 &position,
             const glm::vec3 &halfSize,
             const glm::vec3 &velocity = {0.0f, 0.0f, 0.0f}
@@ -28,7 +28,6 @@ public:
     void Draw(Renderer &renderer) override;
 
 private:
-    PhysicsSystem *m_physics = nullptr;
     glm::vec3 m_halfSize{};
 
     MeshBase m_mesh;

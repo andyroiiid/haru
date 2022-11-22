@@ -19,12 +19,13 @@ void Game::Init() {
 
     m_renderer = std::make_unique<DeferredRenderer>();
     m_physics = std::make_unique<PhysicsSystem>();
+    m_physicsScene = std::make_unique<PhysicsScene>(m_physics.get());
 
     Window->SetCursorEnabled(false);
 
     m_scene.CreateActor<ADirectionalLight>(0.0f);
     m_scene.CreateActor<AFlyCamera>(
-            m_physics.get(),
+            m_physicsScene.get(),
             Window,
             &m_scene,
             glm::vec3{0.0f, 1.8f, 15.0f}
@@ -43,7 +44,7 @@ void Game::Init() {
         for (int z = -4; z <= 4; z++) {
             for (int x = -4; x <= 4; x++) {
                 m_scene.CreateActor<APhysBoxDynamic>(
-                        m_physics.get(),
+                        m_physicsScene.get(),
                         glm::vec3{x * 2, y * 2, -z * 2},
                         glm::vec3{0.5f, 0.5f, 0.5f}
                 );
@@ -52,32 +53,32 @@ void Game::Init() {
     }
 
     m_scene.CreateActor<APhysBoxStatic>(
-            m_physics.get(),
+            m_physicsScene.get(),
             glm::vec3{0.0f, -0.5f, 0.0f},
             glm::vec3{20.0f, 0.5f, 20.0f}
     );
     m_scene.CreateActor<APhysBoxStatic>(
-            m_physics.get(),
+            m_physicsScene.get(),
             glm::vec3{0.0f, 20.5f, 0.0f},
             glm::vec3{20.0f, 0.5f, 20.0f}
     );
     m_scene.CreateActor<APhysBoxStatic>(
-            m_physics.get(),
+            m_physicsScene.get(),
             glm::vec3{20.5f, 10.0f, 0.0f},
             glm::vec3{0.5f, 11.0f, 20.0f}
     );
     m_scene.CreateActor<APhysBoxStatic>(
-            m_physics.get(),
+            m_physicsScene.get(),
             glm::vec3{-20.5f, 10.0f, 0.0f},
             glm::vec3{0.5f, 11.0f, 20.0f}
     );
     m_scene.CreateActor<APhysBoxStatic>(
-            m_physics.get(),
+            m_physicsScene.get(),
             glm::vec3{0.0f, 10.0f, 20.5f},
             glm::vec3{21.0f, 11.0f, 0.5f}
     );
     m_scene.CreateActor<APhysBoxStatic>(
-            m_physics.get(),
+            m_physicsScene.get(),
             glm::vec3{0.0f, 10.0f, -20.5f},
             glm::vec3{21.0f, 11.0f, 0.5f}
     );
@@ -90,6 +91,7 @@ void Game::Shutdown() {
 
     Window->SetCursorEnabled(true);
 
+    m_physicsScene.reset();
     m_physics.reset();
     m_renderer.reset();
 
@@ -101,7 +103,7 @@ void Game::Resize(const glm::ivec2 &size) {
 }
 
 void Game::Update(const float deltaTime) {
-    m_physics->Update(deltaTime, m_timeScale);
+    m_physicsScene->Update(deltaTime, m_timeScale);
 
     if (Window->IsKeyDown(GLFW_KEY_ESCAPE)) {
         Window->Close();

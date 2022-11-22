@@ -31,7 +31,9 @@ add_library(engine
         src/render/DeferredShaders.cpp
         src/render/DeferredRenderer.cpp
 
+        include/haru/physics/PhysicsScene.h
         include/haru/physics/PhysicsSystem.h
+        src/physics/PhysicsScene.cpp
         src/physics/PhysicsSystem.cpp)
 
 target_include_directories(engine PUBLIC include)

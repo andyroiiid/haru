@@ -4,7 +4,7 @@
 
 #include "Actor.h"
 
-class PhysicsSystem;
+class PhysicsScene;
 
 namespace physx {
     class PxRigidStatic;
@@ -14,7 +14,7 @@ class APhysBoxStatic final : public Actor {
 public:
     DEFINE_ACTOR_CLASS(APhysBoxStatic)
 
-    APhysBoxStatic(PhysicsSystem *physics, const glm::vec3 &position, const glm::vec3 &halfSize);
+    APhysBoxStatic(PhysicsScene *physicsScene, const glm::vec3 &position, const glm::vec3 &halfSize);
 
     ~APhysBoxStatic() override;
 
@@ -23,7 +23,6 @@ public:
     void Draw(Renderer &renderer) override;
 
 private:
-    PhysicsSystem *m_physics = nullptr;
     glm::vec3 m_halfSize{};
 
     MeshBase m_mesh;

@@ -4,7 +4,7 @@
 
 #include "Actor.h"
 
-class PhysicsSystem;
+class PhysicsScene;
 
 class Window;
 
@@ -24,7 +24,7 @@ public:
     DEFINE_ACTOR_CLASS(AFlyCamera)
 
     AFlyCamera(
-            PhysicsSystem *physics,
+            PhysicsScene *physicsScene,
             Window *window,
             Scene *scene,
             const glm::vec3 &position = {0, 0, 5},
@@ -37,7 +37,7 @@ public:
     void Draw(Renderer &renderer) override;
 
 private:
-    PhysicsSystem *m_physics = nullptr;
+    PhysicsScene *m_physicsScene = nullptr;
     Window *m_window = nullptr;
     Scene *m_scene = nullptr;
 

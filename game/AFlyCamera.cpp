@@ -2,19 +2,19 @@
 
 #include <PxRigidActor.h>
 
-#include <haru/physics/PhysicsSystem.h>
+#include <haru/physics/PhysicsScene.h>
 #include <haru/system/Window.h>
 
 #include "APhysBoxDynamic.h"
 #include "Scene.h"
 
 AFlyCamera::AFlyCamera(
-        PhysicsSystem *physics,
+        PhysicsScene *physicsScene,
         Window *window,
         Scene *scene,
         const glm::vec3 &position, float yaw,
         const CameraConfig &cameraConfig
-) : m_physics(physics), m_window(window), m_scene(scene), m_cameraConfig(cameraConfig) {
+) : m_physicsScene(physicsScene), m_window(window), m_scene(scene), m_cameraConfig(cameraConfig) {
     GetTransform().SetPosition(position).RotateY(yaw);
 }
 
@@ -52,7 +52,7 @@ void AFlyCamera::Update(const float deltaTime) {
     const bool currLmb = m_window->IsMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT);
     if (currLmb && !m_prevLmb) {
         m_scene->CreateActor<APhysBoxDynamic>(
-                m_physics,
+                m_physicsScene,
                 position,
                 glm::vec3{0.5f, 0.5f, 0.5f},
                 forward * 20.0f
@@ -62,7 +62,7 @@ void AFlyCamera::Update(const float deltaTime) {
 
     const bool currRmb = m_window->IsMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT);
     if (currRmb && !m_prevRmb) {
-        const auto hit = m_physics->Raycast(
+        const auto hit = m_physicsScene->Raycast(
                 {position.x, position.y, position.z},
                 {forward.x, forward.y, forward.z},
                 10.0f

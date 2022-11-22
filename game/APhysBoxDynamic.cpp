@@ -2,15 +2,15 @@
 
 #include <PxRigidDynamic.h>
 
-#include <haru/physics/PhysicsSystem.h>
+#include <haru/physics/PhysicsScene.h>
 #include <haru/render/MeshUtilities.h>
 
 APhysBoxDynamic::APhysBoxDynamic(
-        PhysicsSystem *physics,
+        PhysicsScene *physicsScene,
         const glm::vec3 &position,
         const glm::vec3 &halfSize,
         const glm::vec3 &velocity
-) : m_physics(physics), m_halfSize(halfSize), m_velocity(velocity) {
+) : m_halfSize(halfSize), m_velocity(velocity) {
     GetTransform().SetPosition(position);
 
     m_mesh = MeshBase(CreateBox(m_halfSize), GL_TRIANGLES);
@@ -18,7 +18,7 @@ APhysBoxDynamic::APhysBoxDynamic(
     const physx::PxTransform transform{position.x, position.y, position.z};
     const physx::PxBoxGeometry geometry{m_halfSize.x, m_halfSize.y, m_halfSize.z};
 
-    m_rigidbody = m_physics->CreateDynamic(transform, geometry);
+    m_rigidbody = physicsScene->CreateDynamic(transform, geometry);
     m_rigidbody->setLinearVelocity({m_velocity.x, m_velocity.y, m_velocity.z});
     m_rigidbody->userData = this;
 }

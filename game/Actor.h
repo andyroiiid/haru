@@ -12,13 +12,13 @@
 #include <haru/render/Renderer.h>
 
 #define DEFINE_ACTOR_CLASS(className) \
-    MOVE_ONLY(className) \
+    NO_MOVE_OR_COPY(className) \
     static inline const std::string &ClassName = #className; \
     const std::string &GetActorClassName() const override { return ClassName; }
 
 class Actor {
 public:
-    MOVE_ONLY(Actor)
+    NO_MOVE_OR_COPY(Actor)
 
     Actor() = default;
 

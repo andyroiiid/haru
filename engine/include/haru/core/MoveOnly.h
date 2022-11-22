@@ -65,3 +65,5 @@ private:
 static_assert(sizeof(int) == sizeof(MoveOnly<int>));
 
 #define MOVE_ONLY(T) T(const T&) = delete; T& operator=(const T&) = delete; T(T&&) noexcept = default; T& operator=(T&&) noexcept = default;
+
+#define NO_MOVE_OR_COPY(T) T(const T&) = delete; T& operator=(const T&) = delete; T(T&&) = delete; T& operator=(T&&) = delete;

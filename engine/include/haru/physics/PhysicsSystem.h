@@ -6,9 +6,6 @@
 
 #include "haru/core/MoveOnly.h"
 
-#include <geometry/PxGeometry.h>
-#include <PxQueryReport.h>
-
 namespace physx {
     class PxFoundation;
 
@@ -21,43 +18,23 @@ namespace physx {
     class PxDefaultCpuDispatcher;
 
     class PxMaterial;
-
-    class PxScene;
-
-    class PxRigidStatic;
-
-    class PxRigidDynamic;
 }
 
 class PhysicsSystem {
 public:
-    MOVE_ONLY(PhysicsSystem)
+    NO_MOVE_OR_COPY(PhysicsSystem)
 
     PhysicsSystem();
 
     ~PhysicsSystem();
 
-    void Update(float deltaTime, float timeScale);
-
-    physx::PxRigidStatic *CreateStatic(const physx::PxTransform &transform, const physx::PxGeometry &geometry);
-
-    physx::PxRigidDynamic *CreateDynamic(const physx::PxTransform &transform, const physx::PxGeometry &geometry);
-
-    [[nodiscard]] physx::PxRaycastBuffer Raycast(
-            const physx::PxVec3 &origin,
-            const physx::PxVec3 &unitDir,
-            float distance
-    ) const;
-
 private:
+    friend class PhysicsScene;
+
     physx::PxFoundation *m_foundation = nullptr;
     physx::PxPvdTransport *m_pvdTransport = nullptr;
     physx::PxPvd *m_pvd = nullptr;
     physx::PxPhysics *m_physics = nullptr;
     physx::PxDefaultCpuDispatcher *m_dispatcher = nullptr;
-
     physx::PxMaterial *m_defaultMaterial = nullptr;
-    physx::PxScene *m_scene = nullptr;
-
-    float m_timeSinceLastTick = 0.0f;
 };

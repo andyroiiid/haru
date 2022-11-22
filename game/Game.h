@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <haru/physics/PhysicsScene.h>
 #include <haru/physics/PhysicsSystem.h>
 #include <haru/render/Renderer.h>
 #include <haru/system/Window.h>
@@ -25,6 +26,7 @@ public:
 private:
     std::unique_ptr<Renderer> m_renderer;
     std::unique_ptr<PhysicsSystem> m_physics;
+    std::unique_ptr<PhysicsScene> m_physicsScene;
 
     Scene m_scene;
 
