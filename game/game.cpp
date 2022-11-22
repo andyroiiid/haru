@@ -5,12 +5,13 @@
 #include <sstream>
 #include <glm/gtc/matrix_transform.hpp>
 
-#include <haru/system/Window.h>
 #include <haru/core/Debug.h>
+#include <haru/math/Transform.h>
+#include <haru/physics/PhysicsSystem.h>
 #include <haru/render/DeferredRenderer.h>
 #include <haru/render/MeshUtilities.h>
 #include <haru/system/Files.h>
-#include <haru/math/Transform.h>
+#include <haru/system/Window.h>
 
 struct CameraConfig {
     float MouseSpeed = 0.001f;
@@ -83,6 +84,8 @@ public:
     }
 
     void Update(float deltaTime) override {
+        m_physics.Update(deltaTime);
+
         if (Window->IsKeyDown(GLFW_KEY_ESCAPE)) {
             Window->Close();
             return;
@@ -138,6 +141,7 @@ public:
 
 private:
     DeferredRenderer m_renderer;
+    PhysicsSystem m_physics;
 
     MeshBase m_mesh;
     MeshPositionOnly m_lines;

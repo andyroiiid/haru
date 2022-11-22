@@ -27,10 +27,15 @@ add_library(engine
         src/render/MeshUtilities.cpp
         src/render/Shader.cpp
         src/render/Texture.cpp
-        src/render/DeferredRenderer.cpp)
+        src/render/DeferredRenderer.cpp
+
+        include/haru/physics/PhysicsSystem.h
+        src/physics/PhysicsSystem.cpp)
 
 target_include_directories(engine PUBLIC include)
 
 target_compile_definitions(engine PUBLIC GLFW_INCLUDE_NONE)
 
-target_link_libraries(engine PUBLIC glfw glad glm stb)
+target_link_libraries(engine PUBLIC glfw glad glm stb PhysX)
+
+set_msvc_runtime_library(engine)
