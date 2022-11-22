@@ -52,15 +52,16 @@ PhysicsSystem::~PhysicsSystem() {
     PX_RELEASE(m_foundation)
 }
 
-void PhysicsSystem::Update(const float deltaTime) {
-    m_timeSinceLastTick += deltaTime;
+void PhysicsSystem::Update(const float deltaTime, const float timeScale) {
+    m_timeSinceLastTick += deltaTime * timeScale;
 
     static constexpr float FIXED_TIMESTEP = 0.02f;
+    const float scaledTimestep = FIXED_TIMESTEP * timeScale;
 
-    if (m_timeSinceLastTick >= FIXED_TIMESTEP) {
-        m_scene->simulate(FIXED_TIMESTEP);
+    if (m_timeSinceLastTick >= scaledTimestep) {
+        m_scene->simulate(scaledTimestep);
         m_scene->fetchResults(true);
-        m_timeSinceLastTick -= FIXED_TIMESTEP;
+        m_timeSinceLastTick -= scaledTimestep;
     }
 }
 

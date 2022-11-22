@@ -27,4 +27,6 @@ private:
     std::unique_ptr<PhysicsSystem> m_physics;
 
     Scene m_scene;
+
+    float m_timeScale = 1.0f;
 };

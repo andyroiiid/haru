@@ -110,7 +110,7 @@ void Game::Resize(const glm::ivec2 &size) {
 }
 
 void Game::Update(const float deltaTime) {
-    m_physics->Update(deltaTime);
+    m_physics->Update(deltaTime, m_timeScale);
 
     if (Window->IsKeyDown(GLFW_KEY_ESCAPE)) {
         Window->Close();
@@ -122,7 +122,13 @@ void Game::Update(const float deltaTime) {
         }
     }
 
-    m_scene.Update(deltaTime);
+    if (Window->IsKeyDown(GLFW_KEY_TAB)) {
+        m_timeScale = 0.1f;
+    } else {
+        m_timeScale = 1.0f;
+    }
+
+    m_scene.Update(deltaTime * m_timeScale);
 }
 
 void Game::Draw() {

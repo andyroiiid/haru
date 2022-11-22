@@ -37,7 +37,7 @@ public:
 
     ~PhysicsSystem();
 
-    void Update(float deltaTime);
+    void Update(float deltaTime, float timeScale);
 
     physx::PxRigidStatic *CreateStatic(const physx::PxTransform &transform, const physx::PxGeometry &geometry);
 
