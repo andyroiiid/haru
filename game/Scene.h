@@ -33,7 +33,7 @@ public:
 
     template<class T>
     [[nodiscard]] T *FindFirstActorOfClass() const {
-        return reinterpret_cast<T *>(FindFirstActorOfClassImpl(ActorClassNameTraits<T>::value));
+        return reinterpret_cast<T *>(FindFirstActorOfClassImpl(T::ClassName));
     }
 
 private:

@@ -32,5 +32,3 @@ private:
     // not using m_transform because it doesn't support quaternion
     glm::mat4 m_modelMatrix{1.0f};
 };
-
-REGISTER_ACTOR_CLASS(APhysBoxStatic)

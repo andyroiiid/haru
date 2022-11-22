@@ -37,5 +37,3 @@ private:
     Range m_range{};
     glm::vec3 m_color{};
 };
-
-REGISTER_ACTOR_CLASS(APointLight)

@@ -50,5 +50,3 @@ private:
     bool m_prevLmb = false;
     bool m_prevRmb = false;
 };
-
-REGISTER_ACTOR_CLASS(AFlyCamera)

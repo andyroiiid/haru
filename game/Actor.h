@@ -13,18 +13,8 @@
 
 #define DEFINE_ACTOR_CLASS(className) \
     MOVE_ONLY(className) \
-    const std::string &GetActorClassName() const override { \
-        static const std::string s_ClassName = #className; \
-        return s_ClassName; \
-    }
-
-template<class T>
-struct ActorClassNameTraits;
-
-#define REGISTER_ACTOR_CLASS(className) \
-    template <> struct ActorClassNameTraits<className> { \
-        static inline const std::string &value = #className; \
-    };
+    static inline const std::string &ClassName = #className; \
+    const std::string &GetActorClassName() const override { return ClassName; }
 
 class Actor {
 public:
@@ -38,7 +28,7 @@ public:
 
     template<class T>
     bool IsClass() const {
-        return ActorClassNameTraits<T>::value == GetActorClassName();
+        return T::ClassName == GetActorClassName();
     }
 
     virtual void Update(float deltaTime) = 0;

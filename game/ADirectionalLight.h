@@ -17,5 +17,3 @@ public:
 private:
     float m_intensity{};
 };
-
-REGISTER_ACTOR_CLASS(ADirectionalLight)

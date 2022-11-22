@@ -38,5 +38,3 @@ private:
     glm::mat4 m_modelMatrix{1.0f};
     glm::vec3 m_velocity{};
 };
-
-REGISTER_ACTOR_CLASS(APhysBoxDynamic)
