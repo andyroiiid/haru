@@ -6,13 +6,15 @@
 
 #include <PxPhysicsAPI.h>
 
-PhysicsScene::PhysicsScene(PhysicsSystem *physicsSystem)
-        : m_physicsSystem(physicsSystem),
-          m_physics(physicsSystem->m_physics),
-          m_defaultMaterial(physicsSystem->m_defaultMaterial) {
+#include "haru/physics/PhysicsSystem.h"
+
+PhysicsScene::PhysicsScene(PhysicsSystem *physicsSystem) : m_physics(physicsSystem->m_physics) {
+    m_defaultCpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
+    m_defaultMaterial = m_physics->createMaterial(0.8f, 0.8f, 0.2f);
+
     physx::PxSceneDesc sceneDesc(m_physics->getTolerancesScale());
     sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
-    sceneDesc.cpuDispatcher = m_physicsSystem->m_dispatcher;
+    sceneDesc.cpuDispatcher = m_defaultCpuDispatcher;
     sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
     m_scene = m_physics->createScene(sceneDesc);
 
@@ -25,6 +27,8 @@ PhysicsScene::PhysicsScene(PhysicsSystem *physicsSystem)
 
 PhysicsScene::~PhysicsScene() {
     PX_RELEASE(m_scene)
+    PX_RELEASE(m_defaultMaterial)
+    PX_RELEASE(m_defaultCpuDispatcher)
 }
 
 void PhysicsScene::Update(const float deltaTime, const float timeScale) {
@@ -51,9 +55,10 @@ physx::PxRigidStatic *PhysicsScene::CreateStatic(
 
 physx::PxRigidDynamic *PhysicsScene::CreateDynamic(
         const physx::PxTransform &transform,
-        const physx::PxGeometry &geometry
+        const physx::PxGeometry &geometry,
+        float density
 ) {
-    physx::PxRigidDynamic *actor = PxCreateDynamic(*m_physics, transform, geometry, *m_defaultMaterial, 1.0f);
+    physx::PxRigidDynamic *actor = PxCreateDynamic(*m_physics, transform, geometry, *m_defaultMaterial, density);
     m_scene->addActor(*actor);
     return actor;
 }

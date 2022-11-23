@@ -15,8 +15,6 @@ namespace physx {
 
     class PxPhysics;
 
-    class PxDefaultCpuDispatcher;
-
     class PxMaterial;
 }
 
@@ -35,6 +33,4 @@ private:
     physx::PxPvdTransport *m_pvdTransport = nullptr;
     physx::PxPvd *m_pvd = nullptr;
     physx::PxPhysics *m_physics = nullptr;
-    physx::PxDefaultCpuDispatcher *m_dispatcher = nullptr;
-    physx::PxMaterial *m_defaultMaterial = nullptr;
 };

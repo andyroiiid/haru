@@ -8,10 +8,13 @@
 #include <PxQueryReport.h>
 
 #include "haru/core/MoveOnly.h"
-#include "haru/physics/PhysicsSystem.h"
+
+class PhysicsSystem;
 
 namespace physx {
     class PxPhysics;
+
+    class PxDefaultCpuDispatcher;
 
     class PxMaterial;
 
@@ -34,7 +37,7 @@ public:
 
     physx::PxRigidStatic *CreateStatic(const physx::PxTransform &transform, const physx::PxGeometry &geometry);
 
-    physx::PxRigidDynamic *CreateDynamic(const physx::PxTransform &transform, const physx::PxGeometry &geometry);
+    physx::PxRigidDynamic *CreateDynamic(const physx::PxTransform &transform, const physx::PxGeometry &geometry, float density = 1.0f);
 
     [[nodiscard]] physx::PxRaycastBuffer Raycast(
             const physx::PxVec3 &origin,
@@ -43,10 +46,10 @@ public:
     ) const;
 
 private:
-    PhysicsSystem *m_physicsSystem;
     physx::PxPhysics *m_physics = nullptr;
-    physx::PxMaterial *m_defaultMaterial = nullptr;
 
+    physx::PxDefaultCpuDispatcher *m_defaultCpuDispatcher = nullptr;
+    physx::PxMaterial *m_defaultMaterial = nullptr;
     physx::PxScene *m_scene = nullptr;
     float m_timeSinceLastTick = 0.0f;
 };

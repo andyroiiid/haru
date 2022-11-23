@@ -23,15 +23,9 @@ PhysicsSystem::PhysicsSystem() {
     }
 
     m_physics = PxCreatePhysics(PX_PHYSICS_VERSION, *m_foundation, physx::PxTolerancesScale(), true, m_pvd);
-
-    m_dispatcher = physx::PxDefaultCpuDispatcherCreate(2);
-
-    m_defaultMaterial = m_physics->createMaterial(0.8f, 0.8f, 0.25f);
 }
 
 PhysicsSystem::~PhysicsSystem() {
-    PX_RELEASE(m_defaultMaterial)
-    PX_RELEASE(m_dispatcher)
     PX_RELEASE(m_physics)
     PX_RELEASE(m_pvd)
     PX_RELEASE(m_pvdTransport)
