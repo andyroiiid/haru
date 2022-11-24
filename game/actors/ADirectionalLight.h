@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "Actor.h"
 
 class ADirectionalLight final : public Actor {

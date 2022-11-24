@@ -8,7 +8,8 @@
 #include <haru/render/DeferredRenderer.h>
 
 #include "actors/ADirectionalLight.h"
-#include "actors/AFlyCamera.h"
+#include "actors/ACamera.h"
+#include "actors/APlayerNoClip.h"
 #include "actors/APhysxBox.h"
 #include "actors/ALevelGeom.h"
 
@@ -22,12 +23,15 @@ void Game::Init() {
     Window->SetCursorEnabled(false);
 
     m_scene.CreateActor<ADirectionalLight>(1.0f);
-    m_scene.CreateActor<AFlyCamera>(
+
+    auto *camera = m_scene.CreateActor<ACamera>(Window);
+    auto *player = m_scene.CreateActor<APlayerNoClip>(
             m_physicsScene.get(),
             Window,
             &m_scene,
             glm::vec3{0.0f, 1.8f, 15.0f}
     );
+    camera->SetTargetActor(player);
 
     m_scene.CreateActor<ALevelGeom>(m_physics.get(), m_physicsScene.get(), "data/hello.haru");
 }

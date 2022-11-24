@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include <memory>
-
 #include <haru/physics/PhysicsSystem.h>
 #include <haru/physics/PhysicsScene.h>
 
