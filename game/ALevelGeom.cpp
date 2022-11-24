@@ -5,11 +5,15 @@
 #include "ALevelGeom.h"
 
 #include <sstream>
+#include <PxRigidStatic.h>
+#include <foundation/PxAllocator.h>
+#include <foundation/PxTransform.h>
+#include <geometry/PxConvexMeshGeometry.h>
 
 #include <haru/core/Debug.h>
 #include <haru/system/Files.h>
 
-ALevelGeom::ALevelGeom(const std::string &levelName) {
+ALevelGeom::ALevelGeom(PhysicsSystem *physicsSystem, PhysicsScene *physicsScene, const std::string &levelName) {
     DebugLog("loading level %s", levelName.c_str());
 
     std::vector<VertexBase> vertices;
@@ -17,19 +21,28 @@ ALevelGeom::ALevelGeom(const std::string &levelName) {
     std::string map = ReadFile(levelName);
     std::stringstream mapStream(map);
 
+    const physx::PxTransform rigidbodyTransform(physx::PxVec3{0.0f, 0.0f, 0.0f});
+
     int brushCount;
     mapStream >> brushCount;
     for (int i = 0; i < brushCount; i++) {
         int brushVertexCount;
         mapStream >> brushVertexCount;
 
-        std::vector<glm::vec3> brushVertices;
+        std::vector<physx::PxVec3> brushVertices;
         brushVertices.reserve(brushVertexCount);
         for (int j = 0; j < brushVertexCount; j++) {
-            glm::vec3 vertex;
+            physx::PxVec3 vertex;
             mapStream >> vertex.x >> vertex.y >> vertex.z;
             brushVertices.push_back(vertex);
         }
+
+        physx::PxConvexMesh *brushCollider = physicsSystem->CreateConvexMesh(brushVertexCount, brushVertices.data());
+        m_brushColliders.push_back(brushCollider);
+
+        physx::PxRigidStatic *brushRigidbody = physicsScene->CreateStatic(rigidbodyTransform, physx::PxConvexMeshGeometry(brushCollider));
+        brushRigidbody->userData = this;
+        m_brushRigidbodies.push_back(brushRigidbody);
 
         int brushFaceCount;
         mapStream >> brushFaceCount;
@@ -59,6 +72,14 @@ ALevelGeom::ALevelGeom(const std::string &levelName) {
 }
 
 ALevelGeom::~ALevelGeom() {
+    for (physx::PxRigidStatic *rigidbody: m_brushRigidbodies) {
+        PX_RELEASE(rigidbody)
+    }
+
+    for (physx::PxConvexMesh *collider: m_brushColliders) {
+        PX_RELEASE(collider);
+    }
+
     m_mesh = {};
 }
 

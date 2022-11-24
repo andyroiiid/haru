@@ -68,7 +68,7 @@ void Game::Init() {
             glm::vec3{21.0f, 11.0f, 0.5f}
     );
 
-    m_scene.CreateActor<ALevelGeom>("data/hello.haru");
+    m_scene.CreateActor<ALevelGeom>(m_physics.get(), m_physicsScene.get(), "data/hello.haru");
 }
 
 void Game::Shutdown() {

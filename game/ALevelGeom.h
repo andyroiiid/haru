@@ -6,13 +6,16 @@
 
 #include <memory>
 
+#include <haru/physics/PhysicsSystem.h>
+#include <haru/physics/PhysicsScene.h>
+
 #include "Actor.h"
 
 class ALevelGeom : public Actor {
 public:
     DEFINE_ACTOR_CLASS(ALevelGeom)
 
-    explicit ALevelGeom(const std::string &levelName);
+    explicit ALevelGeom(PhysicsSystem *physicsSystem, PhysicsScene *physicsScene, const std::string &levelName);
 
     ~ALevelGeom() override;
 
@@ -22,4 +25,6 @@ public:
 
 private:
     MeshBase m_mesh;
+    std::vector<physx::PxConvexMesh *> m_brushColliders;
+    std::vector<physx::PxRigidStatic *> m_brushRigidbodies;
 };
