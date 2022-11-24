@@ -3,8 +3,7 @@ add_executable(game
 
         ADirectionalLight.cpp ADirectionalLight.h
         AFlyCamera.cpp AFlyCamera.h
-        APhysBoxDynamic.cpp APhysBoxDynamic.h
-        APhysBoxStatic.cpp APhysBoxStatic.h
+        APhysxBox.cpp APhysxBox.h
         APointLight.cpp APointLight.h
         ALevelGeom.cpp ALevelGeom.h
 

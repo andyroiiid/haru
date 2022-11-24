@@ -5,7 +5,7 @@
 #include <haru/physics/PhysicsScene.h>
 #include <haru/system/Window.h>
 
-#include "APhysBoxDynamic.h"
+#include "APhysxBox.h"
 #include "Scene.h"
 
 AFlyCamera::AFlyCamera(
@@ -40,18 +40,12 @@ void AFlyCamera::Update(const float deltaTime) {
         transform.Translate(normalize(inputDirection) * (flySpeed * deltaTime));
     }
 
-    const bool currF = m_window->IsKeyDown(GLFW_KEY_F);
-    if (currF && !m_prevF) {
-        m_flashLight = !m_flashLight;
-    }
-    m_prevF = currF;
-
     const glm::vec3 &position = transform.GetPosition();
     const glm::vec3 &forward = transform.GetForwardVector();
 
     const bool currLmb = m_window->IsMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT);
     if (currLmb && !m_prevLmb) {
-        m_scene->CreateActor<APhysBoxDynamic>(
+        m_scene->CreateActor<APhysxBox>(
                 m_physicsScene,
                 position,
                 glm::vec3{0.5f, 0.5f, 0.5f},
@@ -69,7 +63,7 @@ void AFlyCamera::Update(const float deltaTime) {
         );
         if (hit.hasBlock) {
             const auto actor = static_cast<Actor *>(hit.block.actor->userData);
-            if (actor->IsClass<APhysBoxDynamic>()) {
+            if (actor->IsClass<APhysxBox>()) {
                 actor->Destroy();
             }
         }
@@ -90,11 +84,9 @@ void AFlyCamera::Draw(Renderer &renderer) {
             )
     );
 
-    if (m_flashLight) {
-        renderer.DrawPointLight(
-                GetTransform().GetPosition(),
-                {1.0f, 1.0f, 1.0f},
-                64.0f
-        );
-    }
+    renderer.DrawPointLight(
+            GetTransform().GetPosition(),
+            {1.0f, 1.0f, 1.0f},
+            64.0f
+    );
 }

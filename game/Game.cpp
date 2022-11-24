@@ -8,10 +8,8 @@
 #include <haru/render/DeferredRenderer.h>
 
 #include "ADirectionalLight.h"
-#include "APointLight.h"
 #include "AFlyCamera.h"
-#include "APhysBoxStatic.h"
-#include "APhysBoxDynamic.h"
+#include "APhysxBox.h"
 #include "ALevelGeom.h"
 
 void Game::Init() {
@@ -23,49 +21,12 @@ void Game::Init() {
 
     Window->SetCursorEnabled(false);
 
-    m_scene.CreateActor<ADirectionalLight>(0.0f);
+    m_scene.CreateActor<ADirectionalLight>(1.0f);
     m_scene.CreateActor<AFlyCamera>(
             m_physicsScene.get(),
             Window,
             &m_scene,
             glm::vec3{0.0f, 1.8f, 15.0f}
-    );
-
-    m_scene.CreateActor<APointLight>(glm::vec3{12.0f, 1.0f, 12.0f}, glm::vec3{1.0f, 0.5f, 0.0f}, 128.0f);
-    m_scene.CreateActor<APointLight>(glm::vec3{12.0f, 1.0f, -12.0f}, glm::vec3{1.0f, 1.0f, 1.0f}, 128.0f);
-    m_scene.CreateActor<APointLight>(glm::vec3{-12.0f, 1.0f, 12.0f}, glm::vec3{1.0f, 1.0f, 1.0f}, 128.0f);
-    m_scene.CreateActor<APointLight>(glm::vec3{-12.0f, 1.0f, -12.0f}, glm::vec3{0.4f, 0.8f, 1.0f}, 128.0f);
-    m_scene.CreateActor<APointLight>(glm::vec3{0.0f, 9.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f}, 128.0f);
-
-    m_scene.CreateActor<APhysBoxStatic>(
-            m_physicsScene.get(),
-            glm::vec3{0.0f, -10.5f, 0.0f},
-            glm::vec3{20.0f, 0.5f, 20.0f}
-    );
-    m_scene.CreateActor<APhysBoxStatic>(
-            m_physicsScene.get(),
-            glm::vec3{0.0f, 10.5f, 0.0f},
-            glm::vec3{20.0f, 0.5f, 20.0f}
-    );
-    m_scene.CreateActor<APhysBoxStatic>(
-            m_physicsScene.get(),
-            glm::vec3{20.5f, 0.0f, 0.0f},
-            glm::vec3{0.5f, 11.0f, 20.0f}
-    );
-    m_scene.CreateActor<APhysBoxStatic>(
-            m_physicsScene.get(),
-            glm::vec3{-20.5f, 0.0f, 0.0f},
-            glm::vec3{0.5f, 11.0f, 20.0f}
-    );
-    m_scene.CreateActor<APhysBoxStatic>(
-            m_physicsScene.get(),
-            glm::vec3{0.0f, 0.0f, 20.5f},
-            glm::vec3{21.0f, 11.0f, 0.5f}
-    );
-    m_scene.CreateActor<APhysBoxStatic>(
-            m_physicsScene.get(),
-            glm::vec3{0.0f, 0.0f, -20.5f},
-            glm::vec3{21.0f, 11.0f, 0.5f}
     );
 
     m_scene.CreateActor<ALevelGeom>(m_physics.get(), m_physicsScene.get(), "data/hello.haru");
@@ -95,7 +56,7 @@ void Game::Update(const float deltaTime) {
     }
 
     if (Window->IsKeyDown(GLFW_KEY_DELETE)) {
-        if (const auto box = m_scene.FindFirstActorOfClass<APhysBoxDynamic>()) {
+        if (const auto box = m_scene.FindFirstActorOfClass<APhysxBox>()) {
             box->Destroy();
         }
     }

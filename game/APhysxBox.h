@@ -7,21 +7,21 @@
 class PhysicsScene;
 
 namespace physx {
-class PxRigidDynamic;
+    class PxRigidDynamic;
 }
 
-class APhysBoxDynamic final : public Actor {
+class APhysxBox final : public Actor {
 public:
-    DEFINE_ACTOR_CLASS(APhysBoxDynamic)
+    DEFINE_ACTOR_CLASS(APhysxBox)
 
-    APhysBoxDynamic(
+    APhysxBox(
             PhysicsScene *physicsScene,
             const glm::vec3 &position,
             const glm::vec3 &halfSize,
             const glm::vec3 &velocity = {0.0f, 0.0f, 0.0f}
     );
 
-    ~APhysBoxDynamic() override;
+    ~APhysxBox() override;
 
     void Update(float deltaTime) override;
 

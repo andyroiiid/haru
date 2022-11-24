@@ -43,9 +43,6 @@ private:
 
     CameraConfig m_cameraConfig;
 
-    bool m_prevF = false;
-    bool m_flashLight = false;
-
     bool m_prevLmb = false;
     bool m_prevRmb = false;
 };
