@@ -4,12 +4,6 @@
 
 #include "Scene.h"
 
-void Scene::Cleanup() {
-    m_actors.clear();
-    m_pendingCreationActors.clear();
-    m_pendingDestroyActors.clear();
-}
-
 void Scene::Update(const float deltaTime) {
     // put pending destroy actors from last frame into a temp queue
     std::vector<std::unique_ptr<Actor>> pendingCreationActorsFromLastFrame = std::move(m_pendingCreationActors);

@@ -19,28 +19,28 @@ void Game::Init() {
     m_renderer = std::make_unique<DeferredRenderer>();
     m_physics = std::make_unique<PhysicsSystem>();
     m_physicsScene = std::make_unique<PhysicsScene>(m_physics.get());
+    m_scene = std::make_unique<Scene>();
 
     Window->SetCursorEnabled(false);
 
-    m_scene.CreateActor<ADirectionalLight>(1.0f);
+    m_scene->CreateActor<ADirectionalLight>(1.0f);
 
-    auto *camera = m_scene.CreateActor<ACamera>(Window);
-    auto *player = m_scene.CreateActor<APlayerNoClip>(
+    auto *camera = m_scene->CreateActor<ACamera>(Window);
+    auto *player = m_scene->CreateActor<APlayerNoClip>(
             m_physicsScene.get(),
             Window,
-            &m_scene,
+            m_scene.get(),
             glm::vec3{0.0f, 1.8f, 15.0f}
     );
     camera->SetTargetActor(player);
 
-    m_scene.CreateActor<ALevelGeom>(m_physics.get(), m_physicsScene.get(), "data/hello.haru");
+    m_scene->CreateActor<ALevelGeom>(m_physics.get(), m_physicsScene.get(), "data/hello.haru");
 }
 
 void Game::Shutdown() {
-    m_scene.Cleanup();
-
     Window->SetCursorEnabled(true);
 
+    m_scene.reset();
     m_physicsScene.reset();
     m_physics.reset();
     m_renderer.reset();
@@ -60,7 +60,7 @@ void Game::Update(const float deltaTime) {
     }
 
     if (Window->IsKeyDown(GLFW_KEY_DELETE)) {
-        if (const auto box = m_scene.FindFirstActorOfClass<APhysxBox>()) {
+        if (const auto box = m_scene->FindFirstActorOfClass<APhysxBox>()) {
             box->Destroy();
         }
     }
@@ -71,11 +71,11 @@ void Game::Update(const float deltaTime) {
         m_timeScale = 1.0f;
     }
 
-    m_scene.Update(deltaTime * m_timeScale);
+    m_scene->Update(deltaTime * m_timeScale);
 }
 
 void Game::Draw() {
     m_renderer->BeginDraw();
-    m_scene.Draw(*m_renderer);
+    m_scene->Draw(*m_renderer);
     m_renderer->EndDraw();
 }

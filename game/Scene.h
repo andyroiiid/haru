@@ -17,8 +17,6 @@ public:
 
     ~Scene() = default;
 
-    void Cleanup();
-
     void Update(float deltaTime);
 
     void Draw(Renderer &renderer);
