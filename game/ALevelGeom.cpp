@@ -14,34 +14,46 @@ ALevelGeom::ALevelGeom(const std::string &levelName) {
 
     std::vector<VertexBase> vertices;
 
-    int facesLoaded = 0;
-
     std::string map = ReadFile(levelName);
     std::stringstream mapStream(map);
-    while (!mapStream.eof()) {
-        glm::vec3 normal;
-        mapStream >> normal.x >> normal.y >> normal.z;
 
-        int count;
-        mapStream >> count;
+    int brushCount;
+    mapStream >> brushCount;
+    for (int i = 0; i < brushCount; i++) {
+        int brushVertexCount;
+        mapStream >> brushVertexCount;
 
-        std::vector<glm::vec3> faceVertices;
-        for (int i = 0; i < count; i++) {
+        std::vector<glm::vec3> brushVertices;
+        brushVertices.reserve(brushVertexCount);
+        for (int j = 0; j < brushVertexCount; j++) {
             glm::vec3 vertex;
             mapStream >> vertex.x >> vertex.y >> vertex.z;
-            faceVertices.push_back(vertex / 32.0f); // scale 1/32
+            brushVertices.push_back(vertex);
         }
 
-        for (int i = 1; i < count - 1; i++) {
-            vertices.push_back({faceVertices[0], normal, {0.0f, 0.0f}});
-            vertices.push_back({faceVertices[i], normal, {0.0f, 0.0f}});
-            vertices.push_back({faceVertices[i + 1], normal, {0.0f, 0.0f}});
-        }
+        int brushFaceCount;
+        mapStream >> brushFaceCount;
+        for (int j = 0; j < brushFaceCount; j++) {
+            glm::vec3 normal;
+            mapStream >> normal.x >> normal.y >> normal.z;
 
-        facesLoaded++;
+            int brushFaceVertexCount;
+            mapStream >> brushFaceVertexCount;
+
+            std::vector<glm::vec3> brushFaceVertices(brushFaceVertexCount);
+            for (int k = 0; k < brushFaceVertexCount; k++) {
+                glm::vec3 &vertex = brushFaceVertices[k];
+                mapStream >> vertex.x >> vertex.y >> vertex.z;
+            }
+
+            // triangulate
+            for (int k = 1; k < brushFaceVertexCount - 1; k++) {
+                vertices.push_back({brushFaceVertices[0], normal, {0.0f, 0.0f}});
+                vertices.push_back({brushFaceVertices[k], normal, {0.0f, 0.0f}});
+                vertices.push_back({brushFaceVertices[k + 1], normal, {0.0f, 0.0f}});
+            }
+        }
     }
-
-    DebugLog("%d faces loaded", facesLoaded);
 
     m_mesh = MeshBase(vertices, GL_TRIANGLES);
 }

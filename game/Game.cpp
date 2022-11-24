@@ -31,55 +31,40 @@ void Game::Init() {
             glm::vec3{0.0f, 1.8f, 15.0f}
     );
 
-    m_scene.CreateActor<APointLight>(glm::vec3{12.0f, 1.0f, -12.0f}, glm::vec3{0.4f, 0.8f, 1.0f});
-    m_scene.CreateActor<APointLight>(glm::vec3{12.0f, 1.0f, 0.0f}, glm::vec3{1.0f, 0.5f, 0.0f});
-    m_scene.CreateActor<APointLight>(glm::vec3{12.0f, 1.0f, 12.0f});
-    m_scene.CreateActor<APointLight>(glm::vec3{0.0f, 1.0f, -12.0f});
-    m_scene.CreateActor<APointLight>(glm::vec3{0.0f, 1.0f, 12.0f});
-    m_scene.CreateActor<APointLight>(glm::vec3{-12.0f, 1.0f, -12.0f});
-    m_scene.CreateActor<APointLight>(glm::vec3{-12.0f, 1.0f, 0.0f});
-    m_scene.CreateActor<APointLight>(glm::vec3{-12.0f, 1.0f, 12.0f});
-
-    for (int y = 1; y < 9; y++) {
-        for (int z = -4; z <= 4; z++) {
-            for (int x = -4; x <= 4; x++) {
-                m_scene.CreateActor<APhysBoxDynamic>(
-                        m_physicsScene.get(),
-                        glm::vec3{x * 2, y * 2, -z * 2},
-                        glm::vec3{0.5f, 0.5f, 0.5f}
-                );
-            }
-        }
-    }
+    m_scene.CreateActor<APointLight>(glm::vec3{12.0f, 1.0f, 12.0f}, glm::vec3{1.0f, 0.5f, 0.0f}, 128.0f);
+    m_scene.CreateActor<APointLight>(glm::vec3{12.0f, 1.0f, -12.0f}, glm::vec3{1.0f, 1.0f, 1.0f}, 128.0f);
+    m_scene.CreateActor<APointLight>(glm::vec3{-12.0f, 1.0f, 12.0f}, glm::vec3{1.0f, 1.0f, 1.0f}, 128.0f);
+    m_scene.CreateActor<APointLight>(glm::vec3{-12.0f, 1.0f, -12.0f}, glm::vec3{0.4f, 0.8f, 1.0f}, 128.0f);
+    m_scene.CreateActor<APointLight>(glm::vec3{0.0f, 9.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f}, 128.0f);
 
     m_scene.CreateActor<APhysBoxStatic>(
             m_physicsScene.get(),
-            glm::vec3{0.0f, -0.5f, 0.0f},
+            glm::vec3{0.0f, -10.5f, 0.0f},
             glm::vec3{20.0f, 0.5f, 20.0f}
     );
     m_scene.CreateActor<APhysBoxStatic>(
             m_physicsScene.get(),
-            glm::vec3{0.0f, 20.5f, 0.0f},
+            glm::vec3{0.0f, 10.5f, 0.0f},
             glm::vec3{20.0f, 0.5f, 20.0f}
     );
     m_scene.CreateActor<APhysBoxStatic>(
             m_physicsScene.get(),
-            glm::vec3{20.5f, 10.0f, 0.0f},
+            glm::vec3{20.5f, 0.0f, 0.0f},
             glm::vec3{0.5f, 11.0f, 20.0f}
     );
     m_scene.CreateActor<APhysBoxStatic>(
             m_physicsScene.get(),
-            glm::vec3{-20.5f, 10.0f, 0.0f},
+            glm::vec3{-20.5f, 0.0f, 0.0f},
             glm::vec3{0.5f, 11.0f, 20.0f}
     );
     m_scene.CreateActor<APhysBoxStatic>(
             m_physicsScene.get(),
-            glm::vec3{0.0f, 10.0f, 20.5f},
+            glm::vec3{0.0f, 0.0f, 20.5f},
             glm::vec3{21.0f, 11.0f, 0.5f}
     );
     m_scene.CreateActor<APhysBoxStatic>(
             m_physicsScene.get(),
-            glm::vec3{0.0f, 10.0f, -20.5f},
+            glm::vec3{0.0f, 0.0f, -20.5f},
             glm::vec3{21.0f, 11.0f, 0.5f}
     );
 
