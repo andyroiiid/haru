@@ -7,6 +7,8 @@
 #include <haru/core/Debug.h>
 #include <haru/render/DeferredRenderer.h>
 
+#include "GameStatics.h"
+
 #include "actors/ADirectionalLight.h"
 #include "actors/ACamera.h"
 #include "actors/APlayerNoClip.h"
@@ -16,34 +18,23 @@
 void Game::Init() {
     DebugLog("Game init");
 
-    m_renderer = std::make_unique<DeferredRenderer>();
-    m_physics = std::make_unique<PhysicsSystem>();
-    m_physicsScene = std::make_unique<PhysicsScene>(m_physics.get());
-    m_scene = std::make_unique<Scene>();
+    CreateEssentials();
 
     Window->SetCursorEnabled(false);
 
     m_scene->CreateActor<ADirectionalLight>(1.0f);
 
-    auto *camera = m_scene->CreateActor<ACamera>(Window);
-    auto *player = m_scene->CreateActor<APlayerNoClip>(
-            m_physicsScene.get(),
-            Window,
-            m_scene.get(),
-            glm::vec3{0.0f, 1.8f, 15.0f}
-    );
+    auto *camera = m_scene->CreateActor<ACamera>();
+    auto *player = m_scene->CreateActor<APlayerNoClip>(glm::vec3{0.0f, 1.8f, 15.0f});
     camera->SetTargetActor(player);
 
-    m_scene->CreateActor<ALevelGeom>(m_physics.get(), m_physicsScene.get(), "data/hello.haru");
+    m_scene->CreateActor<ALevelGeom>("data/hello.haru");
 }
 
 void Game::Shutdown() {
     Window->SetCursorEnabled(true);
 
-    m_scene.reset();
-    m_physicsScene.reset();
-    m_physics.reset();
-    m_renderer.reset();
+    DestroyEssentials();
 
     DebugLog("Game shutdown");
 }
@@ -78,4 +69,32 @@ void Game::Draw() {
     m_renderer->BeginDraw();
     m_scene->Draw(*m_renderer);
     m_renderer->EndDraw();
+}
+
+void Game::CreateEssentials() {
+    m_renderer = std::make_unique<DeferredRenderer>();
+    m_physics = std::make_unique<PhysicsSystem>();
+    m_physicsScene = std::make_unique<PhysicsScene>(m_physics.get());
+    m_scene = std::make_unique<Scene>();
+
+    GameStatics &gameStatics = GameStatics::Get();
+    gameStatics.m_window = Window;
+    gameStatics.m_renderer = m_renderer.get();
+    gameStatics.m_physics = m_physics.get();
+    gameStatics.m_physicsScene = m_physicsScene.get();
+    gameStatics.m_scene = m_scene.get();
+}
+
+void Game::DestroyEssentials() {
+    GameStatics &gameStatics = GameStatics::Get();
+    gameStatics.m_window = nullptr;
+    gameStatics.m_renderer = nullptr;
+    gameStatics.m_physics = nullptr;
+    gameStatics.m_physicsScene = nullptr;
+    gameStatics.m_scene = nullptr;
+
+    m_scene.reset();
+    m_physicsScene.reset();
+    m_physics.reset();
+    m_renderer.reset();
 }

@@ -40,7 +40,7 @@ public:
 
     ~DeferredRenderer() override;
 
-    void Resize(const glm::ivec2 &size) override;
+    void OnResize(const glm::ivec2 &size) override;
 
     void SetCameraMatrices(const glm::mat4 &view, const glm::mat4 &projection) override;
 
@@ -62,8 +62,6 @@ private:
     void DrawToGBuffers();
 
     void DrawForwardPass();
-
-    glm::ivec2 m_screenSize{};
 
     Framebuffer m_gBuffers;
 

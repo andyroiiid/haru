@@ -8,6 +8,7 @@ add_executable(game
         actors/ALevelGeom.cpp actors/ALevelGeom.h
 
         Scene.cpp Scene.h
+        GameStatics.h
         Game.cpp Game.h
         main.cpp)
 

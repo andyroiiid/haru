@@ -4,10 +4,8 @@
 
 #include "ACamera.h"
 
-#include <haru/system/Window.h>
-
-ACamera::ACamera(Window *window, float fov, float near, float far)
-        : m_window(window), m_fov(fov), m_near(near), m_far(far) {
+ACamera::ACamera(float fov, float near, float far)
+        : m_fov(fov), m_near(near), m_far(far) {
 }
 
 void ACamera::Update(float deltaTime) {
@@ -21,13 +19,13 @@ void ACamera::Update(float deltaTime) {
 }
 
 void ACamera::Draw(Renderer &renderer) {
-    const glm::ivec2 screenSize = m_window->GetSize();
+    const glm::vec2 screenSize = renderer.GetSize();
 
     renderer.SetCameraMatrices(
             GetTransform().GetInverseMatrix(),
             glm::perspective(
                     glm::radians(m_fov),
-                    static_cast<float>(screenSize.x) / static_cast<float>(screenSize.y),
+                    screenSize.x / screenSize.y,
                     m_near,
                     m_far
             )

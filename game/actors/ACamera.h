@@ -12,7 +12,7 @@ class ACamera final : public Actor {
 public:
     DEFINE_ACTOR_CLASS(ACamera)
 
-    explicit ACamera(Window *window, float fov = 90.0f, float near = 0.01f, float far = 1000.0f);
+    explicit ACamera(float fov = 90.0f, float near = 0.01f, float far = 1000.0f);
 
     void Update(float deltaTime) override;
 
@@ -23,7 +23,6 @@ public:
     }
 
 private:
-    Window *m_window;
     float m_fov;
     float m_near;
     float m_far;

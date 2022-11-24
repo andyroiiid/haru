@@ -24,6 +24,10 @@ public:
     void Draw() override;
 
 private:
+    void CreateEssentials();
+
+    void DestroyEssentials();
+
     std::unique_ptr<Renderer> m_renderer;
     std::unique_ptr<PhysicsSystem> m_physics;
     std::unique_ptr<PhysicsScene> m_physicsScene;

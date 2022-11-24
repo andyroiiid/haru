@@ -24,9 +24,7 @@ DeferredRenderer::~DeferredRenderer() {
     glBindBufferBase(GL_UNIFORM_BUFFER, 1, 0);
 }
 
-void DeferredRenderer::Resize(const glm::ivec2 &size) {
-    m_screenSize = size;
-
+void DeferredRenderer::OnResize(const glm::ivec2 &size) {
     m_gBuffers = Framebuffer(
             size,
             {
@@ -108,7 +106,7 @@ void DeferredRenderer::DrawToGBuffers() {
 
 void DeferredRenderer::DrawForwardPass() {
     Framebuffer::BindDefault();
-    glViewport(0, 0, m_screenSize.x, m_screenSize.y);
+    glViewport(0, 0, GetSize().x, GetSize().y);
 
     constexpr GLfloat clearColor[4]{0.0f, 0.0f, 0.0f, 1.0f};
     glClearBufferfv(GL_COLOR, 0, clearColor);
@@ -123,7 +121,7 @@ void DeferredRenderer::DrawForwardPass() {
     glUseProgram(0);
 
     // blit depth & stencil from g-buffers to screen
-    m_gBuffers.BlitDepthStencilToScreen(m_screenSize);
+    m_gBuffers.BlitDepthStencilToScreen(GetSize());
 
     glEnable(GL_DEPTH_TEST);
 

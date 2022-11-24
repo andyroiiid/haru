@@ -7,17 +7,15 @@
 
 #include "APhysxBox.h"
 #include "../Scene.h"
+#include "../GameStatics.h"
 
 APlayerNoClip::APlayerNoClip(
-        PhysicsScene *physicsScene,
-        Window *window,
-        Scene *scene,
         const glm::vec3 &position, float yaw,
         float mouseSpeed,
         float flySpeed
-) : m_physicsScene(physicsScene),
-    m_window(window),
-    m_scene(scene),
+) : m_physicsScene(GameStatics::GetPhysicsScene()),
+    m_window(GameStatics::GetWindow()),
+    m_scene(GameStatics::GetScene()),
     m_mouseSpeed(mouseSpeed),
     m_flySpeed(flySpeed) {
     GetTransform().SetPosition(position).RotateY(yaw);

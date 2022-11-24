@@ -11,9 +11,13 @@
 #include <geometry/PxConvexMeshGeometry.h>
 
 #include <haru/core/Debug.h>
+#include <haru/physics/PhysicsScene.h>
+#include <haru/physics/PhysicsSystem.h>
 #include <haru/system/Files.h>
 
-ALevelGeom::ALevelGeom(PhysicsSystem *physicsSystem, PhysicsScene *physicsScene, const std::string &levelName) {
+#include "../GameStatics.h"
+
+ALevelGeom::ALevelGeom(const std::string &levelName) {
     DebugLog("loading level %s", levelName.c_str());
 
     std::vector<VertexBase> vertices;
@@ -22,6 +26,8 @@ ALevelGeom::ALevelGeom(PhysicsSystem *physicsSystem, PhysicsScene *physicsScene,
     std::stringstream mapStream(map);
 
     const physx::PxTransform rigidbodyTransform(physx::PxVec3{0.0f, 0.0f, 0.0f});
+    PhysicsSystem *physicsSystem = GameStatics::GetPhysicsSystem();
+    PhysicsScene *physicsScene = GameStatics::GetPhysicsScene();
 
     int brushCount;
     mapStream >> brushCount;

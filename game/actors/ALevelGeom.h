@@ -4,8 +4,11 @@
 
 #pragma once
 
-#include <haru/physics/PhysicsSystem.h>
-#include <haru/physics/PhysicsScene.h>
+namespace physx {
+    class PxConvexMesh;
+
+    class PxRigidStatic;
+}
 
 #include "Actor.h"
 
@@ -13,7 +16,7 @@ class ALevelGeom : public Actor {
 public:
     DEFINE_ACTOR_CLASS(ALevelGeom)
 
-    explicit ALevelGeom(PhysicsSystem *physicsSystem, PhysicsScene *physicsScene, const std::string &levelName);
+    explicit ALevelGeom(const std::string &levelName);
 
     ~ALevelGeom() override;
 

@@ -20,14 +20,24 @@ static inline float PointLightAttenuationQuadraticFromRange(float range) {
     return glm::exp(-2.01920616f * glm::log(range) + 4.41212873f);
 }
 
-struct Renderer {
+class Renderer {
+public:
     MOVE_ONLY(Renderer)
 
     Renderer() = default;
 
     virtual ~Renderer() = default;
 
-    virtual void Resize(const glm::ivec2 &size) = 0;
+    void Resize(const glm::ivec2 &size) {
+        m_screenSize = size;
+        OnResize(size);
+    }
+
+    virtual void OnResize(const glm::ivec2 &size) = 0;
+
+    [[nodiscard]] const glm::ivec2 &GetSize() const {
+        return m_screenSize;
+    }
 
     virtual void SetCameraMatrices(const glm::mat4 &view, const glm::mat4 &projection) = 0;
 
@@ -48,4 +58,7 @@ struct Renderer {
     virtual void DrawLines(const MeshPositionOnly &lines, const glm::vec4 &color) = 0;
 
     virtual void DrawMesh(const MeshBase &mesh, const glm::mat4 &model) = 0;
+
+private:
+    glm::ivec2 m_screenSize{};
 };

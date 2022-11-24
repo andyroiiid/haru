@@ -12,10 +12,7 @@ class APlayerNoClip final : public Actor {
 public:
     DEFINE_ACTOR_CLASS(APlayerNoClip)
 
-    APlayerNoClip(
-            PhysicsScene *physicsScene,
-            Window *window,
-            Scene *scene,
+    explicit APlayerNoClip(
             const glm::vec3 &position = {0, 0, 5},
             float yaw = 0.0f,
             float mouseSpeed = 0.001f,
