@@ -13,7 +13,7 @@
 #include "actors/ACamera.h"
 #include "actors/APlayerNoClip.h"
 #include "actors/APhysxBox.h"
-#include "actors/ALevelGeom.h"
+#include "actors/ALevelGeometry.h"
 
 void Game::Init() {
     DebugLog("Game init");
@@ -28,7 +28,7 @@ void Game::Init() {
     auto *player = m_scene->CreateActor<APlayerNoClip>(glm::vec3{0.0f, 1.8f, 15.0f});
     camera->SetTargetActor(player);
 
-    m_scene->CreateActor<ALevelGeom>("data/hello.haru");
+    m_scene->CreateActor<ALevelGeometry>("data/hello.haru");
 }
 
 void Game::Shutdown() {

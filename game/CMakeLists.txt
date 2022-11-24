@@ -5,7 +5,7 @@ add_executable(game
         actors/APlayerNoClip.cpp actors/APlayerNoClip.h
         actors/APhysxBox.cpp actors/APhysxBox.h
         actors/APointLight.cpp actors/APointLight.h
-        actors/ALevelGeom.cpp actors/ALevelGeom.h
+        actors/ALevelGeometry.cpp actors/ALevelGeometry.h
 
         Scene.cpp Scene.h
         GameStatics.h

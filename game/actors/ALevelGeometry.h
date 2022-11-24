@@ -12,13 +12,13 @@ namespace physx {
 
 #include "Actor.h"
 
-class ALevelGeom : public Actor {
+class ALevelGeometry : public Actor {
 public:
-    DEFINE_ACTOR_CLASS(ALevelGeom)
+    DEFINE_ACTOR_CLASS(ALevelGeometry)
 
-    explicit ALevelGeom(const std::string &levelName);
+    explicit ALevelGeometry(const std::string &levelName);
 
-    ~ALevelGeom() override;
+    ~ALevelGeometry() override;
 
     void Update(float deltaTime) override;
 

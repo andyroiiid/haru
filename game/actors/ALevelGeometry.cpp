@@ -2,7 +2,7 @@
 // Created by andyroiiid on 11/21/2022.
 //
 
-#include "ALevelGeom.h"
+#include "ALevelGeometry.h"
 
 #include <sstream>
 #include <PxRigidStatic.h>
@@ -17,7 +17,7 @@
 
 #include "../GameStatics.h"
 
-ALevelGeom::ALevelGeom(const std::string &levelName) {
+ALevelGeometry::ALevelGeometry(const std::string &levelName) {
     DebugLog("loading level %s", levelName.c_str());
 
     std::vector<VertexBase> vertices;
@@ -77,7 +77,7 @@ ALevelGeom::ALevelGeom(const std::string &levelName) {
     m_mesh = MeshBase(vertices, GL_TRIANGLES);
 }
 
-ALevelGeom::~ALevelGeom() {
+ALevelGeometry::~ALevelGeometry() {
     for (physx::PxRigidStatic *rigidbody: m_brushRigidbodies) {
         PX_RELEASE(rigidbody)
     }
@@ -89,9 +89,9 @@ ALevelGeom::~ALevelGeom() {
     m_mesh = {};
 }
 
-void ALevelGeom::Update(float deltaTime) {
+void ALevelGeometry::Update(float deltaTime) {
 }
 
-void ALevelGeom::Draw(Renderer &renderer) {
+void ALevelGeometry::Draw(Renderer &renderer) {
     renderer.DrawMesh(m_mesh, GetTransform().GetMatrix());
 }
