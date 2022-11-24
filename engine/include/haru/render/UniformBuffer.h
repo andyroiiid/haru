@@ -18,7 +18,7 @@ public:
 
         glCreateBuffers(1, &m_buffer);
         glNamedBufferStorage(m_buffer, sizeof(T), nullptr, MAPPING_ACCESS);
-        void *data = glMapNamedBufferRange(m_buffer, 0, sizeof(T), MAPPING_ACCESS);
+        void *data = glMapNamedBufferRange(m_buffer, 0, sizeof(T), MAPPING_ACCESS | GL_MAP_FLUSH_EXPLICIT_BIT);
         m_data = static_cast<T *>(data);
     }
 
