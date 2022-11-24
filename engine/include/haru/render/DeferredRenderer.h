@@ -71,8 +71,10 @@ private:
     DeferredShaderBase m_baseShader;
     DeferredShaderGPass m_gPassShader;
     DeferredShaderLines m_linesShader;
+    DeferredShaderSkybox m_skyboxShader;
 
     MeshPositionOnly m_fullscreenQuad;
+    MeshPositionOnly m_skyboxCube;
 
     std::vector<PointLightData> m_pendingPointLightData;
 

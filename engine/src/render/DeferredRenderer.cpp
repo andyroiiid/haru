@@ -17,6 +17,27 @@ DeferredRenderer::DeferredRenderer() {
             },
             GL_TRIANGLE_STRIP
     );
+
+    // http://www.cs.umd.edu/gvil/papers/av_ts.pdf
+    m_skyboxCube = MeshPositionOnly(
+            {
+                    {{-1.0f, 1.0f,  1.0f}},
+                    {{1.0f,  1.0f,  1.0f}},
+                    {{-1.0f, -1.0f, 1.0f}},
+                    {{1.0f,  -1.0f, 1.0f}},
+                    {{1.0f,  -1.0f, -1.0f}},
+                    {{1.0f,  1.0f,  1.0f}},
+                    {{1.0f,  1.0f,  -1.0f}},
+                    {{-1.0f, 1.0f,  1.0f}},
+                    {{-1.0f, 1.0f,  -1.0f}},
+                    {{-1.0f, -1.0f, 1.0f}},
+                    {{-1.0f, -1.0f, -1.0f}},
+                    {{1.0f,  -1.0f, -1.0f}},
+                    {{-1.0f, 1.0f,  -1.0f}},
+                    {{1.0f,  1.0f,  -1.0}},
+            },
+            GL_TRIANGLE_STRIP
+    );
 }
 
 DeferredRenderer::~DeferredRenderer() {
@@ -131,6 +152,11 @@ void DeferredRenderer::DrawForwardPass() {
         m_linesShader.SetColor(linesDrawCall.Color);
         linesDrawCall.Mesh.BindAndDraw();
     }
+
+    glDepthFunc(GL_LEQUAL);
+    m_skyboxShader.Use();
+    m_skyboxCube.BindAndDraw();
+    glDepthFunc(GL_LESS);
 
     glDisable(GL_DEPTH_TEST);
 }

@@ -36,3 +36,10 @@ public:
 private:
     GLint m_colorLocation = -1;
 };
+
+class DeferredShaderSkybox : public Shader {
+public:
+    MOVE_ONLY(DeferredShaderSkybox)
+
+    DeferredShaderSkybox();
+};
