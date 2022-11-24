@@ -6,7 +6,7 @@
 #include <haru/system/Window.h>
 
 #include "APhysxBox.h"
-#include "Scene.h"
+#include "../Scene.h"
 
 AFlyCamera::AFlyCamera(
         PhysicsScene *physicsScene,

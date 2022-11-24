@@ -7,10 +7,10 @@
 #include <haru/core/Debug.h>
 #include <haru/render/DeferredRenderer.h>
 
-#include "ADirectionalLight.h"
-#include "AFlyCamera.h"
-#include "APhysxBox.h"
-#include "ALevelGeom.h"
+#include "actors/ADirectionalLight.h"
+#include "actors/AFlyCamera.h"
+#include "actors/APhysxBox.h"
+#include "actors/ALevelGeom.h"
 
 void Game::Init() {
     DebugLog("Game init");

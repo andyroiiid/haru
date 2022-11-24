@@ -1,11 +1,10 @@
 add_executable(game
-        Actor.h
-
-        ADirectionalLight.cpp ADirectionalLight.h
-        AFlyCamera.cpp AFlyCamera.h
-        APhysxBox.cpp APhysxBox.h
-        APointLight.cpp APointLight.h
-        ALevelGeom.cpp ALevelGeom.h
+        actors/Actor.h
+        actors/ADirectionalLight.cpp actors/ADirectionalLight.h
+        actors/AFlyCamera.cpp actors/AFlyCamera.h
+        actors/APhysxBox.cpp actors/APhysxBox.h
+        actors/APointLight.cpp actors/APointLight.h
+        actors/ALevelGeom.cpp actors/ALevelGeom.h
 
         Scene.cpp Scene.h
         Game.cpp Game.h
