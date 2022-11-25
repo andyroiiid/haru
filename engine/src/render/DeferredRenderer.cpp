@@ -84,6 +84,9 @@ void DeferredRenderer::BeginDraw() {
     m_pendingPointLightData.clear();
     m_pendingBaseDrawCalls.clear();
     m_pendingLinesDrawCalls.clear();
+
+    m_shaderGlobals.Map();
+    m_lightGlobals.Map();
 }
 
 void DeferredRenderer::EndDraw() {
@@ -106,7 +109,7 @@ void DeferredRenderer::DrawMesh(const MeshBase &mesh, const glm::mat4 &model) {
 }
 
 void DeferredRenderer::FlushUniformBuffers() {
-    m_shaderGlobals.Flush();
+    m_shaderGlobals.Unmap();
 
     constexpr float shadowNear = 0.01f;
     constexpr float shadowFar = 32.0f;
@@ -122,7 +125,7 @@ void DeferredRenderer::FlushUniformBuffers() {
         m_lightGlobals->PointLightData[i] = i < numPointLights ? m_pendingPointLightData[i] : PointLightData{};
     }
 
-    m_lightGlobals.Flush();
+    m_lightGlobals.Unmap();
 }
 
 void DeferredRenderer::DrawToShadowMap() {

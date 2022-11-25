@@ -14,12 +14,8 @@ public:
     MOVE_ONLY(UniformBuffer)
 
     UniformBuffer() {
-        static constexpr GLbitfield MAPPING_ACCESS = GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT;
-
         glCreateBuffers(1, &m_buffer);
-        glNamedBufferStorage(m_buffer, sizeof(T), nullptr, MAPPING_ACCESS);
-        void *data = glMapNamedBufferRange(m_buffer, 0, sizeof(T), MAPPING_ACCESS | GL_MAP_FLUSH_EXPLICIT_BIT);
-        m_data = static_cast<T *>(data);
+        glNamedBufferStorage(m_buffer, sizeof(T), nullptr, GL_MAP_WRITE_BIT);
     }
 
     ~UniformBuffer() {
@@ -31,8 +27,12 @@ public:
         glBindBufferBase(GL_UNIFORM_BUFFER, index, m_buffer);
     }
 
-    void Flush() {
-        glFlushMappedNamedBufferRange(m_buffer, 0, sizeof(T));
+    void Map() {
+        m_data = static_cast<T *>(glMapNamedBuffer(m_buffer, GL_WRITE_ONLY));
+    }
+
+    void Unmap() {
+        glUnmapNamedBuffer(m_buffer);
     }
 
     T *operator->() {
