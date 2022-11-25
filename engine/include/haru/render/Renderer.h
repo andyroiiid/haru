@@ -43,6 +43,8 @@ public:
 
     virtual void SetDirectionalLight(const glm::vec3 &lightDirection, float intensity) = 0;
 
+    virtual void SetWorldBounds(const glm::vec3 &min, const glm::vec3 &max) = 0;
+
     virtual void BeginDraw() = 0;
 
     virtual void EndDraw() = 0;

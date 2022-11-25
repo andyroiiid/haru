@@ -75,6 +75,11 @@ void DeferredRenderer::SetDirectionalLight(const glm::vec3 &lightDirection, cons
     m_shadowMatrixCalculator.SetLightDirection(lightDirection);
 }
 
+void DeferredRenderer::SetWorldBounds(const glm::vec3 &min, const glm::vec3 &max) {
+    static constexpr float SHADOW_SAFE_DISTANCE = 4.0f;
+    m_shadowMatrixCalculator.SetWorldBounds(min - SHADOW_SAFE_DISTANCE, max + SHADOW_SAFE_DISTANCE);
+}
+
 void DeferredRenderer::BeginDraw() {
     m_pendingPointLightData.clear();
     m_pendingBaseDrawCalls.clear();

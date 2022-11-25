@@ -40,6 +40,14 @@ ALevelGeometry::ALevelGeometry(const std::string &levelName) {
         for (int j = 0; j < brushVertexCount; j++) {
             physx::PxVec3 vertex;
             mapStream >> vertex.x >> vertex.y >> vertex.z;
+
+            m_geomMin.x = glm::min(vertex.x, m_geomMin.x);
+            m_geomMin.y = glm::min(vertex.y, m_geomMin.y);
+            m_geomMin.z = glm::min(vertex.z, m_geomMin.z);
+            m_geomMax.x = glm::max(vertex.x, m_geomMax.x);
+            m_geomMax.y = glm::max(vertex.y, m_geomMax.y);
+            m_geomMax.z = glm::max(vertex.z, m_geomMax.z);
+
             brushVertices.push_back(vertex);
         }
 
@@ -90,5 +98,6 @@ ALevelGeometry::~ALevelGeometry() {
 }
 
 void ALevelGeometry::Draw(Renderer &renderer) {
+    renderer.SetWorldBounds(m_geomMin, m_geomMax);
     renderer.DrawMesh(m_mesh, GetTransform().GetMatrix());
 }

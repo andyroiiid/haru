@@ -191,8 +191,7 @@ float ReadShadowMap(vec4 viewSpacePos, vec4 worldPos, vec3 worldNormal)
     vec4 lightSpacePos = uShadowMatrices[layer] * worldPos;
     vec3 shadowCoord = lightSpacePos.xyz / lightSpacePos.w;
     shadowCoord = shadowCoord * 0.5 + 0.5;
-    float bias = max(0.1 * (1.0 - dot(worldNormal, uDirectionalLight)), 0.01);
-    bias *= 1 / (uCascadeShadowMapSplits[layer] * 0.5);
+    float bias = max(0.01 * (1.0 - dot(worldNormal, uDirectionalLight)), 0.005);
     return shadowCoord.z > 1.0 ? 0.0 : BlurShadow(shadowCoord, layer, bias);
 }
 
@@ -228,6 +227,7 @@ void main() {
 
 	vec4 color = diffuse;
 
+    /* CSM splits visualization
     int layer = GetShadowLayer(viewSpacePosition);
     vec3 layerVis[4] = vec3[](
         vec3(1.0, 1.0, 1.0),
@@ -236,6 +236,7 @@ void main() {
         vec3(0.8, 0.8, 1.0)
     );
     color.rgb = layerVis[layer];
+    */
 
 	color.rgb *= lighting;
 	color.rgb = ACESToneMapping(color.rgb);

@@ -51,6 +51,8 @@ public:
 
     void SetDirectionalLight(const glm::vec3 &lightDirection, float intensity) override;
 
+    void SetWorldBounds(const glm::vec3 &min, const glm::vec3 &max) override;
+
     void BeginDraw() override;
 
     void EndDraw() override;

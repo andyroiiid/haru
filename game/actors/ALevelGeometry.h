@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <glm/vec3.hpp>
+
 namespace physx {
     class PxConvexMesh;
 
@@ -26,4 +28,7 @@ private:
     MeshBase m_mesh;
     std::vector<physx::PxConvexMesh *> m_brushColliders;
     std::vector<physx::PxRigidStatic *> m_brushRigidbodies;
+
+    glm::vec3 m_geomMin{};
+    glm::vec3 m_geomMax{};
 };
