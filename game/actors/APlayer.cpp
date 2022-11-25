@@ -10,6 +10,7 @@
 #include "../Scene.h"
 #include "../GameStatics.h"
 #include "APointLight.h"
+#include "APhysBox.h"
 
 APlayer::APlayer(
         const glm::vec3 &position, float yaw,
@@ -64,7 +65,7 @@ void APlayer::Update(const float deltaTime) {
         if (pointLight) {
             pointLight->Destroy();
         }
-        const glm::vec3 lightPosition = GetTransform().GetPosition() - glm::vec3{0.0f, 0.5, 0.0f};
+        const glm::vec3 lightPosition = GetTransform().GetPosition() - glm::vec3{0.0f, 0.5f, 0.0f};
         const glm::vec3 lightColor = glm::vec3{
                 m_random.Float(0.0f, 16.0f),
                 m_random.Float(0.0f, 16.0f),
@@ -74,6 +75,24 @@ void APlayer::Update(const float deltaTime) {
         m_nextPointLight = (m_nextPointLight + 1) % MAX_NUM_POINT_LIGHTS;
     }
     m_prevLmb = currLmb;
+
+    bool currRmb = m_window->IsMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT);
+    if (currRmb && !m_prevRmb) {
+        APhysBox *&physBox = m_physBoxes[m_nextPhysBox];
+        if (physBox) {
+            physBox->Destroy();
+        }
+        const Transform &transform = GetTransform();
+        const glm::vec3 boxPosition = transform.GetPosition() + transform.GetHorizontalForwardVector() * 5.0f + glm::vec3{0.0f, 5.0f, 0.0f};
+        const glm::vec3 boxSize = glm::vec3{
+                m_random.Float(0.5f, 2.0f),
+                m_random.Float(0.5f, 2.0f),
+                m_random.Float(0.5f, 2.0f)
+        };
+        physBox = GameStatics::GetScene()->CreateActor<APhysBox>(boxPosition, boxSize);
+        m_nextPhysBox = (m_nextPhysBox + 1) % MAX_NUM_BOXES;
+    }
+    m_prevRmb = currRmb;
 }
 
 void APlayer::CalcHorizontalAcceleration(const glm::vec3 &direction, float acceleration, float drag) {
@@ -114,6 +133,6 @@ void APlayer::Draw(Renderer &renderer) {
     renderer.DrawPointLight(
             GetTransform().GetPosition(),
             {0.4f, 0.4f, 0.4f},
-            12.0f
+            64.0f
     );
 }

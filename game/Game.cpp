@@ -12,7 +12,7 @@
 #include "actors/ADirectionalLight.h"
 #include "actors/ACamera.h"
 #include "actors/APlayer.h"
-#include "actors/APhysxBox.h"
+#include "actors/APhysBox.h"
 #include "actors/ALevelGeometry.h"
 
 void Game::Init() {
@@ -45,7 +45,7 @@ void Game::Resize(const glm::ivec2 &size) {
 
 void Game::Update(const float deltaTime) {
     if (m_physicsScene->Update(deltaTime, m_timeScale)) {
-        m_scene->FixedUpdate(m_physicsScene->GetFixedTimestep());
+        m_scene->FixedUpdate(m_physicsScene->GetFixedTimestep() * m_timeScale);
     }
 
     if (Window->IsKeyDown(GLFW_KEY_ESCAPE)) {
@@ -53,13 +53,13 @@ void Game::Update(const float deltaTime) {
     }
 
     if (Window->IsKeyDown(GLFW_KEY_DELETE)) {
-        if (const auto box = m_scene->FindFirstActorOfClass<APhysxBox>()) {
+        if (const auto box = m_scene->FindFirstActorOfClass<APhysBox>()) {
             box->Destroy();
         }
     }
 
     if (Window->IsKeyDown(GLFW_KEY_TAB)) {
-        m_timeScale = 0.1f;
+        m_timeScale = 0.2f;
     } else {
         m_timeScale = 1.0f;
     }

@@ -16,6 +16,8 @@ namespace physx {
 
 class APointLight;
 
+class APhysBox;
+
 class APlayer final : public Actor {
 public:
     DEFINE_ACTOR_CLASS(APlayer)
@@ -60,8 +62,13 @@ private:
     glm::vec3 m_previousPosition{};
 
     bool m_prevLmb = false;
-    static constexpr int MAX_NUM_POINT_LIGHTS = 4;
+    static constexpr int MAX_NUM_POINT_LIGHTS = 16;
     APointLight *m_pointLights[MAX_NUM_POINT_LIGHTS]{};
     int m_nextPointLight = 0;
     Random m_random;
+
+    bool m_prevRmb = false;
+    static constexpr int MAX_NUM_BOXES = 8;
+    APhysBox *m_physBoxes[MAX_NUM_BOXES]{};
+    int m_nextPhysBox = 0;
 };

@@ -2,24 +2,21 @@
 
 #include "Actor.h"
 
-class PhysicsScene;
-
 namespace physx {
     class PxRigidDynamic;
 }
 
-class APhysxBox final : public Actor {
+class APhysBox final : public Actor {
 public:
-    DEFINE_ACTOR_CLASS(APhysxBox)
+    DEFINE_ACTOR_CLASS(APhysBox)
 
-    APhysxBox(
-            PhysicsScene *physicsScene,
+    APhysBox(
             const glm::vec3 &position,
             const glm::vec3 &halfSize,
             const glm::vec3 &velocity = {0.0f, 0.0f, 0.0f}
     );
 
-    ~APhysxBox() override;
+    ~APhysBox() override;
 
     void Update(float deltaTime) override;
 

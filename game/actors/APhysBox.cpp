@@ -1,12 +1,13 @@
-﻿#include "APhysxBox.h"
+﻿#include "APhysBox.h"
 
 #include <PxRigidDynamic.h>
 
 #include <haru/physics/PhysicsScene.h>
 #include <haru/render/MeshUtilities.h>
 
-APhysxBox::APhysxBox(
-        PhysicsScene *physicsScene,
+#include "../GameStatics.h"
+
+APhysBox::APhysBox(
         const glm::vec3 &position,
         const glm::vec3 &halfSize,
         const glm::vec3 &velocity
@@ -18,18 +19,18 @@ APhysxBox::APhysxBox(
     const physx::PxTransform transform{position.x, position.y, position.z};
     const physx::PxBoxGeometry geometry{m_halfSize.x, m_halfSize.y, m_halfSize.z};
 
-    m_rigidbody = physicsScene->CreateDynamic(transform, geometry);
+    m_rigidbody = GameStatics::GetPhysicsScene()->CreateDynamic(transform, geometry);
     m_rigidbody->setLinearVelocity({m_velocity.x, m_velocity.y, m_velocity.z});
     m_rigidbody->userData = this;
 }
 
-APhysxBox::~APhysxBox() {
+APhysBox::~APhysBox() {
     m_rigidbody->release();
 
     m_mesh = {};
 }
 
-void APhysxBox::Update(const float deltaTime) {
+void APhysBox::Update(const float deltaTime) {
     const physx::PxTransform transform = m_rigidbody->getGlobalPose();
     const glm::vec3 position{transform.p.x, transform.p.y, transform.p.z};
     const glm::quat rotation{transform.q.w, transform.q.x, transform.q.y, transform.q.z};
@@ -46,6 +47,6 @@ void APhysxBox::Update(const float deltaTime) {
     }
 }
 
-void APhysxBox::Draw(Renderer &renderer) {
+void APhysBox::Draw(Renderer &renderer) {
     renderer.DrawMesh(m_mesh, m_modelMatrix);
 }
