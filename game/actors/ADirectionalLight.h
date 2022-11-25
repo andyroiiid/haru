@@ -8,8 +8,6 @@ public:
 
     explicit ADirectionalLight(float intensity = 1.0f, float yaw = 30.0f, float pitch = 45.0f);
 
-    void Update(float deltaTime) override;
-
     void Draw(Renderer &renderer) override;
 
 private:

@@ -39,7 +39,11 @@ public:
 
     ~PhysicsScene();
 
-    void Update(float deltaTime, float timeScale);
+    bool Update(float deltaTime, float timeScale);
+
+    [[nodiscard]] float GetFixedTimestep() const { return m_fixedTimestep; }
+
+    [[nodiscard]] float GetFixedUpdateTimeError() const { return m_timeSinceLastTick; }
 
     physx::PxController *CreateController(const glm::vec3 &position, float radius, float height);
 
@@ -68,5 +72,6 @@ private:
     physx::PxScene *m_scene = nullptr;
     physx::PxControllerManager *m_controllerManager = nullptr;
 
+    float m_fixedTimestep = 0.02f;
     float m_timeSinceLastTick = 0.0f;
 };

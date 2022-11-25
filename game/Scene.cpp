@@ -33,6 +33,12 @@ void Scene::Update(const float deltaTime) {
     // this strategy will give other actors one frame to cleanup their references
 }
 
+void Scene::FixedUpdate(float fixedDeltaTime) {
+    for (auto &actor: m_actors) {
+        actor->FixedUpdate(fixedDeltaTime);
+    }
+}
+
 void Scene::Draw(Renderer &renderer) {
     for (const auto &actor: m_actors) {
         actor->Draw(renderer);

@@ -19,6 +19,8 @@ public:
 
     void Update(float deltaTime);
 
+    void FixedUpdate(float fixedDeltaTime);
+
     void Draw(Renderer &renderer);
 
     template<class T, class... Args, std::enable_if_t<!std::is_array_v<T>, int>  = 0>

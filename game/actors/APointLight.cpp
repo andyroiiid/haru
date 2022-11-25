@@ -7,9 +7,6 @@ APointLight::APointLight(const glm::vec3 &position, const glm::vec3 &color, floa
     GetTransform().SetPosition(position);
 }
 
-void APointLight::Update(float deltaTime) {
-}
-
 void APointLight::Draw(Renderer &renderer) {
     renderer.DrawPointLight(GetTransform().GetPosition(), m_color, m_linear, m_quadratic);
 }

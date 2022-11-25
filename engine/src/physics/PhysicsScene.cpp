@@ -36,17 +36,18 @@ PhysicsScene::~PhysicsScene() {
     PX_RELEASE(m_defaultCpuDispatcher)
 }
 
-void PhysicsScene::Update(const float deltaTime, const float timeScale) {
+bool PhysicsScene::Update(const float deltaTime, const float timeScale) {
     m_timeSinceLastTick += deltaTime * timeScale;
 
-    static constexpr float FIXED_TIMESTEP = 0.02f;
-    const float scaledTimestep = FIXED_TIMESTEP * timeScale;
-
-    if (m_timeSinceLastTick >= scaledTimestep) {
-        m_scene->simulate(scaledTimestep);
-        m_scene->fetchResults(true);
-        m_timeSinceLastTick -= scaledTimestep;
+    const float scaledTimestep = m_fixedTimestep * timeScale;
+    if (m_timeSinceLastTick < scaledTimestep) {
+        return false;
     }
+
+    m_scene->simulate(scaledTimestep);
+    m_scene->fetchResults(true);
+    m_timeSinceLastTick -= scaledTimestep;
+    return true;
 }
 
 physx::PxController *PhysicsScene::CreateController(const glm::vec3 &position, float radius, float height) {
@@ -87,9 +88,9 @@ physx::PxRaycastBuffer PhysicsScene::Raycast(
         const physx::PxVec3 &unitDir,
         const float distance
 ) const {
-    physx::PxRaycastBuffer hitCall;
-    m_scene->raycast(origin, unitDir, distance, hitCall);
-    return hitCall;
+    physx::PxRaycastBuffer buffer;
+    m_scene->raycast(origin, unitDir, distance, buffer);
+    return buffer;
 }
 
 physx::PxSweepBuffer PhysicsScene::Sweep(

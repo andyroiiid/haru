@@ -31,9 +31,11 @@ public:
         return T::ClassName == GetActorClassName();
     }
 
-    virtual void Update(float deltaTime) = 0;
+    virtual void Update(float deltaTime) {}
 
-    virtual void Draw(Renderer &renderer) = 0;
+    virtual void FixedUpdate(float fixedDeltaTime) {}
+
+    virtual void Draw(Renderer &renderer) {}
 
     bool IsPendingDestroy() const { return m_pendingDestroy; }
 

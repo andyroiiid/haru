@@ -89,9 +89,6 @@ ALevelGeometry::~ALevelGeometry() {
     m_mesh = {};
 }
 
-void ALevelGeometry::Update(float deltaTime) {
-}
-
 void ALevelGeometry::Draw(Renderer &renderer) {
     renderer.DrawMesh(m_mesh, GetTransform().GetMatrix());
 }

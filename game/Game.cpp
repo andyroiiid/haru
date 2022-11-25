@@ -44,7 +44,9 @@ void Game::Resize(const glm::ivec2 &size) {
 }
 
 void Game::Update(const float deltaTime) {
-    m_physicsScene->Update(deltaTime, m_timeScale);
+    if (m_physicsScene->Update(deltaTime, m_timeScale)) {
+        m_scene->FixedUpdate(m_physicsScene->GetFixedTimestep());
+    }
 
     if (Window->IsKeyDown(GLFW_KEY_ESCAPE)) {
         Window->Close();

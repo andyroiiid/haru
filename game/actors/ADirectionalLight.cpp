@@ -8,9 +8,6 @@ ADirectionalLight::ADirectionalLight(float intensity, float yaw, float pitch)
             .ClampPitch();
 }
 
-void ADirectionalLight::Update(float deltaTime) {
-}
-
 void ADirectionalLight::Draw(Renderer &renderer) {
     renderer.SetDirectionalLight(GetTransform().GetForwardVector(), m_intensity);
 }

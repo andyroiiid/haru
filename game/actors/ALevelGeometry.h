@@ -20,8 +20,6 @@ public:
 
     ~ALevelGeometry() override;
 
-    void Update(float deltaTime) override;
-
     void Draw(Renderer &renderer) override;
 
 private:

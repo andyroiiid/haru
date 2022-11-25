@@ -12,8 +12,6 @@ public:
             float range = 20.0f
     );
 
-    void Update(float deltaTime) override;
-
     void Draw(Renderer &renderer) override;
 
 private:
