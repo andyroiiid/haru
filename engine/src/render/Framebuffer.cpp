@@ -123,7 +123,7 @@ void Framebuffer::UnbindAllTextures() {
     for (int i = 0; i < m_numColorAttachments; i++) {
         glBindTextureUnit(i, 0);
     }
-    if (m_depthIsTexture) return;
+    if (!m_depthIsTexture) return;
     glBindTextureUnit(m_numColorAttachments, 0);
 }
 

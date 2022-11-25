@@ -6,6 +6,18 @@
 
 #include "haru/render/Shader.h"
 
+class DeferredShaderShadowPass : public Shader {
+public:
+    MOVE_ONLY(DeferredShaderShadowPass)
+
+    DeferredShaderShadowPass();
+
+    void SetModel(const glm::mat4 &model);
+
+private:
+    GLint m_modelLocation = -1;
+};
+
 class DeferredShaderBase : public Shader {
 public:
     MOVE_ONLY(DeferredShaderBase)

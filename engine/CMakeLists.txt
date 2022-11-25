@@ -16,6 +16,7 @@ add_library(engine
         src/system/ImageFile.cpp
 
         include/haru/render/Framebuffer.h
+        include/haru/render/ShadowMap.h
         include/haru/render/UniformBuffer.h
         include/haru/render/Mesh.h
         include/haru/render/MeshPositionOnly.h
@@ -27,6 +28,7 @@ add_library(engine
         include/haru/render/DeferredShaders.h
         include/haru/render/DeferredRenderer.h
         src/render/Framebuffer.cpp
+        src/render/ShadowMap.cpp
         src/render/MeshUtilities.cpp
         src/render/Shader.cpp
         src/render/Texture.cpp

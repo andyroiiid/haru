@@ -61,8 +61,8 @@ Shader::Shader(
         const std::string &vertexSource,
         const std::string &fragmentSource
 ) {
-    auto   versionString  = "#version 450 core\n";
-    GLuint vertexShader   = CreateShader(
+    auto versionString = "#version 450 core\n";
+    GLuint vertexShader = CreateShader(
             GL_VERTEX_SHADER,
             {
                     versionString,
@@ -82,6 +82,45 @@ Shader::Shader(
     m_program = CreateProgram({vertexShader, fragmentShader});
 
     glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+}
+
+Shader::Shader(
+        const std::string &sharedSource,
+        const std::string &vertexSource,
+        const std::string &geometrySource,
+        const std::string &fragmentSource
+) {
+    auto versionString = "#version 450 core\n";
+    GLuint vertexShader = CreateShader(
+            GL_VERTEX_SHADER,
+            {
+                    versionString,
+                    sharedSource.c_str(),
+                    vertexSource.c_str()
+            }
+    );
+    GLuint geometryShader = CreateShader(
+            GL_GEOMETRY_SHADER,
+            {
+                    versionString,
+                    sharedSource.c_str(),
+                    geometrySource.c_str()
+            }
+    );
+    GLuint fragmentShader = CreateShader(
+            GL_FRAGMENT_SHADER,
+            {
+                    versionString,
+                    sharedSource.c_str(),
+                    fragmentSource.c_str()
+            }
+    );
+
+    m_program = CreateProgram({vertexShader, geometryShader, fragmentShader});
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(geometryShader);
     glDeleteShader(fragmentShader);
 }
 

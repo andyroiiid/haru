@@ -25,6 +25,13 @@ public:
             const std::string &fragmentSource
     );
 
+    Shader(
+            const std::string &sharedSource,
+            const std::string &vertexSource,
+            const std::string &geometrySource,
+            const std::string &fragmentSource
+    );
+
     ~Shader();
 
     void Use() const;

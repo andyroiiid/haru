@@ -59,6 +59,11 @@ void DeferredRenderer::OnResize(const glm::ivec2 &size) {
 void DeferredRenderer::SetCameraMatrices(const glm::mat4 &view, const glm::mat4 &projection) {
     m_shaderGlobals->View = view;
     m_shaderGlobals->Projection = projection;
+
+    // TODO: replace this with real shadow matrices
+    for (auto &shadowMatrix: m_lightGlobals->ShadowMatrices) {
+        shadowMatrix = projection * view;
+    }
 }
 
 void DeferredRenderer::SetDirectionalLight(const glm::vec3 &lightDirection, const float intensity) {
@@ -74,6 +79,7 @@ void DeferredRenderer::BeginDraw() {
 
 void DeferredRenderer::EndDraw() {
     FlushUniformBuffers();
+    DrawToShadowMap();
     DrawToGBuffers();
     DrawForwardPass();
 }
@@ -100,6 +106,26 @@ void DeferredRenderer::FlushUniformBuffers() {
     }
 
     m_lightGlobals.Flush();
+}
+
+void DeferredRenderer::DrawToShadowMap() {
+    m_shadowMap.Bind();
+    glViewport(0, 0, m_shadowMap.Size(), m_shadowMap.Size());
+
+    glClearBufferfi(GL_DEPTH_STENCIL, 0, 1.0f, 0);
+
+    glEnable(GL_DEPTH_TEST);
+
+    m_shadowShader.Use();
+    for (const auto &baseDrawCall: m_pendingBaseDrawCalls) {
+        m_shadowShader.SetModel(baseDrawCall.Model);
+        baseDrawCall.Mesh.BindAndDraw();
+    }
+
+    glBindVertexArray(0);
+    glUseProgram(0);
+
+    glDisable(GL_DEPTH_TEST);
 }
 
 void DeferredRenderer::DrawToGBuffers() {

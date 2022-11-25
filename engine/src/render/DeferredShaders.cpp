@@ -4,6 +4,58 @@
 
 #include "haru/render/DeferredShaders.h"
 
+DeferredShaderShadowPass::DeferredShaderShadowPass()
+        : Shader(R"GLSL(
+struct PointLightData {
+	vec3 position;
+	float linear;
+	vec3 color;
+	float quadratic;
+};
+
+layout(std140, binding = 1) uniform LightGlobals {
+	vec3 uDirectionalLight;
+	float uDirectionalLightIntensity;
+    mat4 uShadowMatrices[4];
+	PointLightData uPointLightData[32];
+};
+)GLSL",
+                 R"GLSL(
+layout(location = 0) in vec3 aPosition;
+
+layout(location = 0) uniform mat4 uModel;
+
+void main() {
+	gl_Position = uModel * vec4(aPosition, 1);
+}
+)GLSL",
+                 R"GLSL(
+layout(triangles, invocations = 4) in;
+
+layout(triangle_strip, max_vertices = 3) out;
+
+void main() {
+    for (int i = 0; i < 3; i++) {
+        gl_Position = uShadowMatrices[gl_InvocationID] * gl_in[i].gl_Position;
+        gl_Layer = gl_InvocationID;
+        EmitVertex();
+    }
+    EndPrimitive();
+}
+)GLSL",
+                 R"GLSL(
+void main()
+{
+    gl_FragDepth = gl_FragCoord.z;
+}
+)GLSL") {
+    m_modelLocation = GetUniformLocation("uModel");
+}
+
+void DeferredShaderShadowPass::SetModel(const glm::mat4 &model) {
+    SetUniform(m_modelLocation, model);
+}
+
 DeferredShaderBase::DeferredShaderBase()
         : Shader(R"GLSL(
 layout(std140, binding = 0) uniform ShaderGlobals {
@@ -63,6 +115,7 @@ struct PointLightData {
 layout(std140, binding = 1) uniform LightGlobals {
 	vec3 uDirectionalLight;
 	float uDirectionalLightIntensity;
+    mat4 uShadowMatrices[4];
 	PointLightData uPointLightData[32];
 };
 )GLSL",
@@ -183,6 +236,7 @@ struct PointLightData {
 layout(std140, binding = 1) uniform LightGlobals {
 	vec3 uDirectionalLight;
 	float uDirectionalLightIntensity;
+    mat4 uShadowMatrices[4];
 	PointLightData uPointLightData[32];
 };
 )GLSL",

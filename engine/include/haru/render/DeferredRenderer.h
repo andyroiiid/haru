@@ -12,6 +12,7 @@
 #include "haru/render/Framebuffer.h"
 #include "haru/render/Mesh.h"
 #include "haru/render/Renderer.h"
+#include "haru/render/ShadowMap.h"
 #include "haru/render/UniformBuffer.h"
 
 class DeferredRenderer final : public Renderer {
@@ -30,6 +31,7 @@ class DeferredRenderer final : public Renderer {
     struct LightGlobals {
         glm::vec3 DirectionalLight;
         float DirectionalLightIntensity;
+        glm::mat4 ShadowMatrices[4];
         PointLightData PointLightData[32];
     };
 
@@ -59,15 +61,19 @@ public:
 private:
     void FlushUniformBuffers();
 
+    void DrawToShadowMap();
+
     void DrawToGBuffers();
 
     void DrawForwardPass();
 
+    ShadowMap m_shadowMap{1024};
     Framebuffer m_gBuffers;
 
     UniformBuffer<ShaderGlobals> m_shaderGlobals;
     UniformBuffer<LightGlobals> m_lightGlobals;
 
+    DeferredShaderShadowPass m_shadowShader;
     DeferredShaderBase m_baseShader;
     DeferredShaderGPass m_gPassShader;
     DeferredShaderLines m_linesShader;
