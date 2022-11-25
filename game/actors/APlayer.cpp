@@ -9,6 +9,7 @@
 
 #include "../Scene.h"
 #include "../GameStatics.h"
+#include "APointLight.h"
 
 APlayer::APlayer(
         const glm::vec3 &position, float yaw,
@@ -56,6 +57,23 @@ void APlayer::Update(const float deltaTime) {
         };
         GetTransform().SetPosition(predictedPosition + glm::vec3{0.0f, 0.5f, 0.0f}); // + 0.5 for the eye height
     }
+
+    bool currLmb = m_window->IsMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT);
+    if (currLmb && !m_prevLmb) {
+        APointLight *&pointLight = m_pointLights[m_nextPointLight];
+        if (pointLight) {
+            pointLight->Destroy();
+        }
+        const glm::vec3 lightPosition = GetTransform().GetPosition() - glm::vec3{0.0f, 0.5, 0.0f};
+        const glm::vec3 lightColor = glm::vec3{
+                m_random.Float(0.0f, 16.0f),
+                m_random.Float(0.0f, 16.0f),
+                m_random.Float(0.0f, 16.0f)
+        };
+        pointLight = GameStatics::GetScene()->CreateActor<APointLight>(lightPosition, lightColor, 4.0f);
+        m_nextPointLight = (m_nextPointLight + 1) % MAX_NUM_POINT_LIGHTS;
+    }
+    m_prevLmb = currLmb;
 }
 
 void APlayer::CalcHorizontalAcceleration(const glm::vec3 &direction, float acceleration, float drag) {
@@ -95,7 +113,7 @@ void APlayer::FixedUpdate(float fixedDeltaTime) {
 void APlayer::Draw(Renderer &renderer) {
     renderer.DrawPointLight(
             GetTransform().GetPosition(),
-            {0.5f, 0.5f, 0.5f},
-            64.0f
+            {0.4f, 0.4f, 0.4f},
+            12.0f
     );
 }

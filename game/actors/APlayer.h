@@ -2,6 +2,8 @@
 
 #include "Actor.h"
 
+#include <haru/math/Random.h>
+
 class PhysicsScene;
 
 class Window;
@@ -11,6 +13,8 @@ class Scene;
 namespace physx {
     class PxController;
 }
+
+class APointLight;
 
 class APlayer final : public Actor {
 public:
@@ -54,4 +58,10 @@ private:
     glm::vec3 m_acceleration{};
 
     glm::vec3 m_previousPosition{};
+
+    bool m_prevLmb = false;
+    static constexpr int MAX_NUM_POINT_LIGHTS = 4;
+    APointLight *m_pointLights[MAX_NUM_POINT_LIGHTS]{};
+    int m_nextPointLight = 0;
+    Random m_random;
 };
