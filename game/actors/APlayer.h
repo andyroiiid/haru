@@ -19,8 +19,7 @@ public:
     explicit APlayer(
             const glm::vec3 &position = {0, 0, 5},
             float yaw = 0.0f,
-            float mouseSpeed = 0.001f,
-            float flySpeed = 5.0f
+            float mouseSpeed = 0.001f
     );
 
     ~APlayer() override;
@@ -32,7 +31,11 @@ public:
     void Draw(Renderer &renderer) override;
 
 private:
-    glm::vec3 GetInputDirection();
+    void ReadMovementInput();
+
+    void CalcHorizontalAcceleration(const glm::vec3 &direction, float acceleration, float drag);
+
+    void UpdateAcceleration();
 
     PhysicsScene *m_physicsScene;
     Window *m_window;
@@ -40,10 +43,15 @@ private:
     physx::PxController *m_controller;
 
     float m_mouseSpeed;
-    float m_flySpeed;
 
-    glm::vec3 m_inputVelocity{};
+    float m_groundAcceleration = 50.0f;
+    float m_gravity = 20.0f;
+    float m_groundDrag = 10.0f;
+
+    glm::vec3 m_movementInput{};
+
+    glm::vec3 m_velocity{};
+    glm::vec3 m_acceleration{};
 
     glm::vec3 m_previousPosition{};
-    glm::vec3 m_projectedVelocity{};
 };
