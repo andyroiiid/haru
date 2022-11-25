@@ -36,6 +36,10 @@ public:
 
     void UnbindAllTextures();
 
+    [[nodiscard]] int GetTextureCount() const {
+        return m_depthIsTexture ? m_numColorAttachments + 1 : m_numColorAttachments;
+    }
+
     void BlitDepthStencilToScreen(const glm::ivec2 &screenSize);
 
 private:

@@ -22,7 +22,7 @@ void Game::Init() {
 
     Window->SetCursorEnabled(false);
 
-    m_scene->CreateActor<ADirectionalLight>(0.2f);
+    m_scene->CreateActor<ADirectionalLight>(1.0f);
 
     auto *camera = m_scene->CreateActor<ACamera>();
     auto *player = m_scene->CreateActor<APlayer>(glm::vec3{0.0f, 1.8f, 0.0f}, glm::radians(180.0f));

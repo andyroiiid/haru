@@ -72,13 +72,7 @@ void DeferredRenderer::SetDirectionalLight(const glm::vec3 &lightDirection, cons
     m_lightGlobals->DirectionalLight = lightDirection;
     m_lightGlobals->DirectionalLightIntensity = intensity;
 
-    constexpr float shadowNear = 0.01f;
-    constexpr float shadowFar = 64.0f;
-    constexpr glm::vec3 csmSplits{8.0f, 16.0f, 32.0f};
-    m_lightGlobals->ShadowMatrices[0] = m_shadowMatrixCalculator.CalcShadowMatrix(lightDirection, shadowNear, csmSplits[0]);
-    m_lightGlobals->ShadowMatrices[1] = m_shadowMatrixCalculator.CalcShadowMatrix(lightDirection, csmSplits[0], csmSplits[1]);
-    m_lightGlobals->ShadowMatrices[2] = m_shadowMatrixCalculator.CalcShadowMatrix(lightDirection, csmSplits[1], csmSplits[2]);
-    m_lightGlobals->ShadowMatrices[3] = m_shadowMatrixCalculator.CalcShadowMatrix(lightDirection, csmSplits[2], shadowFar);
+    m_shadowMatrixCalculator.SetLightDirection(lightDirection);
 }
 
 void DeferredRenderer::BeginDraw() {
@@ -108,6 +102,15 @@ void DeferredRenderer::DrawMesh(const MeshBase &mesh, const glm::mat4 &model) {
 
 void DeferredRenderer::FlushUniformBuffers() {
     m_shaderGlobals.Flush();
+
+    constexpr float shadowNear = 0.01f;
+    constexpr float shadowFar = 32.0f;
+    constexpr glm::vec3 csmSplits{4.0f, 8.0f, 16.0f};
+    m_lightGlobals->CascadeShadowMapSplits = csmSplits;
+    m_lightGlobals->ShadowMatrices[0] = m_shadowMatrixCalculator.CalcShadowMatrix(shadowNear, csmSplits[0]);
+    m_lightGlobals->ShadowMatrices[1] = m_shadowMatrixCalculator.CalcShadowMatrix(csmSplits[0], csmSplits[1]);
+    m_lightGlobals->ShadowMatrices[2] = m_shadowMatrixCalculator.CalcShadowMatrix(csmSplits[1], csmSplits[2]);
+    m_lightGlobals->ShadowMatrices[3] = m_shadowMatrixCalculator.CalcShadowMatrix(csmSplits[2], shadowFar);
 
     const size_t numPointLights = m_pendingPointLightData.size();
     for (size_t i = 0; i < 32; i++) {
@@ -171,6 +174,7 @@ void DeferredRenderer::DrawForwardPass() {
     // draw to g-buffers
     m_gPassShader.Use();
     m_gBuffers.BindAllTextures();
+    m_shadowMap.BindDepthTexture(m_gBuffers.GetTextureCount());
     m_fullscreenQuad.BindAndDraw();
     glBindVertexArray(0);
     m_gBuffers.UnbindAllTextures();

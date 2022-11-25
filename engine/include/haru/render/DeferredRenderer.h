@@ -32,6 +32,8 @@ class DeferredRenderer final : public Renderer {
     struct LightGlobals {
         glm::vec3 DirectionalLight;
         float DirectionalLightIntensity;
+        glm::vec3 CascadeShadowMapSplits;
+        float Padding0;
         glm::mat4 ShadowMatrices[4];
         PointLightData PointLightData[32];
     };

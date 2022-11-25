@@ -17,7 +17,11 @@ public:
         m_aspectRatio = aspectRatio;
     }
 
-    [[nodiscard]] glm::mat4 CalcShadowMatrix(const glm::vec3 &lightDir, float near, float far) const;
+    void SetLightDirection(const glm::vec3 &lightDir) {
+        m_lightDir = lightDir;
+    }
+
+    [[nodiscard]] glm::mat4 CalcShadowMatrix(float near, float far) const;
 
 private:
     [[nodiscard]] std::array<glm::vec4, 8> GetFrustumCorners(float near, float far) const;
@@ -25,4 +29,6 @@ private:
     glm::mat4 m_view{1.0f};
     float m_fov = 0.0f;
     float m_aspectRatio = 1.0f;
+
+    glm::vec3 m_lightDir{};
 };
