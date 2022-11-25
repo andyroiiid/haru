@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <glm/vec3.hpp>
+#include <characterkinematic/PxExtended.h>
 #include <geometry/PxGeometry.h>
 #include <PxQueryReport.h>
 
@@ -20,6 +22,10 @@ namespace physx {
 
     class PxScene;
 
+    class PxController;
+
+    class PxControllerManager;
+
     class PxRigidStatic;
 
     class PxRigidDynamic;
@@ -35,6 +41,8 @@ public:
 
     void Update(float deltaTime, float timeScale);
 
+    physx::PxController *CreateController(const glm::vec3 &position, float radius, float height);
+
     physx::PxRigidStatic *CreateStatic(const physx::PxTransform &transform, const physx::PxGeometry &geometry);
 
     physx::PxRigidDynamic *CreateDynamic(const physx::PxTransform &transform, const physx::PxGeometry &geometry, float density = 1.0f);
@@ -45,11 +53,20 @@ public:
             float distance
     ) const;
 
+    [[nodiscard]] physx::PxSweepBuffer Sweep(
+            const physx::PxGeometry &geometry,
+            const physx::PxTransform &pose,
+            const physx::PxVec3 &unitDir,
+            float distance
+    ) const;
+
 private:
     physx::PxPhysics *m_physics = nullptr;
 
     physx::PxDefaultCpuDispatcher *m_defaultCpuDispatcher = nullptr;
     physx::PxMaterial *m_defaultMaterial = nullptr;
     physx::PxScene *m_scene = nullptr;
+    physx::PxControllerManager *m_controllerManager = nullptr;
+
     float m_timeSinceLastTick = 0.0f;
 };

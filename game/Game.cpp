@@ -11,7 +11,7 @@
 
 #include "actors/ADirectionalLight.h"
 #include "actors/ACamera.h"
-#include "actors/APlayerNoClip.h"
+#include "actors/APlayer.h"
 #include "actors/APhysxBox.h"
 #include "actors/ALevelGeometry.h"
 
@@ -25,7 +25,7 @@ void Game::Init() {
     m_scene->CreateActor<ADirectionalLight>(1.0f);
 
     auto *camera = m_scene->CreateActor<ACamera>();
-    auto *player = m_scene->CreateActor<APlayerNoClip>(glm::vec3{0.0f, 1.8f, 15.0f});
+    auto *player = m_scene->CreateActor<APlayer>(glm::vec3{0.0f, 1.8f, 0.0f}, glm::radians(180.0f));
     camera->SetTargetActor(player);
 
     m_scene->CreateActor<ALevelGeometry>("data/hello.haru");

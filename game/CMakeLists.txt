@@ -3,6 +3,7 @@ add_executable(game
         actors/ADirectionalLight.cpp actors/ADirectionalLight.h
         actors/ACamera.cpp actors/ACamera.h
         actors/APlayerNoClip.cpp actors/APlayerNoClip.h
+        actors/APlayer.cpp actors/APlayer.h
         actors/APhysxBox.cpp actors/APhysxBox.h
         actors/APointLight.cpp actors/APointLight.h
         actors/ALevelGeometry.cpp actors/ALevelGeometry.h

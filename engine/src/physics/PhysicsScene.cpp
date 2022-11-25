@@ -5,6 +5,8 @@
 #include "haru/physics/PhysicsScene.h"
 
 #include <PxPhysicsAPI.h>
+#include <characterkinematic/PxController.h>
+#include <characterkinematic/PxControllerManager.h>
 
 #include "haru/physics/PhysicsSystem.h"
 
@@ -23,9 +25,12 @@ PhysicsScene::PhysicsScene(PhysicsSystem *physicsSystem) : m_physics(physicsSyst
         pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
         pvdClient->setScenePvdFlag(physx::PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
     }
+
+    m_controllerManager = PxCreateControllerManager(*m_scene);
 }
 
 PhysicsScene::~PhysicsScene() {
+    PX_RELEASE(m_controllerManager)
     PX_RELEASE(m_scene)
     PX_RELEASE(m_defaultMaterial)
     PX_RELEASE(m_defaultCpuDispatcher)
@@ -42,6 +47,20 @@ void PhysicsScene::Update(const float deltaTime, const float timeScale) {
         m_scene->fetchResults(true);
         m_timeSinceLastTick -= scaledTimestep;
     }
+}
+
+physx::PxController *PhysicsScene::CreateController(const glm::vec3 &position, float radius, float height) {
+    physx::PxCapsuleControllerDesc desc;
+    desc.position = {position.x, position.y, position.z};
+    desc.invisibleWallHeight = height;
+    desc.maxJumpHeight = height;
+    desc.stepOffset = 0.1f;
+    desc.nonWalkableMode = physx::PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
+    desc.material = m_defaultMaterial;
+    desc.radius = radius;
+    desc.height = height;
+    desc.climbingMode = physx::PxCapsuleClimbingMode::eCONSTRAINED;
+    return m_controllerManager->createController(desc);
 }
 
 physx::PxRigidStatic *PhysicsScene::CreateStatic(
@@ -71,4 +90,15 @@ physx::PxRaycastBuffer PhysicsScene::Raycast(
     physx::PxRaycastBuffer hitCall;
     m_scene->raycast(origin, unitDir, distance, hitCall);
     return hitCall;
+}
+
+physx::PxSweepBuffer PhysicsScene::Sweep(
+        const physx::PxGeometry &geometry,
+        const physx::PxTransform &pose,
+        const physx::PxVec3 &unitDir,
+        float distance
+) const {
+    physx::PxSweepBuffer buffer;
+    m_scene->sweep(geometry, pose, unitDir, distance, buffer);
+    return buffer;
 }
