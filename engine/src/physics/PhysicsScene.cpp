@@ -56,7 +56,7 @@ physx::PxController *PhysicsScene::CreateController(const glm::vec3 &position, f
     desc.invisibleWallHeight = height;
     desc.maxJumpHeight = height;
     desc.stepOffset = 0.3f;
-    desc.nonWalkableMode = physx::PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
+    desc.nonWalkableMode = physx::PxControllerNonWalkableMode::ePREVENT_CLIMBING;
     desc.material = m_defaultMaterial;
     desc.radius = radius;
     desc.height = height;
