@@ -39,7 +39,7 @@ public:
         return m_screenSize;
     }
 
-    virtual void SetCameraMatrices(const glm::mat4 &view, const glm::mat4 &projection) = 0;
+    virtual void SetCameraInfo(const glm::mat4 &view, float fov, float near, float far) = 0;
 
     virtual void SetDirectionalLight(const glm::vec3 &lightDirection, float intensity) = 0;
 

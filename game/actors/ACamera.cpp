@@ -19,15 +19,5 @@ void ACamera::Update(float deltaTime) {
 }
 
 void ACamera::Draw(Renderer &renderer) {
-    const glm::vec2 screenSize = renderer.GetSize();
-
-    renderer.SetCameraMatrices(
-            GetTransform().GetInverseMatrix(),
-            glm::perspective(
-                    glm::radians(m_fov),
-                    screenSize.x / screenSize.y,
-                    m_near,
-                    m_far
-            )
-    );
+    renderer.SetCameraInfo(GetTransform().GetInverseMatrix(), m_fov, m_near, m_far);
 }

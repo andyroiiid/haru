@@ -4,6 +4,8 @@
 
 #include "haru/render/DeferredRenderer.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 DeferredRenderer::DeferredRenderer() {
     m_shaderGlobals.Bind(0);
     m_lightGlobals.Bind(1);
@@ -56,19 +58,27 @@ void DeferredRenderer::OnResize(const glm::ivec2 &size) {
     );
 }
 
-void DeferredRenderer::SetCameraMatrices(const glm::mat4 &view, const glm::mat4 &projection) {
+void DeferredRenderer::SetCameraInfo(const glm::mat4 &view, float fov, float near, float far) {
     m_shaderGlobals->View = view;
-    m_shaderGlobals->Projection = projection;
 
-    // TODO: replace this with real shadow matrices
-    for (auto &shadowMatrix: m_lightGlobals->ShadowMatrices) {
-        shadowMatrix = projection * view;
-    }
+    const glm::vec2 screenSize = GetSize();
+    const float aspectRatio = screenSize.x / screenSize.y;
+    m_shaderGlobals->Projection = glm::perspective(glm::radians(fov), aspectRatio, near, far);
+
+    m_shadowMatrixCalculator.SetCameraInfo(view, fov, aspectRatio);
 }
 
 void DeferredRenderer::SetDirectionalLight(const glm::vec3 &lightDirection, const float intensity) {
     m_lightGlobals->DirectionalLight = lightDirection;
     m_lightGlobals->DirectionalLightIntensity = intensity;
+
+    constexpr float shadowNear = 0.01f;
+    constexpr float shadowFar = 64.0f;
+    constexpr glm::vec3 csmSplits{8.0f, 16.0f, 32.0f};
+    m_lightGlobals->ShadowMatrices[0] = m_shadowMatrixCalculator.CalcShadowMatrix(lightDirection, shadowNear, csmSplits[0]);
+    m_lightGlobals->ShadowMatrices[1] = m_shadowMatrixCalculator.CalcShadowMatrix(lightDirection, csmSplits[0], csmSplits[1]);
+    m_lightGlobals->ShadowMatrices[2] = m_shadowMatrixCalculator.CalcShadowMatrix(lightDirection, csmSplits[1], csmSplits[2]);
+    m_lightGlobals->ShadowMatrices[3] = m_shadowMatrixCalculator.CalcShadowMatrix(lightDirection, csmSplits[2], shadowFar);
 }
 
 void DeferredRenderer::BeginDraw() {
@@ -84,8 +94,7 @@ void DeferredRenderer::EndDraw() {
     DrawForwardPass();
 }
 
-void DeferredRenderer::DrawPointLight(const glm::vec3 &position, const glm::vec3 &color, const float linear,
-                                      const float quadratic) {
+void DeferredRenderer::DrawPointLight(const glm::vec3 &position, const glm::vec3 &color, const float linear, const float quadratic) {
     m_pendingPointLightData.push_back({position, linear, color, quadratic});
 }
 

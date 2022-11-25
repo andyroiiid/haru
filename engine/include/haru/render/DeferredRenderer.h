@@ -13,6 +13,7 @@
 #include "haru/render/Mesh.h"
 #include "haru/render/Renderer.h"
 #include "haru/render/ShadowMap.h"
+#include "haru/render/ShadowMatrixCalculator.h"
 #include "haru/render/UniformBuffer.h"
 
 class DeferredRenderer final : public Renderer {
@@ -44,7 +45,7 @@ public:
 
     void OnResize(const glm::ivec2 &size) override;
 
-    void SetCameraMatrices(const glm::mat4 &view, const glm::mat4 &projection) override;
+    void SetCameraInfo(const glm::mat4 &view, float fov, float near, float far) override;
 
     void SetDirectionalLight(const glm::vec3 &lightDirection, float intensity) override;
 
@@ -72,6 +73,8 @@ private:
 
     UniformBuffer<ShaderGlobals> m_shaderGlobals;
     UniformBuffer<LightGlobals> m_lightGlobals;
+
+    ShadowMatrixCalculator m_shadowMatrixCalculator;
 
     DeferredShaderShadowPass m_shadowShader;
     DeferredShaderBase m_baseShader;
