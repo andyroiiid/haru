@@ -112,8 +112,8 @@ void DeferredRenderer::FlushUniformBuffers() {
     m_shaderGlobals.Unmap();
 
     constexpr float shadowNear = 0.01f;
-    constexpr float shadowFar = 32.0f;
-    constexpr glm::vec3 csmSplits{4.0f, 8.0f, 16.0f};
+    constexpr float shadowFar = 64.0f;
+    constexpr glm::vec3 csmSplits{8.0f, 16.0f, 32.0f};
     m_lightGlobals->CascadeShadowMapSplits = csmSplits;
     m_lightGlobals->ShadowMatrices[0] = m_shadowMatrixCalculator.CalcShadowMatrix(shadowNear, csmSplits[0]);
     m_lightGlobals->ShadowMatrices[1] = m_shadowMatrixCalculator.CalcShadowMatrix(csmSplits[0], csmSplits[1]);

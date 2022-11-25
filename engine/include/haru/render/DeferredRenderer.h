@@ -72,7 +72,7 @@ private:
 
     void DrawForwardPass();
 
-    ShadowMap m_shadowMap{1024};
+    ShadowMap m_shadowMap{2048};
     Framebuffer m_gBuffers;
 
     UniformBuffer<ShaderGlobals> m_shaderGlobals;
