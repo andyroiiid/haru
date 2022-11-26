@@ -10,6 +10,8 @@
 #include "haru/render/MeshPositionOnly.h"
 #include "haru/render/MeshBase.h"
 
+struct Material;
+
 // point light attenuation from https://wiki.ogre3d.org/-Point+Light+Attenuation
 // poly-fitted expression: log(y) = A * log(x) + B
 static inline float PointLightAttenuationLinearFromRange(float range) {
@@ -59,7 +61,7 @@ public:
 
     virtual void DrawLines(const MeshPositionOnly &lines, const glm::vec4 &color) = 0;
 
-    virtual void DrawMesh(const MeshBase &mesh, const glm::mat4 &model) = 0;
+    virtual void DrawMesh(const MeshBase &mesh, const glm::mat4 &model, const Material *material) = 0;
 
 private:
     glm::ivec2 m_screenSize{};

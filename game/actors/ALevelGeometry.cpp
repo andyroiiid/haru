@@ -105,5 +105,5 @@ ALevelGeometry::~ALevelGeometry() {
 
 void ALevelGeometry::Draw(Renderer &renderer) {
     renderer.SetWorldBounds(m_geomMin, m_geomMax);
-    renderer.DrawMesh(m_mesh, GetTransform().GetMatrix());
+    renderer.DrawMesh(m_mesh, GetTransform().GetMatrix(), nullptr);
 }

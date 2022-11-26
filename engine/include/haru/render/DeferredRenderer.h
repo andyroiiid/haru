@@ -10,10 +10,12 @@
 
 #include "haru/render/DeferredShaders.h"
 #include "haru/render/Framebuffer.h"
+#include "haru/render/Material.h"
 #include "haru/render/Mesh.h"
 #include "haru/render/Renderer.h"
 #include "haru/render/ShadowMap.h"
 #include "haru/render/ShadowMatrixCalculator.h"
+#include "haru/render/Texture.h"
 #include "haru/render/UniformBuffer.h"
 
 class DeferredRenderer final : public Renderer {
@@ -61,7 +63,7 @@ public:
 
     void DrawLines(const MeshPositionOnly &lines, const glm::vec4 &color) override;
 
-    void DrawMesh(const MeshBase &mesh, const glm::mat4 &model) override;
+    void DrawMesh(const MeshBase &mesh, const glm::mat4 &model, const Material *material) override;
 
 private:
     void FlushUniformBuffers();
@@ -89,11 +91,17 @@ private:
     MeshPositionOnly m_fullscreenQuad;
     MeshPositionOnly m_skyboxCube;
 
+    Texture m_defaultDiffuseTexture;
+    Material m_defaultMaterial{
+            &m_defaultDiffuseTexture
+    };
+
     std::vector<PointLightData> m_pendingPointLightData;
 
     struct DrawCallBase {
         const MeshBase &Mesh;
         glm::mat4 Model;
+        const Material *material;
     };
 
     std::vector<DrawCallBase> m_pendingBaseDrawCalls;

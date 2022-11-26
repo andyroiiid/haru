@@ -92,10 +92,12 @@ layout(location = 0) out vec4 fWorldPosition;
 layout(location = 1) out vec4 fWorldNormal;
 layout(location = 2) out vec4 fDiffuse;
 
+layout(binding = 0) uniform sampler2D uDiffuseTexture;
+
 void main() {
 	fWorldPosition = vWorldPosition;
 	fWorldNormal = normalize(vWorldNormal);
-	fDiffuse = vec4(fract(vTexCoord.x), fract(vTexCoord.y), 1, 1);
+	fDiffuse = texture(uDiffuseTexture, vTexCoord);
 }
 )GLSL") {
     m_modelLocation = GetUniformLocation("uModel");

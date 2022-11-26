@@ -48,5 +48,5 @@ void APhysBox::Update(const float deltaTime) {
 }
 
 void APhysBox::Draw(Renderer &renderer) {
-    renderer.DrawMesh(m_mesh, m_modelMatrix);
+    renderer.DrawMesh(m_mesh, m_modelMatrix, nullptr);
 }

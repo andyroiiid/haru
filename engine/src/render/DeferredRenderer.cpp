@@ -40,6 +40,15 @@ DeferredRenderer::DeferredRenderer() {
             },
             GL_TRIANGLE_STRIP
     );
+
+    static constexpr int DEFAULT_DIFFUSE_TEXTURE_SIZE = 4;
+    static constexpr unsigned char DEFAULT_DIFFUSE_TEXTURE_DATA[DEFAULT_DIFFUSE_TEXTURE_SIZE * DEFAULT_DIFFUSE_TEXTURE_SIZE * 4] = {
+            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    };
+    m_defaultDiffuseTexture = Texture({DEFAULT_DIFFUSE_TEXTURE_SIZE, DEFAULT_DIFFUSE_TEXTURE_SIZE}, DEFAULT_DIFFUSE_TEXTURE_DATA);
 }
 
 DeferredRenderer::~DeferredRenderer() {
@@ -104,8 +113,8 @@ void DeferredRenderer::DrawLines(const MeshPositionOnly &lines, const glm::vec4 
     m_pendingLinesDrawCalls.push_back({lines, color});
 }
 
-void DeferredRenderer::DrawMesh(const MeshBase &mesh, const glm::mat4 &model) {
-    m_pendingBaseDrawCalls.push_back({mesh, model});
+void DeferredRenderer::DrawMesh(const MeshBase &mesh, const glm::mat4 &model, const Material *material) {
+    m_pendingBaseDrawCalls.push_back({mesh, model, material ? material : &m_defaultMaterial});
 }
 
 void DeferredRenderer::FlushUniformBuffers() {
@@ -160,6 +169,7 @@ void DeferredRenderer::DrawToGBuffers() {
     m_baseShader.Use();
     for (const auto &baseDrawCall: m_pendingBaseDrawCalls) {
         m_baseShader.SetModel(baseDrawCall.Model);
+        baseDrawCall.material->Diffuse->Bind(0);
         baseDrawCall.Mesh.BindAndDraw();
     }
 
