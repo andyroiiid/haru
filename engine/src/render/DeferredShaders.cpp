@@ -95,7 +95,7 @@ layout(location = 2) out vec4 fDiffuse;
 void main() {
 	fWorldPosition = vWorldPosition;
 	fWorldNormal = normalize(vWorldNormal);
-	fDiffuse = vec4(1, 1, 1, 1);
+	fDiffuse = vec4(fract(vTexCoord.x), fract(vTexCoord.y), 1, 1);
 }
 )GLSL") {
     m_modelLocation = GetUniformLocation("uModel");

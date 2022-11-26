@@ -61,23 +61,29 @@ ALevelGeometry::ALevelGeometry(const std::string &levelName) {
         int brushFaceCount;
         mapStream >> brushFaceCount;
         for (int j = 0; j < brushFaceCount; j++) {
+            std::string texture;
+            mapStream >> texture;
+
             glm::vec3 normal;
             mapStream >> normal.x >> normal.y >> normal.z;
 
             int brushFaceVertexCount;
             mapStream >> brushFaceVertexCount;
 
-            std::vector<glm::vec3> brushFaceVertices(brushFaceVertexCount);
+            std::vector<glm::vec3> brushFaceVertexPositions(brushFaceVertexCount);
+            std::vector<glm::vec2> brushFaceVertexTextureCoords(brushFaceVertexCount);
             for (int k = 0; k < brushFaceVertexCount; k++) {
-                glm::vec3 &vertex = brushFaceVertices[k];
-                mapStream >> vertex.x >> vertex.y >> vertex.z;
+                glm::vec3 &position = brushFaceVertexPositions[k];
+                mapStream >> position.x >> position.y >> position.z;
+                glm::vec2 &textureCoord = brushFaceVertexTextureCoords[k];
+                mapStream >> textureCoord.x >> textureCoord.y;
             }
 
             // triangulate
             for (int k = 1; k < brushFaceVertexCount - 1; k++) {
-                vertices.push_back({brushFaceVertices[0], normal, {0.0f, 0.0f}});
-                vertices.push_back({brushFaceVertices[k], normal, {0.0f, 0.0f}});
-                vertices.push_back({brushFaceVertices[k + 1], normal, {0.0f, 0.0f}});
+                vertices.push_back({brushFaceVertexPositions[0], normal, brushFaceVertexTextureCoords[0]});
+                vertices.push_back({brushFaceVertexPositions[k], normal, brushFaceVertexTextureCoords[k]});
+                vertices.push_back({brushFaceVertexPositions[k + 1], normal, brushFaceVertexTextureCoords[k + 1]});
             }
         }
     }
