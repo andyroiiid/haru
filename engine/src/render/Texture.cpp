@@ -46,14 +46,14 @@ Texture::Texture(const glm::ivec2 &size, const unsigned char *data, Wrap wrap, b
     }
 }
 
-std::unique_ptr<Texture> Texture::FromFile(const std::string &filename, Texture::Wrap wrap, bool filter, bool mipmaps) {
+Texture Texture::FromFile(const std::string &filename, Texture::Wrap wrap, bool filter, bool mipmaps) {
     ImageFile image(filename);
     if (!image.Data()) {
         DebugLog("Failed to load texture from file: %s", filename.c_str());
         return {};
     }
     DebugLog("Loaded texture from file: %s", filename.c_str());
-    return std::make_unique<Texture>(image.Size(), image.Data(), wrap, filter, mipmaps);
+    return {image.Size(), image.Data(), wrap, filter, mipmaps};
 }
 
 Texture::~Texture() {

@@ -7,5 +7,5 @@
 class Texture;
 
 struct Material {
-    Texture *Diffuse;
+    Texture *Diffuse = nullptr;
 };

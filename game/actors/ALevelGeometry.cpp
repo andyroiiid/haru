@@ -4,6 +4,7 @@
 
 #include "ALevelGeometry.h"
 
+#include <map>
 #include <sstream>
 #include <PxRigidStatic.h>
 #include <foundation/PxAllocator.h>
@@ -13,6 +14,7 @@
 #include <haru/core/Debug.h>
 #include <haru/physics/PhysicsScene.h>
 #include <haru/physics/PhysicsSystem.h>
+#include <haru/render/Material.h>
 #include <haru/system/Files.h>
 
 #include "../GameStatics.h"
@@ -20,7 +22,7 @@
 ALevelGeometry::ALevelGeometry(const std::string &levelName) {
     DebugLog("loading level %s", levelName.c_str());
 
-    std::vector<VertexBase> vertices;
+    std::map<std::string, std::vector<VertexBase>> textureToVertices;
 
     std::string map = ReadFile(levelName);
     std::stringstream mapStream(map);
@@ -61,8 +63,10 @@ ALevelGeometry::ALevelGeometry(const std::string &levelName) {
         int brushFaceCount;
         mapStream >> brushFaceCount;
         for (int j = 0; j < brushFaceCount; j++) {
-            std::string texture;
-            mapStream >> texture;
+            std::string textureName;
+            mapStream >> textureName;
+
+            auto &vertices = textureToVertices[textureName];
 
             glm::vec3 normal;
             mapStream >> normal.x >> normal.y >> normal.z;
@@ -88,7 +92,9 @@ ALevelGeometry::ALevelGeometry(const std::string &levelName) {
         }
     }
 
-    m_mesh = MeshBase(vertices, GL_TRIANGLES);
+    for (const auto &[textureName, vertices]: textureToVertices) {
+        m_meshesAndMaterials.emplace_back(vertices, textureName);
+    }
 }
 
 ALevelGeometry::~ALevelGeometry() {
@@ -97,13 +103,24 @@ ALevelGeometry::~ALevelGeometry() {
     }
 
     for (physx::PxConvexMesh *collider: m_brushColliders) {
-        PX_RELEASE(collider);
+        PX_RELEASE(collider)
     }
-
-    m_mesh = {};
 }
 
 void ALevelGeometry::Draw(Renderer &renderer) {
     renderer.SetWorldBounds(m_geomMin, m_geomMax);
-    renderer.DrawMesh(m_mesh, GetTransform().GetMatrix(), nullptr);
+    const glm::mat4 modelMatrix = GetTransform().GetMatrix();
+    for (auto &meshAndMaterial: m_meshesAndMaterials) {
+        meshAndMaterial.Draw(renderer, modelMatrix);
+    }
+}
+
+ALevelGeometry::MeshAndTexture::MeshAndTexture(const std::vector<VertexBase> &vertices, const std::string &textureName)
+        : m_mesh(vertices, GL_TRIANGLES),
+          m_texture(Texture::FromFile("data/textures/" + textureName + ".png")) {
+}
+
+void ALevelGeometry::MeshAndTexture::Draw(Renderer &renderer, const glm::mat4 &modelMatrix) {
+    Material material{&m_texture};
+    renderer.DrawMesh(m_mesh, modelMatrix, &material);
 }

@@ -114,7 +114,7 @@ void DeferredRenderer::DrawLines(const MeshPositionOnly &lines, const glm::vec4 
 }
 
 void DeferredRenderer::DrawMesh(const MeshBase &mesh, const glm::mat4 &model, const Material *material) {
-    m_pendingBaseDrawCalls.push_back({mesh, model, material ? material : &m_defaultMaterial});
+    m_pendingBaseDrawCalls.push_back({mesh, model, material ? *material : m_defaultMaterial});
 }
 
 void DeferredRenderer::FlushUniformBuffers() {
@@ -169,7 +169,7 @@ void DeferredRenderer::DrawToGBuffers() {
     m_baseShader.Use();
     for (const auto &baseDrawCall: m_pendingBaseDrawCalls) {
         m_baseShader.SetModel(baseDrawCall.Model);
-        baseDrawCall.material->Diffuse->Bind(0);
+        baseDrawCall.material.Diffuse->Bind(0);
         baseDrawCall.Mesh.BindAndDraw();
     }
 

@@ -5,7 +5,6 @@
 #pragma once
 
 #include <string>
-#include <memory>
 #include <glad/gl.h>
 #include <glm/vec2.hpp>
 
@@ -13,6 +12,8 @@
 
 class Texture {
 public:
+    MOVE_ONLY(Texture)
+
     enum class Wrap {
         Repeat,
         Clamp,
@@ -22,10 +23,6 @@ public:
 
     Texture() = default;
 
-    Texture(Texture &&) noexcept = default;
-
-    Texture &operator=(Texture &&) noexcept = default;
-
     Texture(
             const glm::ivec2 &size,
             const unsigned char *data,
@@ -34,7 +31,7 @@ public:
             bool mipmaps = false
     );
 
-    static std::unique_ptr<Texture> FromFile(
+    static Texture FromFile(
             const std::string &filename,
             Wrap wrap = Wrap::Repeat,
             bool filter = false,
@@ -43,7 +40,7 @@ public:
 
     ~Texture();
 
-    [[nodiscard]] inline const glm::ivec2 &Size() const { return m_size; }
+    [[nodiscard]] const glm::ivec2 &Size() const { return m_size; }
 
     void Bind(GLuint unit) const;
 

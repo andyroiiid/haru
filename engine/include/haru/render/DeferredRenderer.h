@@ -100,8 +100,8 @@ private:
 
     struct DrawCallBase {
         const MeshBase &Mesh;
-        glm::mat4 Model;
-        const Material *material;
+        glm::mat4 Model{1.0f};
+        Material material;
     };
 
     std::vector<DrawCallBase> m_pendingBaseDrawCalls;
