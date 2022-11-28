@@ -1,3 +1,6 @@
+/**
+ * SPDX-License-Identifier: (WTFPL OR CC0-1.0) AND Apache-2.0
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -39,6 +42,7 @@ int GLAD_GL_VERSION_4_3 = 0;
 int GLAD_GL_VERSION_4_4 = 0;
 int GLAD_GL_VERSION_4_5 = 0;
 int GLAD_GL_VERSION_4_6 = 0;
+int GLAD_GL_ARB_shading_language_include = 0;
 
 
 
@@ -112,6 +116,7 @@ PFNGLCLIPCONTROLPROC glad_glClipControl = NULL;
 PFNGLCOLORMASKPROC glad_glColorMask = NULL;
 PFNGLCOLORMASKIPROC glad_glColorMaski = NULL;
 PFNGLCOMPILESHADERPROC glad_glCompileShader = NULL;
+PFNGLCOMPILESHADERINCLUDEARBPROC glad_glCompileShaderIncludeARB = NULL;
 PFNGLCOMPRESSEDTEXIMAGE1DPROC glad_glCompressedTexImage1D = NULL;
 PFNGLCOMPRESSEDTEXIMAGE2DPROC glad_glCompressedTexImage2D = NULL;
 PFNGLCOMPRESSEDTEXIMAGE3DPROC glad_glCompressedTexImage3D = NULL;
@@ -150,6 +155,7 @@ PFNGLDEBUGMESSAGECONTROLPROC glad_glDebugMessageControl = NULL;
 PFNGLDEBUGMESSAGEINSERTPROC glad_glDebugMessageInsert = NULL;
 PFNGLDELETEBUFFERSPROC glad_glDeleteBuffers = NULL;
 PFNGLDELETEFRAMEBUFFERSPROC glad_glDeleteFramebuffers = NULL;
+PFNGLDELETENAMEDSTRINGARBPROC glad_glDeleteNamedStringARB = NULL;
 PFNGLDELETEPROGRAMPROC glad_glDeleteProgram = NULL;
 PFNGLDELETEPROGRAMPIPELINESPROC glad_glDeleteProgramPipelines = NULL;
 PFNGLDELETEQUERIESPROC glad_glDeleteQueries = NULL;
@@ -270,6 +276,8 @@ PFNGLGETNAMEDBUFFERSUBDATAPROC glad_glGetNamedBufferSubData = NULL;
 PFNGLGETNAMEDFRAMEBUFFERATTACHMENTPARAMETERIVPROC glad_glGetNamedFramebufferAttachmentParameteriv = NULL;
 PFNGLGETNAMEDFRAMEBUFFERPARAMETERIVPROC glad_glGetNamedFramebufferParameteriv = NULL;
 PFNGLGETNAMEDRENDERBUFFERPARAMETERIVPROC glad_glGetNamedRenderbufferParameteriv = NULL;
+PFNGLGETNAMEDSTRINGARBPROC glad_glGetNamedStringARB = NULL;
+PFNGLGETNAMEDSTRINGIVARBPROC glad_glGetNamedStringivARB = NULL;
 PFNGLGETOBJECTLABELPROC glad_glGetObjectLabel = NULL;
 PFNGLGETOBJECTPTRLABELPROC glad_glGetObjectPtrLabel = NULL;
 PFNGLGETPOINTERVPROC glad_glGetPointerv = NULL;
@@ -365,6 +373,7 @@ PFNGLISBUFFERPROC glad_glIsBuffer = NULL;
 PFNGLISENABLEDPROC glad_glIsEnabled = NULL;
 PFNGLISENABLEDIPROC glad_glIsEnabledi = NULL;
 PFNGLISFRAMEBUFFERPROC glad_glIsFramebuffer = NULL;
+PFNGLISNAMEDSTRINGARBPROC glad_glIsNamedStringARB = NULL;
 PFNGLISPROGRAMPROC glad_glIsProgram = NULL;
 PFNGLISPROGRAMPIPELINEPROC glad_glIsProgramPipeline = NULL;
 PFNGLISQUERYPROC glad_glIsQuery = NULL;
@@ -404,6 +413,7 @@ PFNGLNAMEDFRAMEBUFFERTEXTUREPROC glad_glNamedFramebufferTexture = NULL;
 PFNGLNAMEDFRAMEBUFFERTEXTURELAYERPROC glad_glNamedFramebufferTextureLayer = NULL;
 PFNGLNAMEDRENDERBUFFERSTORAGEPROC glad_glNamedRenderbufferStorage = NULL;
 PFNGLNAMEDRENDERBUFFERSTORAGEMULTISAMPLEPROC glad_glNamedRenderbufferStorageMultisample = NULL;
+PFNGLNAMEDSTRINGARBPROC glad_glNamedStringARB = NULL;
 PFNGLOBJECTLABELPROC glad_glObjectLabel = NULL;
 PFNGLOBJECTPTRLABELPROC glad_glObjectPtrLabel = NULL;
 PFNGLPATCHPARAMETERFVPROC glad_glPatchParameterfv = NULL;
@@ -1419,6 +1429,15 @@ static void glad_gl_load_GL_VERSION_4_6( GLADuserptrloadfunc load, void* userptr
     glad_glPolygonOffsetClamp = (PFNGLPOLYGONOFFSETCLAMPPROC) load(userptr, "glPolygonOffsetClamp");
     glad_glSpecializeShader = (PFNGLSPECIALIZESHADERPROC) load(userptr, "glSpecializeShader");
 }
+static void glad_gl_load_GL_ARB_shading_language_include( GLADuserptrloadfunc load, void* userptr) {
+    if(!GLAD_GL_ARB_shading_language_include) return;
+    glad_glCompileShaderIncludeARB = (PFNGLCOMPILESHADERINCLUDEARBPROC) load(userptr, "glCompileShaderIncludeARB");
+    glad_glDeleteNamedStringARB = (PFNGLDELETENAMEDSTRINGARBPROC) load(userptr, "glDeleteNamedStringARB");
+    glad_glGetNamedStringARB = (PFNGLGETNAMEDSTRINGARBPROC) load(userptr, "glGetNamedStringARB");
+    glad_glGetNamedStringivARB = (PFNGLGETNAMEDSTRINGIVARBPROC) load(userptr, "glGetNamedStringivARB");
+    glad_glIsNamedStringARB = (PFNGLISNAMEDSTRINGARBPROC) load(userptr, "glIsNamedStringARB");
+    glad_glNamedStringARB = (PFNGLNAMEDSTRINGARBPROC) load(userptr, "glNamedStringARB");
+}
 
 
 
@@ -1432,9 +1451,9 @@ static int glad_gl_get_extensions( int version, const char **out_exts, unsigned 
 #if GLAD_GL_IS_SOME_NEW_VERSION
     if(GLAD_VERSION_MAJOR(version) < 3) {
 #else
-    (void) version;
-    (void) out_num_exts_i;
-    (void) out_exts_i;
+    GLAD_UNUSED(version);
+    GLAD_UNUSED(out_num_exts_i);
+    GLAD_UNUSED(out_exts_i);
 #endif
         if (glad_glGetString == NULL) {
             return 0;
@@ -1526,7 +1545,7 @@ static int glad_gl_find_extensions_gl( int version) {
     char **exts_i = NULL;
     if (!glad_gl_get_extensions(version, &exts, &num_exts_i, &exts_i)) return 0;
 
-    (void) glad_gl_has_extension;
+    GLAD_GL_ARB_shading_language_include = glad_gl_has_extension(version, exts, num_exts_i, exts_i, "GL_ARB_shading_language_include");
 
     glad_gl_free_extensions(exts_i, num_exts_i);
 
@@ -1609,6 +1628,7 @@ int gladLoadGLUserPtr( GLADuserptrloadfunc load, void *userptr) {
     glad_gl_load_GL_VERSION_4_6(load, userptr);
 
     if (!glad_gl_find_extensions_gl(version)) return 0;
+    glad_gl_load_GL_ARB_shading_language_include(load, userptr);
 
 
 
@@ -1713,7 +1733,7 @@ static GLADapiproc glad_gl_get_proc(void *vuserptr, const char *name) {
     return result;
 }
 
-static void* _gl_handle = NULL;
+static void* _glad_GL_loader_handle = NULL;
 
 static void* glad_gl_dlopen_handle(void) {
 #if GLAD_PLATFORM_APPLE
@@ -1735,11 +1755,11 @@ static void* glad_gl_dlopen_handle(void) {
     };
 #endif
 
-    if (_gl_handle == NULL) {
-        _gl_handle = glad_get_dlopen_handle(NAMES, sizeof(NAMES) / sizeof(NAMES[0]));
+    if (_glad_GL_loader_handle == NULL) {
+        _glad_GL_loader_handle = glad_get_dlopen_handle(NAMES, sizeof(NAMES) / sizeof(NAMES[0]));
     }
 
-    return _gl_handle;
+    return _glad_GL_loader_handle;
 }
 
 static struct _glad_gl_userptr glad_gl_build_userptr(void *handle) {
@@ -1765,7 +1785,7 @@ int gladLoaderLoadGL(void) {
     int did_load = 0;
     struct _glad_gl_userptr userptr;
 
-    did_load = _gl_handle == NULL;
+    did_load = _glad_GL_loader_handle == NULL;
     handle = glad_gl_dlopen_handle();
     if (handle) {
         userptr = glad_gl_build_userptr(handle);
@@ -1783,9 +1803,9 @@ int gladLoaderLoadGL(void) {
 
 
 void gladLoaderUnloadGL(void) {
-    if (_gl_handle != NULL) {
-        glad_close_dlopen_handle(_gl_handle);
-        _gl_handle = NULL;
+    if (_glad_GL_loader_handle != NULL) {
+        glad_close_dlopen_handle(_glad_GL_loader_handle);
+        _glad_GL_loader_handle = NULL;
     }
 }
 

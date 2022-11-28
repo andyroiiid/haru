@@ -4,8 +4,13 @@
 
 #include "haru/render/DeferredShaders.h"
 
-DeferredShaderShadowPass::DeferredShaderShadowPass()
-        : Shader(R"GLSL(
+DeferredShadersPrelude::DeferredShadersPrelude() {
+    Shader::AddNamedString("/uniforms", R"GLSL(
+layout(std140, binding = 0) uniform ShaderGlobals {
+    mat4 uView;
+    mat4 uProjection;
+};
+
 struct PointLightData {
 	vec3 position;
 	float linear;
@@ -21,6 +26,16 @@ layout(std140, binding = 1) uniform LightGlobals {
     mat4 uShadowMatrices[4];
 	PointLightData uPointLightData[32];
 };
+)GLSL");
+}
+
+DeferredShadersPrelude::~DeferredShadersPrelude() {
+    Shader::DeleteNamedString("/uniforms");
+}
+
+DeferredShaderShadowPass::DeferredShaderShadowPass()
+        : Shader(R"GLSL(
+#include <uniforms>
 )GLSL",
                  R"GLSL(
 layout(location = 0) in vec3 aPosition;
@@ -60,10 +75,7 @@ void DeferredShaderShadowPass::SetModel(const glm::mat4 &model) {
 
 DeferredShaderBase::DeferredShaderBase()
         : Shader(R"GLSL(
-layout(std140, binding = 0) uniform ShaderGlobals {
-    mat4 uView;
-    mat4 uProjection;
-};
+#include <uniforms>
 )GLSL",
                  R"GLSL(
 layout(location = 0) in vec3 aPosition;
@@ -109,26 +121,7 @@ void DeferredShaderBase::SetModel(const glm::mat4 &model) {
 
 DeferredShaderGPass::DeferredShaderGPass()
         : Shader(R"GLSL(
-layout(std140, binding = 0) uniform ShaderGlobals {
-    mat4 uView;
-    mat4 uProjection;
-};
-
-struct PointLightData {
-	vec3 position;
-	float linear;
-	vec3 color;
-	float quadratic;
-};
-
-layout(std140, binding = 1) uniform LightGlobals {
-	vec3 uDirectionalLight;
-	float uDirectionalLightIntensity;
-    vec3 uCascadeShadowMapSplits;
-    float Padding0;
-    mat4 uShadowMatrices[4];
-	PointLightData uPointLightData[32];
-};
+#include <uniforms>
 )GLSL",
                  R"GLSL(
 layout(location = 0) in vec2 aPosition;
@@ -250,10 +243,7 @@ void main() {
 
 DeferredShaderLines::DeferredShaderLines()
         : Shader(R"GLSL(
-layout(std140, binding = 0) uniform ShaderGlobals {
-    mat4 uView;
-    mat4 uProjection;
-};
+#include <uniforms>
 )GLSL",
                  R"GLSL(
 layout(location = 0) in vec3 aPosition;
@@ -280,26 +270,7 @@ void DeferredShaderLines::SetColor(const glm::vec4 &color) {
 
 DeferredShaderSkybox::DeferredShaderSkybox()
         : Shader(R"GLSL(
-layout(std140, binding = 0) uniform ShaderGlobals {
-    mat4 uView;
-    mat4 uProjection;
-};
-
-struct PointLightData {
-	vec3 position;
-	float linear;
-	vec3 color;
-	float quadratic;
-};
-
-layout(std140, binding = 1) uniform LightGlobals {
-	vec3 uDirectionalLight;
-	float uDirectionalLightIntensity;
-    vec3 uCascadeShadowMapSplits;
-    float Padding0;
-    mat4 uShadowMatrices[4];
-	PointLightData uPointLightData[32];
-};
+#include <uniforms>
 )GLSL",
                  R"GLSL(
 layout(location = 0) in vec3 aPosition;

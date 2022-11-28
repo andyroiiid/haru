@@ -33,6 +33,7 @@ Window::Window() {
 
     glfwMakeContextCurrent(m_window);
     DebugCheckCritical(gladLoadGL(glfwGetProcAddress) != 0, "Failed to load glad");
+    DebugCheckCritical(GLAD_GL_ARB_shading_language_include, "GL_ARB_shading_language_include not supported");
 
     DebugLog("GL_VERSION: %s", glGetString(GL_VERSION));
     DebugLog("GL_SHADING_LANGUAGE_VERSION: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));

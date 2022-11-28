@@ -41,7 +41,7 @@ class DeferredRenderer final : public Renderer {
     };
 
 public:
-    MOVE_ONLY(DeferredRenderer)
+    NO_MOVE_OR_COPY(DeferredRenderer)
 
     DeferredRenderer();
 
@@ -82,6 +82,7 @@ private:
 
     ShadowMatrixCalculator m_shadowMatrixCalculator;
 
+    DeferredShadersPrelude m_shadersPrelude;
     DeferredShaderShadowPass m_shadowShader;
     DeferredShaderBase m_baseShader;
     DeferredShaderGPass m_gPassShader;
