@@ -479,3 +479,9 @@
 "origin" "0 0 32"
 "angle" "270"
 }
+// entity 2
+{
+"classname" "props_suzanne"
+"origin" "8 -72 8"
+"angle" "0"
+}

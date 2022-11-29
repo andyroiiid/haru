@@ -7,6 +7,11 @@ add_executable(game
         actors/APhysBox.cpp actors/APhysBox.h
         actors/APointLight.cpp actors/APointLight.h
         actors/ALevelGeometry.cpp actors/ALevelGeometry.h
+        actors/MdlPalette.h
+        actors/MdlNormals.h
+        actors/MdlStructs.h
+        actors/MdlLoader.cpp actors/MdlLoader.h
+        actors/AStaticModel.cpp actors/AStaticModel.h
 
         Scene.cpp Scene.h
         GameStatics.h

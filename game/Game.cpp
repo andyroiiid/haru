@@ -14,6 +14,7 @@
 #include "actors/APlayer.h"
 #include "actors/APhysBox.h"
 #include "actors/ALevelGeometry.h"
+#include "actors/AStaticModel.h"
 
 void Game::Init() {
     DebugLog("Game init");
@@ -29,6 +30,8 @@ void Game::Init() {
     camera->SetTargetActor(player);
 
     m_scene->CreateActor<ALevelGeometry>("data/hello.haru");
+
+    m_scene->CreateActor<AStaticModel>();
 }
 
 void Game::Shutdown() {
