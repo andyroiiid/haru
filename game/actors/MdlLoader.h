@@ -9,10 +9,21 @@
 #include <glm/vec3.hpp>
 
 #include <haru/render/Texture.h>
+#include <haru/render/MeshBase.h>
+
+#include "MdlStructs.h"
 
 class MdlLoader {
 public:
     explicit MdlLoader(const std::string &filename);
+
+    [[nodiscard]] Texture GetTexture() const {
+        return {{m_skinWidth, m_skinHeight}, m_textureData.data()};
+    }
+
+    [[nodiscard]] MeshBase GetMesh() const {
+        return {m_meshVertices, GL_TRIANGLES};
+    }
 
 private:
     bool ReadBytes(size_t numBytes, void *output);
@@ -35,6 +46,10 @@ private:
 
     bool LoadFrames();
 
+    bool LoadSimpleFrame();
+
+    VertexBase GenerateVertex(const std::vector<trivertx_t> &vertices, const dtriangle_t &triangle, int indexInTriangle);
+
     std::string m_bytes;
     const char *m_currentPos;
     size_t m_remainingBytes;
@@ -52,4 +67,11 @@ private:
     long m_syncType{};
     long m_flags{};
     float m_size{};
+
+    std::vector<stvert_t> m_textureCoords;
+    std::vector<dtriangle_t> m_triangles;
+
+    // one skin + one frame (temporary)
+    std::vector<unsigned char> m_textureData;
+    std::vector<VertexBase> m_meshVertices;
 };
