@@ -9,6 +9,7 @@
 #include "../GameStatics.h"
 #include "../Scene.h"
 #include "../actors/ALevelGeometry.h"
+#include "../actors/AStaticModel.h"
 
 void LoadWorldSpawn(const EntityDefinition &definition) {
     GameStatics::GetScene()->CreateActor<ALevelGeometry>(definition.Brushes);
@@ -18,6 +19,13 @@ void LoadInfoPlayerStart(const EntityDefinition &definition) {
 }
 
 void LoadPropStatic(const EntityDefinition &definition) {
+    const std::string &model = definition.GetProperty("model");
+    DebugCheckCritical(!model.empty(), "prop_static doesn't have a valid model!");
+
+    glm::vec3 origin;
+    DebugCheckCritical(definition.GetPropertyPosition("origin", origin), "prop_static doesn't have a valid origin!");
+
+    GameStatics::GetScene()->CreateActor<AStaticModel>(model, origin);
 }
 
 typedef void (*EntityLoader)(const EntityDefinition &definition);

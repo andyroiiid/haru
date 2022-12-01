@@ -8,11 +8,11 @@
 
 #include "../mdl/MdlLoader.h"
 
-AStaticModel::AStaticModel() {
-    MdlLoader loader("data/models/desk.mdl");
+AStaticModel::AStaticModel(const std::string &model, const glm::vec3 &origin) {
+    MdlLoader loader("data/" + model);
     m_texture = loader.GetTexture();
     m_mesh = loader.GetMesh();
-    GetTransform().SetPosition({0.0f, 1.0f, 2.0f});
+    GetTransform().SetPosition(origin);
 }
 
 void AStaticModel::Draw(Renderer &renderer) {

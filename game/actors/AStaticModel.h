@@ -13,7 +13,7 @@ class AStaticModel : public Actor {
 public:
     DEFINE_ACTOR_CLASS(AStaticModel)
 
-    AStaticModel();
+    AStaticModel(const std::string &model, const glm::vec3 &origin);
 
     void Draw(Renderer &renderer) override;
 
