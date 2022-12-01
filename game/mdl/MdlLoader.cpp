@@ -184,8 +184,6 @@ bool MdlLoader::LoadSimpleFrame() {
     daliasframe_t frame;
     if (!Read(frame)) return false;
 
-    DebugLog("loading simple frame %.16s", frame.name);
-
     std::vector<trivertx_t> vertices(m_numVertices);
     if (!Read(vertices)) return false;
 
