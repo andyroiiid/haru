@@ -7,7 +7,7 @@
 #include <sstream>
 #include <foundation/PxVec3.h>
 #include <haru/render/MeshBase.h>
-#include <haru/system/Files.h>
+#include <haru/system/FileSystem.h>
 
 static void ParseEntityProperties(std::stringstream &mapStream, EntityProperties &properties) {
     int numProperties;
@@ -88,7 +88,7 @@ static void ParseEntityBrushes(std::stringstream &mapStream, EntityBrushes &brus
 }
 
 void ParseMap(const std::string &mapFilename, std::vector<EntityDefinition> &entities) {
-    std::stringstream mapStream(ReadFile(mapFilename));
+    std::stringstream mapStream(FileSystem::ReadFile(mapFilename));
 
     int numEntities;
     mapStream >> numEntities;

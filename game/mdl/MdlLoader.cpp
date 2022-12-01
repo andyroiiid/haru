@@ -6,13 +6,13 @@
 
 #include <glm/geometric.hpp>
 #include <haru/core/Debug.h>
-#include <haru/system/Files.h>
+#include <haru/system/FileSystem.h>
 
 #include "MdlPalette.h"
 #include "MdlNormals.h"
 
 MdlLoader::MdlLoader(const std::string &filename)
-        : m_bytes(ReadFile(filename)),
+        : m_bytes(FileSystem::ReadFile(filename)),
           m_currentPos(m_bytes.data()),
           m_remainingBytes(m_bytes.size()) {
     if (!LoadHeader()) {

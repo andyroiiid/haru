@@ -7,3 +7,6 @@
 [submodule "engine/dependencies/physx-static"]
 	path = engine/dependencies/physx-static
 	url = https://github.com/andyroiiid/physx-static.git
+[submodule "engine/dependencies/physfs"]
+	path = engine/dependencies/physfs
+	url = https://github.com/icculus/physfs.git

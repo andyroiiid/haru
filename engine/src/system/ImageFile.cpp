@@ -8,11 +8,11 @@
 
 #include <stb_image.h>
 
-#include "haru/system/Files.h"
+#include "haru/system/FileSystem.h"
 
 ImageFile::ImageFile(const std::string &filename) {
     stbi_set_flip_vertically_on_load(true);
-    std::string bytes = ReadFile(filename);
+    std::string bytes = FileSystem::ReadFile(filename);
     m_data = stbi_load_from_memory(
             reinterpret_cast<const stbi_uc *>(bytes.data()),
             static_cast<int>(bytes.length()),

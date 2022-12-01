@@ -9,10 +9,10 @@ add_library(engine
         include/haru/math/Transform.h
 
         include/haru/system/Window.h
-        include/haru/system/Files.h
+        include/haru/system/FileSystem.h
         include/haru/system/ImageFile.h
         src/system/Window.cpp
-        src/system/Files.cpp
+        src/system/FileSystem.cpp
         src/system/ImageFile.cpp
 
         include/haru/render/Framebuffer.h
@@ -47,6 +47,6 @@ target_include_directories(engine PUBLIC include)
 
 target_compile_definitions(engine PUBLIC GLFW_INCLUDE_NONE)
 
-target_link_libraries(engine PUBLIC glfw glad glm stb PhysX)
+target_link_libraries(engine PUBLIC glfw glad glm stb PhysX physfs-static)
 
 set_msvc_runtime_library(engine)

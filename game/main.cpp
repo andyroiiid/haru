@@ -3,6 +3,7 @@
 //
 
 #include <haru/system/Window.h>
+#include <haru/system/FileSystem.h>
 
 #include "Game.h"
 
@@ -16,6 +17,9 @@ __declspec(dllexport) unsigned long AmdPowerXpressRequestHighPerformance = 0x000
 }
 
 int main() {
+    FileSystem fileSystem;
+    fileSystem.Mount("data", "/");
+
     Window window;
     Game game;
     window.MainLoop(game);

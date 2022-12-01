@@ -26,7 +26,7 @@ void Game::Init() {
     Window->SetCursorEnabled(false);
 
     std::vector<EntityDefinition> entities;
-    ParseMap("data/hello.haru", entities);
+    ParseMap("hello.haru", entities);
     LoadEntities(entities);
 
     m_scene->CreateActor<ADirectionalLight>(1.0f);

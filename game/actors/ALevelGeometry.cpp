@@ -61,7 +61,7 @@ void ALevelGeometry::Draw(Renderer &renderer) {
 
 ALevelGeometry::MeshAndTexture::MeshAndTexture(const std::vector<VertexBase> &vertices, const std::string &textureName)
         : m_mesh(vertices, GL_TRIANGLES),
-          m_texture(Texture::FromFile("data/textures/" + textureName + ".png")) {
+          m_texture(Texture::FromFile("textures/" + textureName + ".png")) {
 }
 
 void ALevelGeometry::MeshAndTexture::Draw(Renderer &renderer, const glm::mat4 &modelMatrix) {

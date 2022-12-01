@@ -9,7 +9,7 @@
 #include "../mdl/MdlLoader.h"
 
 AStaticModel::AStaticModel(const std::string &model, const glm::vec3 &origin) {
-    MdlLoader loader("data/" + model);
+    MdlLoader loader(model);
     m_texture = loader.GetTexture();
     m_mesh = loader.GetMesh();
     GetTransform().SetPosition(origin);
