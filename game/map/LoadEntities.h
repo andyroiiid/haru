@@ -4,6 +4,6 @@
 
 #pragma once
 
-#include "Entity.h"
+#include "map/Entity.h"
 
 void LoadEntities(const std::vector<EntityDefinition> &entities);

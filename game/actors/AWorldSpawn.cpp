@@ -2,7 +2,7 @@
 // Created by andyroiiid on 11/21/2022.
 //
 
-#include "ALevelGeometry.h"
+#include "actors/AWorldSpawn.h"
 
 #include <PxRigidStatic.h>
 #include <foundation/PxAllocator.h>
@@ -11,9 +11,9 @@
 #include <haru/physics/PhysicsSystem.h>
 #include <haru/render/Material.h>
 
-#include "../GameStatics.h"
+#include "GameStatics.h"
 
-ALevelGeometry::ALevelGeometry(const EntityBrushes &brushes) {
+AWorldSpawn::AWorldSpawn(const EntityBrushes &brushes) {
     const physx::PxTransform rigidbodyTransform(physx::PxVec3{0.0f, 0.0f, 0.0f});
     PhysicsSystem *physicsSystem = GameStatics::GetPhysicsSystem();
     PhysicsScene *physicsScene = GameStatics::GetPhysicsScene();
@@ -41,7 +41,7 @@ ALevelGeometry::ALevelGeometry(const EntityBrushes &brushes) {
     }
 }
 
-ALevelGeometry::~ALevelGeometry() {
+AWorldSpawn::~AWorldSpawn() {
     for (physx::PxRigidStatic *rigidbody: m_brushRigidbodies) {
         PX_RELEASE(rigidbody)
     }
@@ -51,7 +51,7 @@ ALevelGeometry::~ALevelGeometry() {
     }
 }
 
-void ALevelGeometry::Draw(Renderer &renderer) {
+void AWorldSpawn::Draw(Renderer &renderer) {
     renderer.SetWorldBounds(m_geomMin, m_geomMax);
     const glm::mat4 modelMatrix = GetTransform().GetMatrix();
     for (auto &meshAndMaterial: m_meshesAndMaterials) {
@@ -59,12 +59,12 @@ void ALevelGeometry::Draw(Renderer &renderer) {
     }
 }
 
-ALevelGeometry::MeshAndTexture::MeshAndTexture(const std::vector<VertexBase> &vertices, const std::string &textureName)
+AWorldSpawn::MeshAndTexture::MeshAndTexture(const std::vector<VertexBase> &vertices, const std::string &textureName)
         : m_mesh(vertices, GL_TRIANGLES),
           m_texture(Texture::FromFile("textures/" + textureName + ".png")) {
 }
 
-void ALevelGeometry::MeshAndTexture::Draw(Renderer &renderer, const glm::mat4 &modelMatrix) {
+void AWorldSpawn::MeshAndTexture::Draw(Renderer &renderer, const glm::mat4 &modelMatrix) {
     Material material{&m_texture};
     renderer.DrawMesh(m_mesh, modelMatrix, &material);
 }

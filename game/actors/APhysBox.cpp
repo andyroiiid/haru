@@ -1,11 +1,11 @@
-﻿#include "APhysBox.h"
+﻿#include "actors/APhysBox.h"
 
 #include <PxRigidDynamic.h>
 
 #include <haru/physics/PhysicsScene.h>
 #include <haru/render/MeshUtilities.h>
 
-#include "../GameStatics.h"
+#include "GameStatics.h"
 
 APhysBox::APhysBox(
         const glm::vec3 &position,

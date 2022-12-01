@@ -9,11 +9,11 @@
 #include <haru/render/Texture.h>
 #include <haru/render/MeshBase.h>
 
-class AStaticModel : public Actor {
+class APropStatic : public Actor {
 public:
-    DEFINE_ACTOR_CLASS(AStaticModel)
+    DEFINE_ACTOR_CLASS(APropStatic)
 
-    AStaticModel(const std::string &model, const glm::vec3 &origin);
+    APropStatic(const std::string &model, const glm::vec3 &origin);
 
     void Draw(Renderer &renderer) override;
 

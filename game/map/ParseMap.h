@@ -7,6 +7,6 @@
 #include <string>
 #include <vector>
 
-#include "Entity.h"
+#include "map/Entity.h"
 
 void ParseMap(const std::string &mapFilename, std::vector<EntityDefinition> &entities);

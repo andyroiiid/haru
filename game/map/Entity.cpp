@@ -2,7 +2,7 @@
 // Created by andyroiiid on 11/30/2022.
 //
 
-#include "Entity.h"
+#include "map/Entity.h"
 
 #include <sstream>
 

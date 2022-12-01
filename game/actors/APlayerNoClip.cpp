@@ -1,22 +1,14 @@
-﻿#include "APlayerNoClip.h"
+﻿#include "actors/APlayerNoClip.h"
 
-#include <PxRigidActor.h>
-
-#include <haru/physics/PhysicsScene.h>
 #include <haru/system/Window.h>
 
-#include "APhysBox.h"
-#include "../Scene.h"
-#include "../GameStatics.h"
+#include "GameStatics.h"
 
 APlayerNoClip::APlayerNoClip(
         const glm::vec3 &position, float yaw,
         float mouseSpeed,
         float flySpeed
-) : m_physicsScene(GameStatics::GetPhysicsScene()),
-    m_window(GameStatics::GetWindow()),
-    m_scene(GameStatics::GetScene()),
-    m_mouseSpeed(mouseSpeed),
+) : m_mouseSpeed(mouseSpeed),
     m_flySpeed(flySpeed) {
     GetTransform().SetPosition(position).RotateY(yaw);
 }
@@ -24,8 +16,6 @@ APlayerNoClip::APlayerNoClip(
 void APlayerNoClip::Update(const float deltaTime) {
     Turn();
     Move(deltaTime);
-    CreateBox();
-    DestroyBox();
 }
 
 void APlayerNoClip::Draw(Renderer &renderer) {
@@ -37,15 +27,15 @@ void APlayerNoClip::Draw(Renderer &renderer) {
 }
 
 glm::vec3 APlayerNoClip::GetInputDirection() {
+    Window *window = GameStatics::GetWindow();
     Transform &transform = GetTransform();
-
-    return transform.GetHorizontalRightVector() * m_window->GetKeyAxis(GLFW_KEY_D, GLFW_KEY_A) +
-           glm::vec3{0.0f, 1.0f, 0.0f} * m_window->GetKeyAxis(GLFW_KEY_E, GLFW_KEY_Q) +
-           transform.GetHorizontalForwardVector() * m_window->GetKeyAxis(GLFW_KEY_W, GLFW_KEY_S);
+    return transform.GetHorizontalRightVector() * window->GetKeyAxis(GLFW_KEY_D, GLFW_KEY_A) +
+           glm::vec3{0.0f, 1.0f, 0.0f} * window->GetKeyAxis(GLFW_KEY_E, GLFW_KEY_Q) +
+           transform.GetHorizontalForwardVector() * window->GetKeyAxis(GLFW_KEY_W, GLFW_KEY_S);
 }
 
 void APlayerNoClip::Turn() {
-    const glm::vec2 &deltaMousePos = m_window->GetMouseDeltaPosition();
+    const glm::vec2 &deltaMousePos = GameStatics::GetWindow()->GetMouseDeltaPosition();
     GetTransform()
             .RotateX(m_mouseSpeed * -deltaMousePos.y)
             .RotateY(m_mouseSpeed * -deltaMousePos.x)
@@ -55,46 +45,6 @@ void APlayerNoClip::Turn() {
 void APlayerNoClip::Move(float deltaTime) {
     const glm::vec3 inputDirection = GetInputDirection();
     if (inputDirection.x != 0.0f || inputDirection.y != 0.0f || inputDirection.z != 0.0f) {
-        float flySpeed = m_flySpeed;
-        if (m_window->IsKeyDown(GLFW_KEY_LEFT_SHIFT)) {
-            flySpeed *= 2.0f;
-        }
-        GetTransform().Translate(normalize(inputDirection) * (flySpeed * deltaTime));
+        GetTransform().Translate(normalize(inputDirection) * (m_flySpeed * deltaTime));
     }
-}
-
-void APlayerNoClip::CreateBox() {
-    Transform &transform = GetTransform();
-
-    const bool currLmb = m_window->IsMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT);
-    if (currLmb && !m_prevLmb) {
-        m_scene->CreateActor<APhysBox>(
-                transform.GetPosition(),
-                glm::vec3{0.5f, 0.5f, 0.5f},
-                transform.GetForwardVector() * 20.0f
-        );
-    }
-    m_prevLmb = currLmb;
-}
-
-void APlayerNoClip::DestroyBox() {
-    Transform &transform = GetTransform();
-    const glm::vec3 &position = transform.GetPosition();
-    const glm::vec3 &forward = transform.GetForwardVector();
-
-    const bool currRmb = m_window->IsMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT);
-    if (currRmb && !m_prevRmb) {
-        const auto hit = m_physicsScene->Raycast(
-                {position.x, position.y, position.z},
-                {forward.x, forward.y, forward.z},
-                10.0f
-        );
-        if (hit.hasBlock) {
-            const auto actor = static_cast<Actor *>(hit.block.actor->userData);
-            if (actor->IsClass<APhysBox>()) {
-                actor->Destroy();
-            }
-        }
-    }
-    m_prevRmb = currRmb;
 }

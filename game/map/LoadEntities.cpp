@@ -2,17 +2,17 @@
 // Created by andyroiiid on 11/30/2022.
 //
 
-#include "LoadEntities.h"
+#include "map/LoadEntities.h"
 
 #include <haru/core/Debug.h>
 
-#include "../GameStatics.h"
-#include "../Scene.h"
-#include "../actors/ALevelGeometry.h"
-#include "../actors/AStaticModel.h"
+#include "GameStatics.h"
+#include "Scene.h"
+#include "actors/AWorldSpawn.h"
+#include "actors/APropStatic.h"
 
 void LoadWorldSpawn(const EntityDefinition &definition) {
-    GameStatics::GetScene()->CreateActor<ALevelGeometry>(definition.Brushes);
+    GameStatics::GetScene()->CreateActor<AWorldSpawn>(definition.Brushes);
 }
 
 void LoadInfoPlayerStart(const EntityDefinition &definition) {
@@ -25,7 +25,7 @@ void LoadPropStatic(const EntityDefinition &definition) {
     glm::vec3 origin;
     DebugCheckCritical(definition.GetPropertyPosition("origin", origin), "prop_static doesn't have a valid origin!");
 
-    GameStatics::GetScene()->CreateActor<AStaticModel>(model, origin);
+    GameStatics::GetScene()->CreateActor<APropStatic>(model, origin);
 }
 
 typedef void (*EntityLoader)(const EntityDefinition &definition);

@@ -2,12 +2,6 @@
 
 #include "Actor.h"
 
-class PhysicsScene;
-
-class Window;
-
-class Scene;
-
 class APlayerNoClip final : public Actor {
 public:
     DEFINE_ACTOR_CLASS(APlayerNoClip)
@@ -30,16 +24,6 @@ private:
 
     void Move(float deltaTime);
 
-    void CreateBox();
-
-    void DestroyBox();
-
-    PhysicsScene *m_physicsScene;
-    Window *m_window;
-    Scene *m_scene;
     float m_mouseSpeed;
     float m_flySpeed;
-
-    bool m_prevLmb = false;
-    bool m_prevRmb = false;
 };

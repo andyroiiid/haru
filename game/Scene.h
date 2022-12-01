@@ -7,7 +7,7 @@
 #include <memory>
 #include <vector>
 
-#include "actors/Actor.h"
+#include "Actor.h"
 
 class Scene {
 public:

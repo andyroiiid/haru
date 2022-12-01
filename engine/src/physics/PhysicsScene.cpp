@@ -58,8 +58,9 @@ physx::PxController *PhysicsScene::CreateController(const glm::vec3 &position, f
     desc.stepOffset = 0.3f;
     desc.nonWalkableMode = physx::PxControllerNonWalkableMode::ePREVENT_CLIMBING;
     desc.material = m_defaultMaterial;
+    // https://nvidia-omniverse.github.io/PhysX/physx/5.1.0/docs/CharacterControllers.html#character-volume
     desc.radius = radius;
-    desc.height = height;
+    desc.height = height - radius * 2.0f;
     desc.climbingMode = physx::PxCapsuleClimbingMode::eCONSTRAINED;
     return m_controllerManager->createController(desc);
 }

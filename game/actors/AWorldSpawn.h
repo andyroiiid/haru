@@ -15,16 +15,15 @@ namespace physx {
 }
 
 #include "Actor.h"
+#include "map/Entity.h"
 
-#include "../map/Entity.h"
-
-class ALevelGeometry : public Actor {
+class AWorldSpawn : public Actor {
 public:
-    DEFINE_ACTOR_CLASS(ALevelGeometry)
+    DEFINE_ACTOR_CLASS(AWorldSpawn)
 
-    explicit ALevelGeometry(const EntityBrushes &brushes);
+    explicit AWorldSpawn(const EntityBrushes &brushes);
 
-    ~ALevelGeometry() override;
+    ~AWorldSpawn() override;
 
     void Draw(Renderer &renderer) override;
 

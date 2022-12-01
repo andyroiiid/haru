@@ -2,21 +2,9 @@
 
 #include "Actor.h"
 
-#include <haru/math/Random.h>
-
-class PhysicsScene;
-
-class Window;
-
-class Scene;
-
 namespace physx {
     class PxController;
 }
-
-class APointLight;
-
-class APhysBox;
 
 class APlayer final : public Actor {
 public:
@@ -43,9 +31,6 @@ private:
 
     void UpdateAcceleration();
 
-    PhysicsScene *m_physicsScene;
-    Window *m_window;
-
     physx::PxController *m_controller;
 
     float m_mouseSpeed;
@@ -60,15 +45,4 @@ private:
     glm::vec3 m_acceleration{};
 
     glm::vec3 m_previousPosition{};
-
-    bool m_prevLmb = false;
-    static constexpr int MAX_NUM_POINT_LIGHTS = 16;
-    APointLight *m_pointLights[MAX_NUM_POINT_LIGHTS]{};
-    int m_nextPointLight = 0;
-    Random m_random;
-
-    bool m_prevRmb = false;
-    static constexpr int MAX_NUM_BOXES = 8;
-    APhysBox *m_physBoxes[MAX_NUM_BOXES]{};
-    int m_nextPhysBox = 0;
 };

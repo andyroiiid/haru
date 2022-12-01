@@ -1,4 +1,4 @@
-﻿#include "APointLight.h"
+﻿#include "actors/APointLight.h"
 
 APointLight::APointLight(const glm::vec3 &position, const glm::vec3 &color, float range)
         : m_color(color),

@@ -2,7 +2,7 @@
 // Created by andyroiiid on 11/30/2022.
 //
 
-#include "ParseMap.h"
+#include "map/ParseMap.h"
 
 #include <sstream>
 #include <foundation/PxVec3.h>

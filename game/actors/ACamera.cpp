@@ -2,7 +2,7 @@
 // Created by andyroiiid on 11/24/2022.
 //
 
-#include "ACamera.h"
+#include "actors/ACamera.h"
 
 ACamera::ACamera(float fov, float near, float far)
         : m_fov(fov), m_near(near), m_far(far) {

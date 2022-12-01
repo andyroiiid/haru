@@ -6,8 +6,6 @@
 
 #include "Actor.h"
 
-class Window;
-
 class ACamera final : public Actor {
 public:
     DEFINE_ACTOR_CLASS(ACamera)

@@ -1,4 +1,4 @@
-#include "ADirectionalLight.h"
+#include "actors/ADirectionalLight.h"
 
 ADirectionalLight::ADirectionalLight(float intensity, float yaw, float pitch)
         : m_intensity(intensity) {
