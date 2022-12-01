@@ -5,5 +5,8 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
-void ParseMap(const std::string &mapFilename);
+#include "Entity.h"
+
+void ParseMap(const std::string &mapFilename, std::vector<EntityDefinition> &entities);

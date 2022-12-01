@@ -16,11 +16,13 @@ namespace physx {
 
 #include "Actor.h"
 
+#include "../map/Entity.h"
+
 class ALevelGeometry : public Actor {
 public:
     DEFINE_ACTOR_CLASS(ALevelGeometry)
 
-    explicit ALevelGeometry(const std::string &levelName);
+    explicit ALevelGeometry(const EntityBrushes &brushes);
 
     ~ALevelGeometry() override;
 

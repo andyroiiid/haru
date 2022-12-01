@@ -4,24 +4,14 @@
 
 #include "ParseMap.h"
 
-#include <map>
 #include <sstream>
 #include <foundation/PxVec3.h>
-#include <haru/core/Debug.h>
 #include <haru/render/MeshBase.h>
 #include <haru/system/Files.h>
-
-using EntityProperties = std::map<std::string, std::string>;
-
-struct EntityBrushes {
-    std::map<std::string, std::vector<VertexBase>> TextureToVertices;
-    std::vector<std::vector<physx::PxVec3>> Colliders;
-};
 
 static void ParseEntityProperties(std::stringstream &mapStream, EntityProperties &properties) {
     int numProperties;
     mapStream >> numProperties;
-    DebugLog("%d properties", numProperties);
 
     // read the line end after numProperties
     std::string dummy;
@@ -34,7 +24,7 @@ static void ParseEntityProperties(std::stringstream &mapStream, EntityProperties
         std::string value;
         std::getline(mapStream, value);
 
-        DebugLog("%s -> %s", key.c_str(), value.c_str());
+        properties[key] = value;
     }
 }
 
@@ -89,7 +79,6 @@ static void ParseEntityBrush(std::stringstream &mapStream, EntityBrushes &brushe
 static void ParseEntityBrushes(std::stringstream &mapStream, EntityBrushes &brushes) {
     int numBrushes;
     mapStream >> numBrushes;
-    DebugLog("%d brushes", numBrushes);
 
     brushes.Colliders.resize(numBrushes);
 
@@ -98,22 +87,15 @@ static void ParseEntityBrushes(std::stringstream &mapStream, EntityBrushes &brus
     }
 }
 
-static void LoadEntity(std::stringstream &mapStream) {
-    EntityProperties properties;
-    ParseEntityProperties(mapStream, properties);
-
-    EntityBrushes brushes;
-    ParseEntityBrushes(mapStream, brushes);
-}
-
-void ParseMap(const std::string &mapFilename) {
+void ParseMap(const std::string &mapFilename, std::vector<EntityDefinition> &entities) {
     std::stringstream mapStream(ReadFile(mapFilename));
 
     int numEntities;
     mapStream >> numEntities;
-    DebugLog("%d entities", numEntities);
 
-    for (int i = 0; i < numEntities; i++) {
-        LoadEntity(mapStream);
+    entities.resize(numEntities);
+    for (EntityDefinition &entity: entities) {
+        ParseEntityProperties(mapStream, entity.Properties);
+        ParseEntityBrushes(mapStream, entity.Brushes);
     }
 }
