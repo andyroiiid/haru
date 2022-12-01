@@ -15,7 +15,7 @@
 #include "actors/APhysBox.h"
 #include "actors/ALevelGeometry.h"
 
-#include "LoadMap.h"
+#include "map/ParseMap.h"
 
 void Game::Init() {
     DebugLog("Game init");
@@ -24,7 +24,7 @@ void Game::Init() {
 
     Window->SetCursorEnabled(false);
 
-    LoadMap("data/hello.haru");
+    ParseMap("data/hello.haru");
 
     m_scene->CreateActor<ADirectionalLight>(1.0f);
 

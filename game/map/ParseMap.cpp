@@ -2,7 +2,7 @@
 // Created by andyroiiid on 11/30/2022.
 //
 
-#include "LoadMap.h"
+#include "ParseMap.h"
 
 #include <map>
 #include <sstream>
@@ -11,7 +11,14 @@
 #include <haru/render/MeshBase.h>
 #include <haru/system/Files.h>
 
-void LoadEntityProperties(std::stringstream &mapStream, std::map<std::string, std::string> &properties) {
+using EntityProperties = std::map<std::string, std::string>;
+
+struct EntityBrushes {
+    std::map<std::string, std::vector<VertexBase>> TextureToVertices;
+    std::vector<std::vector<physx::PxVec3>> Colliders;
+};
+
+static void ParseEntityProperties(std::stringstream &mapStream, EntityProperties &properties) {
     int numProperties;
     mapStream >> numProperties;
     DebugLog("%d properties", numProperties);
@@ -31,12 +38,7 @@ void LoadEntityProperties(std::stringstream &mapStream, std::map<std::string, st
     }
 }
 
-struct EntityBrushes {
-    std::map<std::string, std::vector<VertexBase>> TextureToVertices;
-    std::vector<std::vector<physx::PxVec3>> Colliders;
-};
-
-void LoadEntityBrushFace(std::stringstream &mapStream, EntityBrushes &brushes) {
+static void ParseEntityBrushFace(std::stringstream &mapStream, EntityBrushes &brushes) {
     std::string textureName;
     mapStream >> textureName;
 
@@ -65,7 +67,7 @@ void LoadEntityBrushFace(std::stringstream &mapStream, EntityBrushes &brushes) {
     }
 }
 
-void LoadEntityBrush(std::stringstream &mapStream, EntityBrushes &brushes, int brushIndex) {
+static void ParseEntityBrush(std::stringstream &mapStream, EntityBrushes &brushes, int brushIndex) {
     int numColliderVertices;
     mapStream >> numColliderVertices;
 
@@ -80,11 +82,11 @@ void LoadEntityBrush(std::stringstream &mapStream, EntityBrushes &brushes, int b
     int numBrushFaces;
     mapStream >> numBrushFaces;
     for (int j = 0; j < numBrushFaces; j++) {
-        LoadEntityBrushFace(mapStream, brushes);
+        ParseEntityBrushFace(mapStream, brushes);
     }
 }
 
-void LoadEntityBrushes(std::stringstream &mapStream, EntityBrushes &brushes) {
+static void ParseEntityBrushes(std::stringstream &mapStream, EntityBrushes &brushes) {
     int numBrushes;
     mapStream >> numBrushes;
     DebugLog("%d brushes", numBrushes);
@@ -92,19 +94,19 @@ void LoadEntityBrushes(std::stringstream &mapStream, EntityBrushes &brushes) {
     brushes.Colliders.resize(numBrushes);
 
     for (int i = 0; i < numBrushes; i++) {
-        LoadEntityBrush(mapStream, brushes, i);
+        ParseEntityBrush(mapStream, brushes, i);
     }
 }
 
-void LoadEntity(std::stringstream &mapStream) {
-    std::map<std::string, std::string> properties;
-    LoadEntityProperties(mapStream, properties);
+static void LoadEntity(std::stringstream &mapStream) {
+    EntityProperties properties;
+    ParseEntityProperties(mapStream, properties);
 
     EntityBrushes brushes;
-    LoadEntityBrushes(mapStream, brushes);
+    ParseEntityBrushes(mapStream, brushes);
 }
 
-void LoadMap(const std::string &mapFilename) {
+void ParseMap(const std::string &mapFilename) {
     std::stringstream mapStream(ReadFile(mapFilename));
 
     int numEntities;

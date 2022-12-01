@@ -6,4 +6,4 @@
 
 #include <string>
 
-void LoadMap(const std::string &mapFilename);
+void ParseMap(const std::string &mapFilename);

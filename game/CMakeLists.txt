@@ -14,9 +14,10 @@ add_executable(game
         actors/ALevelGeometry.cpp actors/ALevelGeometry.h
         actors/AStaticModel.cpp actors/AStaticModel.h
 
+        map/ParseMap.cpp map/ParseMap.h
+
         Scene.cpp Scene.h
         GameStatics.h
-        LoadMap.cpp LoadMap.h
         Game.cpp Game.h
         main.cpp)
 
