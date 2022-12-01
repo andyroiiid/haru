@@ -6,7 +6,7 @@
 
 #include <haru/render/Material.h>
 
-#include "MdlLoader.h"
+#include "../mdl/MdlLoader.h"
 
 AStaticModel::AStaticModel() {
     MdlLoader loader("data/models/desk.mdl");

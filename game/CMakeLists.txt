@@ -1,4 +1,9 @@
 add_executable(game
+        mdl/MdlPalette.h
+        mdl/MdlNormals.h
+        mdl/MdlStructs.h
+        mdl/MdlLoader.cpp mdl/MdlLoader.h
+
         actors/Actor.h
         actors/ADirectionalLight.cpp actors/ADirectionalLight.h
         actors/ACamera.cpp actors/ACamera.h
@@ -7,10 +12,6 @@ add_executable(game
         actors/APhysBox.cpp actors/APhysBox.h
         actors/APointLight.cpp actors/APointLight.h
         actors/ALevelGeometry.cpp actors/ALevelGeometry.h
-        actors/MdlPalette.h
-        actors/MdlNormals.h
-        actors/MdlStructs.h
-        actors/MdlLoader.cpp actors/MdlLoader.h
         actors/AStaticModel.cpp actors/AStaticModel.h
 
         Scene.cpp Scene.h
