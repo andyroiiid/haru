@@ -481,7 +481,25 @@
 }
 // entity 2
 {
-"classname" "props_suzanne"
-"origin" "8 -72 8"
-"angle" "0"
+"classname" "prop_static"
+"origin" "0 -64 16"
+"model" "models/suzanne.mdl"
+"frame" "0"
+"skin" "0"
+}
+// entity 3
+{
+"classname" "prop_static"
+"origin" "64 -64 0"
+"model" "models/desk.mdl"
+"frame" "0"
+"skin" "0"
+}
+// entity 4
+{
+"classname" "prop_static"
+"origin" "112 -64 0"
+"model" "models/desk.mdl"
+"frame" "0"
+"skin" "0"
 }
