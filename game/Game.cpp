@@ -15,12 +15,16 @@
 #include "actors/APhysBox.h"
 #include "actors/ALevelGeometry.h"
 
+#include "LoadMap.h"
+
 void Game::Init() {
     DebugLog("Game init");
 
     CreateEssentials();
 
     Window->SetCursorEnabled(false);
+
+    LoadMap("data/hello.haru");
 
     m_scene->CreateActor<ADirectionalLight>(1.0f);
 

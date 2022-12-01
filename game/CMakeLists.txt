@@ -16,6 +16,7 @@ add_executable(game
 
         Scene.cpp Scene.h
         GameStatics.h
+        LoadMap.cpp LoadMap.h
         Game.cpp Game.h
         main.cpp)
 
