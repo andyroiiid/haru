@@ -25,19 +25,14 @@ Window::Window() {
     DebugLog("GLFW %d.%d.%d initialized", GLFW_VERSION_MAJOR, GLFW_VERSION_MINOR, GLFW_VERSION_REVISION);
     DebugCheckCritical(atexit(glfwTerminate) == 0, "Failed to register glfwTerminate");
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     m_window = glfwCreateWindow(1366, 768, "Haru", nullptr, nullptr);
     DebugCheckCritical(m_window != nullptr, "Failed to create window");
 
     glfwMakeContextCurrent(m_window);
     DebugCheckCritical(gladLoadGL(glfwGetProcAddress) != 0, "Failed to load glad");
-    DebugCheckCritical(GLAD_GL_ARB_direct_state_access, "GL_ARB_direct_state_access not supported");
-    DebugCheckCritical(GLAD_GL_ARB_explicit_uniform_location, "GL_ARB_explicit_uniform_location not supported");
-    DebugCheckCritical(GLAD_GL_ARB_gpu_shader5, "GL_ARB_gpu_shader5 not supported");
-    DebugCheckCritical(GLAD_GL_ARB_separate_shader_objects, "GL_ARB_separate_shader_objects not supported");
-    DebugCheckCritical(GLAD_GL_ARB_shading_language_420pack, "GL_ARB_shading_language_420pack not supported");
 
     DebugLog("GL_VERSION: %s", glGetString(GL_VERSION));
     DebugLog("GL_SHADING_LANGUAGE_VERSION: %s", glGetString(GL_SHADING_LANGUAGE_VERSION));

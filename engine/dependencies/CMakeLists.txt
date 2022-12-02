@@ -7,7 +7,6 @@ set_msvc_runtime_library(glfw)
 add_subdirectory(glm EXCLUDE_FROM_ALL)
 
 add_subdirectory(glad EXCLUDE_FROM_ALL)
-set_msvc_runtime_library(glad)
 
 add_subdirectory(stb EXCLUDE_FROM_ALL)
 

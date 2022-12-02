@@ -10,14 +10,10 @@
 #include "haru/core/Debug.h"
 
 static constexpr const char *SHADER_COMMON_HEADER = R"GLSL(
-#version 330 core
-#extension GL_ARB_explicit_uniform_location : enable
-#extension GL_ARB_gpu_shader5 : enable
-#extension GL_ARB_separate_shader_objects : enable
-#extension GL_ARB_shading_language_420pack : enable
+#version 450 core
 )GLSL";
 
-static GLuint CreateShader(GLenum type, const std::vector<const char *> &&source) {
+static GLuint CreateShader(GLenum type, const std::vector<const char *> &source) {
     const GLuint shader = glCreateShader(type);
 
     glShaderSource(shader, static_cast<GLsizei>(source.size()), source.data(), nullptr);
