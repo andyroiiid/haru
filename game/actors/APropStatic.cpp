@@ -28,6 +28,7 @@ APropStatic::APropStatic(const std::string &model, const glm::vec3 &origin) {
 
     m_collider = physicsSystem->CreateTriangleMesh(colliderTriangles.size(), colliderTriangles.data());
     m_rigidbody = physicsScene->CreateStatic(physx::PxTransform(origin.x, origin.y, origin.z), physx::PxTriangleMeshGeometry(m_collider));
+    m_rigidbody->userData = this;
 }
 
 APropStatic::~APropStatic() {
