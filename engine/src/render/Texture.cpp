@@ -35,10 +35,6 @@ Texture::Texture(const glm::ivec2 &size, const unsigned char *data, Wrap wrap, b
         glTextureParameteri(m_texture, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
         glTextureParameteri(m_texture, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
         break;
-    case Wrap::MirrorClamp:
-        glTextureParameteri(m_texture, GL_TEXTURE_WRAP_S, GL_MIRROR_CLAMP_TO_EDGE);
-        glTextureParameteri(m_texture, GL_TEXTURE_WRAP_T, GL_MIRROR_CLAMP_TO_EDGE);
-        break;
     }
 
     if (mipmaps) {

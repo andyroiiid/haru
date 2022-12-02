@@ -82,7 +82,6 @@ private:
 
     ShadowMatrixCalculator m_shadowMatrixCalculator;
 
-    DeferredShadersPrelude m_shadersPrelude;
     DeferredShaderShadowPass m_shadowShader;
     DeferredShaderBase m_baseShader;
     DeferredShaderGPass m_gPassShader;

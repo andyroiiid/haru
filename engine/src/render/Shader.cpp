@@ -9,26 +9,19 @@
 
 #include "haru/core/Debug.h"
 
-static constexpr const char *SHADER_SEARCH_PATH = "/";
-
 static constexpr const char *SHADER_COMMON_HEADER = R"GLSL(
-#version 450 core
-#extension GL_ARB_shading_language_include : require
+#version 330 core
+#extension GL_ARB_explicit_uniform_location : enable
+#extension GL_ARB_gpu_shader5 : enable
+#extension GL_ARB_separate_shader_objects : enable
+#extension GL_ARB_shading_language_420pack : enable
 )GLSL";
-
-void Shader::AddNamedString(const std::string &name, const std::string &string) {
-    glNamedStringARB(GL_SHADER_INCLUDE_ARB, -1, name.c_str(), -1, string.c_str());
-}
-
-void Shader::DeleteNamedString(const std::string &name) {
-    glDeleteNamedStringARB(-1, name.c_str());
-}
 
 static GLuint CreateShader(GLenum type, const std::vector<const char *> &&source) {
     const GLuint shader = glCreateShader(type);
 
     glShaderSource(shader, static_cast<GLsizei>(source.size()), source.data(), nullptr);
-    glCompileShaderIncludeARB(shader, 1, &SHADER_SEARCH_PATH, nullptr);
+    glCompileShader(shader);
 
     GLint compileStatus = 0;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);

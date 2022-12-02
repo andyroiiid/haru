@@ -17,8 +17,7 @@ public:
     enum class Wrap {
         Repeat,
         Clamp,
-        MirrorRepeat,
-        MirrorClamp
+        MirrorRepeat
     };
 
     Texture() = default;

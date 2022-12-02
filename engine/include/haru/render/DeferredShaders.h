@@ -6,15 +6,6 @@
 
 #include "haru/render/Shader.h"
 
-class DeferredShadersPrelude {
-public:
-    NO_MOVE_OR_COPY(DeferredShadersPrelude)
-
-    DeferredShadersPrelude();
-
-    ~DeferredShadersPrelude();
-};
-
 class DeferredShaderShadowPass : public Shader {
 public:
     MOVE_ONLY(DeferredShaderShadowPass)

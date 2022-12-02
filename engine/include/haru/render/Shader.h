@@ -34,10 +34,6 @@ public:
 
     ~Shader();
 
-    static void AddNamedString(const std::string &name, const std::string &string);
-
-    static void DeleteNamedString(const std::string &name);
-
     void Use() const;
 
     [[nodiscard]] GLint GetUniformLocation(const std::string &name) const;

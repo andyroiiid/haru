@@ -4,8 +4,7 @@
 
 #include "haru/render/DeferredShaders.h"
 
-DeferredShadersPrelude::DeferredShadersPrelude() {
-    Shader::AddNamedString("/uniforms", R"GLSL(
+static const char *DEFERRED_SHADERS_SHARED = R"GLSL(
 layout(std140, binding = 0) uniform ShaderGlobals {
     mat4 uView;
     mat4 uProjection;
@@ -26,17 +25,10 @@ layout(std140, binding = 1) uniform LightGlobals {
     mat4 uShadowMatrices[4];
 	PointLightData uPointLightData[32];
 };
-)GLSL");
-}
-
-DeferredShadersPrelude::~DeferredShadersPrelude() {
-    Shader::DeleteNamedString("/uniforms");
-}
+)GLSL";
 
 DeferredShaderShadowPass::DeferredShaderShadowPass()
-        : Shader(R"GLSL(
-#include <uniforms>
-)GLSL",
+        : Shader(DEFERRED_SHADERS_SHARED,
                  R"GLSL(
 layout(location = 0) in vec3 aPosition;
 
@@ -74,9 +66,7 @@ void DeferredShaderShadowPass::SetModel(const glm::mat4 &model) {
 }
 
 DeferredShaderBase::DeferredShaderBase()
-        : Shader(R"GLSL(
-#include <uniforms>
-)GLSL",
+        : Shader(DEFERRED_SHADERS_SHARED,
                  R"GLSL(
 layout(location = 0) in vec3 aPosition;
 layout(location = 1) in vec3 aNormal;
@@ -120,9 +110,7 @@ void DeferredShaderBase::SetModel(const glm::mat4 &model) {
 }
 
 DeferredShaderGPass::DeferredShaderGPass()
-        : Shader(R"GLSL(
-#include <uniforms>
-)GLSL",
+        : Shader(DEFERRED_SHADERS_SHARED,
                  R"GLSL(
 layout(location = 0) in vec2 aPosition;
 
@@ -242,9 +230,7 @@ void main() {
 }
 
 DeferredShaderLines::DeferredShaderLines()
-        : Shader(R"GLSL(
-#include <uniforms>
-)GLSL",
+        : Shader(DEFERRED_SHADERS_SHARED,
                  R"GLSL(
 layout(location = 0) in vec3 aPosition;
 
@@ -269,9 +255,7 @@ void DeferredShaderLines::SetColor(const glm::vec4 &color) {
 }
 
 DeferredShaderSkybox::DeferredShaderSkybox()
-        : Shader(R"GLSL(
-#include <uniforms>
-)GLSL",
+        : Shader(DEFERRED_SHADERS_SHARED,
                  R"GLSL(
 layout(location = 0) in vec3 aPosition;
 
