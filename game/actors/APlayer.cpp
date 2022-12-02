@@ -73,15 +73,6 @@ void APlayer::Update(const float deltaTime) {
         if (buffer.hasBlock) {
             const physx::PxRaycastHit &hit = buffer.block;
 
-            if (hit.actor) {
-                m_currentTarget = static_cast<Actor *>(hit.actor->userData);
-
-                auto *physBox = m_currentTarget->Cast<APhysBox>();
-                if (physBox) {
-                    physBox->AddImpulse({0.0f, 10.0f, 0.0f});
-                }
-            }
-
             m_lastHitPosition.x = hit.position.x;
             m_lastHitPosition.y = hit.position.y;
             m_lastHitPosition.z = hit.position.z;
@@ -89,6 +80,15 @@ void APlayer::Update(const float deltaTime) {
             m_lastHitNormal.x = hit.normal.x;
             m_lastHitNormal.y = hit.normal.y;
             m_lastHitNormal.z = hit.normal.z;
+
+            if (hit.actor) {
+                m_currentTarget = static_cast<Actor *>(hit.actor->userData);
+
+                auto *physBox = m_currentTarget->Cast<APhysBox>();
+                if (physBox) {
+                    physBox->AddImpulse(glm::normalize(m_lastHitPosition - position) * 10.0f);
+                }
+            }
         } else {
             m_lastHitPosition = {};
             m_lastHitNormal = {};
