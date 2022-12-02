@@ -8,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "haru/core/Debug.h"
+#include "haru/system/FileSystem.h"
 
 static constexpr const char *SHADER_COMMON_HEADER = R"GLSL(
 #version 450 core
@@ -124,6 +125,30 @@ Shader::Shader(
     glDeleteShader(vertexShader);
     glDeleteShader(geometryShader);
     glDeleteShader(fragmentShader);
+}
+
+Shader Shader::FromFile(
+        const std::string &sharedFilename,
+        const std::string &vertexFilename,
+        const std::string &fragmentFilename) {
+    return {
+            FileSystem::ReadFile(sharedFilename),
+            FileSystem::ReadFile(vertexFilename),
+            FileSystem::ReadFile(fragmentFilename)
+    };
+}
+
+Shader Shader::FromFile(
+        const std::string &sharedFilename,
+        const std::string &vertexFilename,
+        const std::string &geometryFilename,
+        const std::string &fragmentFilename) {
+    return {
+            FileSystem::ReadFile(sharedFilename),
+            FileSystem::ReadFile(vertexFilename),
+            FileSystem::ReadFile(geometryFilename),
+            FileSystem::ReadFile(fragmentFilename)
+    };
 }
 
 Shader::~Shader() {

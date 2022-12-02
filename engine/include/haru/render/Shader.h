@@ -32,6 +32,19 @@ public:
             const std::string &fragmentSource
     );
 
+    static Shader FromFile(
+            const std::string &sharedFilename,
+            const std::string &vertexFilename,
+            const std::string &fragmentFilename
+    );
+
+    static Shader FromFile(
+            const std::string &sharedFilename,
+            const std::string &vertexFilename,
+            const std::string &geometryFilename,
+            const std::string &fragmentFilename
+    );
+
     ~Shader();
 
     void Use() const;
