@@ -10,7 +10,7 @@
 
 #include "GameStatics.h"
 
-#include "actors/ADirectionalLight.h"
+#include "actors/AWorldLight.h"
 #include "actors/ACamera.h"
 #include "actors/APlayer.h"
 #include "actors/APhysBox.h"
@@ -31,7 +31,12 @@ void Game::Init() {
     ParseMap("hello.haru", entities);
     LoadEntities(entities);
 
-    m_scene->CreateActor<ADirectionalLight>(1.0f);
+    m_scene->CreateActor<AWorldLight>(
+            glm::radians(30.0f),
+            glm::radians(45.0f),
+            glm::vec3{0.8f, 0.8f, 0.8f},
+            glm::vec3{0.2f, 0.2f, 0.2f}
+    );
 
     auto *camera = m_scene->CreateActor<ACamera>();
     auto *player = m_scene->CreateActor<APlayer>(glm::vec3{0.0f, 1.0f, 0.0f}, glm::radians(180.0f));

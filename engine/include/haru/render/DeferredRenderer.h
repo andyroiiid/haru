@@ -33,9 +33,13 @@ class DeferredRenderer final : public Renderer {
 
     struct LightGlobals {
         glm::vec3 DirectionalLight;
-        float DirectionalLightIntensity;
-        glm::vec3 CascadeShadowMapSplits;
         float Padding0;
+        glm::vec3 DirectionalColor;
+        float Padding1;
+        glm::vec3 AmbientColor;
+        float Padding2;
+        glm::vec3 CascadeShadowMapSplits;
+        float Padding3;
         glm::mat4 ShadowMatrices[4];
         PointLightData PointLightData[32];
     };
@@ -51,7 +55,7 @@ public:
 
     void SetCameraInfo(const glm::mat4 &view, float fov, float near, float far) override;
 
-    void SetDirectionalLight(const glm::vec3 &lightDirection, float intensity) override;
+    void SetWorldLight(const glm::vec3 &lightDirection, const glm::vec3 &lightColor, const glm::vec3 &ambientColor) override;
 
     void SetWorldBounds(const glm::vec3 &min, const glm::vec3 &max) override;
 

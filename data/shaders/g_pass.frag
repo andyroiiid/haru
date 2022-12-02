@@ -69,12 +69,10 @@ void main() {
     vec3 worldNormal = normalize(texture(uWorldNormal, vTexCoord).xyz);
     vec4 diffuse = texture(uDiffuse, vTexCoord);
 
-    vec3 lighting = vec3(0.0f);
+    vec3 lighting = uAmbientColor;
 
-    if (uDirectionalLightIntensity > 0) {
-        float shadow = ReadShadowMap(viewSpacePosition, worldPosition, worldNormal);
-        lighting += (1 - shadow) * LightDiffuse(worldNormal, uDirectionalLight) * uDirectionalLightIntensity;
-    }
+    float shadow = ReadShadowMap(viewSpacePosition, worldPosition, worldNormal);
+    lighting += (1 - shadow) * LightDiffuse(worldNormal, uDirectionalLight) * uDirectionalColor;
 
     for (int i = 0; i < 32; i++) {
         PointLightData pointLightData = uPointLightData[i];

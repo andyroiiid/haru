@@ -132,12 +132,6 @@ void APlayer::FixedUpdate(float fixedDeltaTime) {
 }
 
 void APlayer::Draw(Renderer &renderer) {
-    renderer.DrawPointLight(
-            GetTransform().GetPosition(),
-            {0.4f, 0.4f, 0.4f},
-            64.0f
-    );
-
     m_hitLine.UpdateData(
             {
                     {{0.0f, 0.0f, 0.0f}},

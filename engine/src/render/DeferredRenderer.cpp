@@ -78,9 +78,10 @@ void DeferredRenderer::SetCameraInfo(const glm::mat4 &view, float fov, float nea
     m_shadowMatrixCalculator.SetCameraInfo(view, fov, aspectRatio);
 }
 
-void DeferredRenderer::SetDirectionalLight(const glm::vec3 &lightDirection, const float intensity) {
+void DeferredRenderer::SetWorldLight(const glm::vec3 &lightDirection, const glm::vec3 &lightColor, const glm::vec3 &ambientColor) {
     m_lightGlobals->DirectionalLight = lightDirection;
-    m_lightGlobals->DirectionalLightIntensity = intensity;
+    m_lightGlobals->DirectionalColor = lightColor;
+    m_lightGlobals->AmbientColor = ambientColor;
 
     m_shadowMatrixCalculator.SetLightDirection(lightDirection);
 }

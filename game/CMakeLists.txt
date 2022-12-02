@@ -4,7 +4,7 @@ add_executable(game
         mdl/MdlStructs.h
         mdl/MdlLoader.cpp mdl/MdlLoader.h
 
-        actors/ADirectionalLight.cpp actors/ADirectionalLight.h
+        actors/AWorldLight.cpp actors/AWorldLight.h
         actors/ACamera.cpp actors/ACamera.h
         actors/APlayerNoClip.cpp actors/APlayerNoClip.h
         actors/APlayer.cpp actors/APlayer.h

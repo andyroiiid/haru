@@ -43,7 +43,11 @@ public:
 
     virtual void SetCameraInfo(const glm::mat4 &view, float fov, float near, float far) = 0;
 
-    virtual void SetDirectionalLight(const glm::vec3 &lightDirection, float intensity) = 0;
+    virtual void SetWorldLight(
+            const glm::vec3 &lightDirection,
+            const glm::vec3 &lightColor,
+            const glm::vec3 &ambientColor
+    ) = 0;
 
     virtual void SetWorldBounds(const glm::vec3 &min, const glm::vec3 &max) = 0;
 

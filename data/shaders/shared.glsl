@@ -12,9 +12,13 @@ struct PointLightData {
 
 layout(std140, binding = 1) uniform LightGlobals {
     vec3 uDirectionalLight;
-    float uDirectionalLightIntensity;
-    vec3 uCascadeShadowMapSplits;
     float Padding0;
+    vec3 uDirectionalColor;
+    float Padding1;
+    vec3 uAmbientColor;
+    float Padding2;
+    vec3 uCascadeShadowMapSplits;
+    float Padding3;
     mat4 uShadowMatrices[4];
     PointLightData uPointLightData[32];
 };
