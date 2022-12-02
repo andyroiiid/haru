@@ -4,7 +4,11 @@
 
 #include "Scene.h"
 
+#include <tracy/Tracy.hpp>
+
 void Scene::Update(const float deltaTime) {
+    ZoneScoped;
+
     // put pending destroy actors from last frame into a temp queue
     std::vector<std::unique_ptr<Actor>> pendingCreationActorsFromLastFrame = std::move(m_pendingCreationActors);
     const std::vector<std::unique_ptr<Actor>> pendingDestroyActorsFromLastFrame = std::move(m_pendingDestroyActors);
@@ -34,12 +38,16 @@ void Scene::Update(const float deltaTime) {
 }
 
 void Scene::FixedUpdate(float fixedDeltaTime) {
+    ZoneScoped;
+
     for (auto &actor: m_actors) {
         actor->FixedUpdate(fixedDeltaTime);
     }
 }
 
 void Scene::Draw(Renderer &renderer) {
+    ZoneScoped;
+
     for (const auto &actor: m_actors) {
         actor->Draw(renderer);
     }

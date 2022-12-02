@@ -6,6 +6,7 @@
 
 #include <haru/core/Debug.h>
 #include <haru/render/DeferredRenderer.h>
+#include <tracy/Tracy.hpp>
 
 #include "GameStatics.h"
 
@@ -18,6 +19,8 @@
 #include "map/LoadEntities.h"
 
 void Game::Init() {
+    ZoneScoped;
+
     DebugLog("Game init");
 
     CreateEssentials();
@@ -38,6 +41,8 @@ void Game::Init() {
 }
 
 void Game::Shutdown() {
+    ZoneScoped;
+
     Window->SetCursorEnabled(true);
 
     DestroyEssentials();
@@ -50,6 +55,8 @@ void Game::Resize(const glm::ivec2 &size) {
 }
 
 void Game::Update(const float deltaTime) {
+    ZoneScoped;
+
     if (m_physicsScene->Update(deltaTime, m_timeScale)) {
         m_scene->FixedUpdate(m_physicsScene->GetFixedTimestep() * m_timeScale);
     }
@@ -74,12 +81,16 @@ void Game::Update(const float deltaTime) {
 }
 
 void Game::Draw() {
+    ZoneScoped;
+
     m_renderer->BeginDraw();
     m_scene->Draw(*m_renderer);
     m_renderer->EndDraw();
 }
 
 void Game::CreateEssentials() {
+    ZoneScoped;
+
     m_renderer = std::make_unique<DeferredRenderer>();
     m_physics = std::make_unique<PhysicsSystem>();
     m_physicsScene = std::make_unique<PhysicsScene>(m_physics.get());
@@ -94,6 +105,8 @@ void Game::CreateEssentials() {
 }
 
 void Game::DestroyEssentials() {
+    ZoneScoped;
+
     GameStatics &gameStatics = GameStatics::Get();
     gameStatics.m_window = nullptr;
     gameStatics.m_renderer = nullptr;

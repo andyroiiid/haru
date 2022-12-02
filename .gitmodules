@@ -10,3 +10,6 @@
 [submodule "engine/dependencies/physfs"]
 	path = engine/dependencies/physfs
 	url = https://github.com/icculus/physfs.git
+[submodule "engine/dependencies/tracy"]
+	path = engine/dependencies/tracy
+	url = https://github.com/wolfpld/tracy.git

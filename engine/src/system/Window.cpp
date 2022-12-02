@@ -5,6 +5,7 @@
 #include "haru/system/Window.h"
 
 #include <glad/gl.h>
+#include <tracy/Tracy.hpp>
 
 #include "haru/core/Debug.h"
 
@@ -19,6 +20,8 @@ static void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
 }
 
 Window::Window() {
+    ZoneScoped;
+
     glfwSetErrorCallback(ErrorCallback);
 
     DebugCheckCritical(glfwInit() == GLFW_TRUE, "Failed to init GLFW");
@@ -72,6 +75,8 @@ void Window::MainLoop(App &app) {
         }
         app.Draw();
         glfwSwapBuffers(m_window);
+
+        FrameMark;
     }
 
     app.Shutdown();

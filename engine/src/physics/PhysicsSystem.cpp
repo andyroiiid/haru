@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <PxPhysicsAPI.h>
+#include <tracy/Tracy.hpp>
 
 #include "haru/core/Debug.h"
 
@@ -38,6 +39,8 @@ PhysicsSystem::~PhysicsSystem() {
 }
 
 physx::PxConvexMesh *PhysicsSystem::CreateConvexMesh(physx::PxU32 count, const physx::PxVec3 *vertices, physx::PxU16 vertexLimit) {
+    ZoneScoped;
+
     physx::PxConvexMeshDesc desc;
     desc.points.count = count;
     desc.points.stride = sizeof(physx::PxVec3);
@@ -59,6 +62,8 @@ physx::PxConvexMesh *PhysicsSystem::CreateConvexMesh(physx::PxU32 count, const p
 }
 
 physx::PxTriangleMesh *PhysicsSystem::CreateTriangleMesh(physx::PxU32 count, const physx::PxVec3 *vertices) {
+    ZoneScoped;
+
     physx::PxTriangleMeshDesc desc;
     desc.points.count = count;
     desc.points.stride = sizeof(physx::PxVec3);

@@ -7,6 +7,7 @@
 #include <PxPhysicsAPI.h>
 #include <characterkinematic/PxController.h>
 #include <characterkinematic/PxControllerManager.h>
+#include <tracy/Tracy.hpp>
 
 #include "haru/physics/PhysicsSystem.h"
 
@@ -37,6 +38,8 @@ PhysicsScene::~PhysicsScene() {
 }
 
 bool PhysicsScene::Update(const float deltaTime, const float timeScale) {
+    ZoneScoped;
+
     m_timeSinceLastTick += deltaTime * timeScale;
 
     const float scaledTimestep = m_fixedTimestep * timeScale;

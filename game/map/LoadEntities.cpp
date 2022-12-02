@@ -5,6 +5,7 @@
 #include "map/LoadEntities.h"
 
 #include <haru/core/Debug.h>
+#include <tracy/Tracy.hpp>
 
 #include "GameStatics.h"
 #include "Scene.h"
@@ -52,6 +53,8 @@ static const std::map<std::string, EntityLoader> s_EntityLoaders{
 };
 
 void LoadEntities(const std::vector<EntityDefinition> &entities) {
+    ZoneScoped;
+
     for (auto &entity: entities) {
         const std::string &className = entity.GetProperty("classname");
         auto loader = s_EntityLoaders.find(className);

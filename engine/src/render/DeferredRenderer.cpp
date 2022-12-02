@@ -5,6 +5,7 @@
 #include "haru/render/DeferredRenderer.h"
 
 #include <glm/gtc/matrix_transform.hpp>
+#include <tracy/Tracy.hpp>
 
 DeferredRenderer::DeferredRenderer() {
     m_shaderGlobals.Bind(0);
@@ -90,6 +91,8 @@ void DeferredRenderer::SetWorldBounds(const glm::vec3 &min, const glm::vec3 &max
 }
 
 void DeferredRenderer::BeginDraw() {
+    ZoneScoped;
+
     m_pendingPointLightData.clear();
     m_pendingBaseDrawCalls.clear();
     m_pendingLinesDrawCalls.clear();
@@ -99,10 +102,13 @@ void DeferredRenderer::BeginDraw() {
 }
 
 void DeferredRenderer::EndDraw() {
+    ZoneScoped;
+
     FlushUniformBuffers();
     DrawToShadowMap();
     DrawToGBuffers();
     DrawForwardPass();
+    glFinish();
 }
 
 void DeferredRenderer::DrawPointLight(const glm::vec3 &position, const glm::vec3 &color, const float linear, const float quadratic) {
@@ -118,6 +124,8 @@ void DeferredRenderer::DrawMesh(const MeshBase &mesh, const glm::mat4 &model, co
 }
 
 void DeferredRenderer::FlushUniformBuffers() {
+    ZoneScoped;
+
     m_shaderGlobals.Unmap();
 
     constexpr float shadowNear = 0.01f;
@@ -138,6 +146,8 @@ void DeferredRenderer::FlushUniformBuffers() {
 }
 
 void DeferredRenderer::DrawToShadowMap() {
+    ZoneScoped;
+
     m_shadowMap.Bind();
     glViewport(0, 0, m_shadowMap.Size(), m_shadowMap.Size());
 
@@ -158,6 +168,8 @@ void DeferredRenderer::DrawToShadowMap() {
 }
 
 void DeferredRenderer::DrawToGBuffers() {
+    ZoneScoped;
+
     m_gBuffers.Bind();
     glViewport(0, 0, m_gBuffers.Size().x, m_gBuffers.Size().y);
 
@@ -182,6 +194,8 @@ void DeferredRenderer::DrawToGBuffers() {
 }
 
 void DeferredRenderer::DrawForwardPass() {
+    ZoneScoped;
+
     Framebuffer::BindDefault();
     glViewport(0, 0, GetSize().x, GetSize().y);
 

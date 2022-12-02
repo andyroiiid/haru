@@ -1,3 +1,5 @@
+set(BUILD_SHARED_LIBS OFF)
+
 set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -24,3 +26,6 @@ set(PHYSFS_BUILD_TEST FALSE CACHE BOOL "" FORCE)
 set(PHYSFS_BUILD_DOCS FALSE CACHE BOOL "" FORCE)
 add_subdirectory(physfs EXCLUDE_FROM_ALL)
 set_msvc_runtime_library(physfs-static)
+
+add_subdirectory(tracy EXCLUDE_FROM_ALL)
+set_msvc_runtime_library(TracyClient)

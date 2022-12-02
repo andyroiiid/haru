@@ -8,6 +8,7 @@
 #include <foundation/PxVec3.h>
 #include <haru/render/MeshBase.h>
 #include <haru/system/FileSystem.h>
+#include <tracy/Tracy.hpp>
 
 static void ParseEntityProperties(std::stringstream &mapStream, EntityProperties &properties) {
     int numProperties;
@@ -88,6 +89,8 @@ static void ParseEntityBrushes(std::stringstream &mapStream, EntityBrushes &brus
 }
 
 void ParseMap(const std::string &mapFilename, std::vector<EntityDefinition> &entities) {
+    ZoneScoped;
+
     std::stringstream mapStream(FileSystem::ReadFile(mapFilename));
 
     int numEntities;
