@@ -6,6 +6,7 @@
 #include <haru/render/MeshUtilities.h>
 
 #include "GameStatics.h"
+#include "actors/APlayer.h"
 
 APhysBox::APhysBox(
         const glm::vec3 &position,
@@ -49,6 +50,11 @@ void APhysBox::Update(const float deltaTime) {
 
 void APhysBox::Draw(Renderer &renderer) {
     renderer.DrawMesh(m_mesh, m_modelMatrix, nullptr);
+}
+
+void APhysBox::Use(APlayer *player, const physx::PxRaycastHit &hit) {
+    const physx::PxVec3 &hitPosition = hit.position;
+    AddImpulse((glm::vec3{hitPosition.x, hitPosition.y, hitPosition.z} - player->GetTransform().GetPosition()) * 10.0f);
 }
 
 void APhysBox::AddImpulse(const glm::vec3 &force) {

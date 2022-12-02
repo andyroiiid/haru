@@ -9,7 +9,6 @@
 
 #include "Scene.h"
 #include "GameStatics.h"
-#include "actors/APhysBox.h"
 
 APlayer::APlayer(
         const glm::vec3 &position, float yaw,
@@ -82,12 +81,7 @@ void APlayer::Update(const float deltaTime) {
             m_lastHitNormal.z = hit.normal.z;
 
             if (hit.actor) {
-                m_currentTarget = static_cast<Actor *>(hit.actor->userData);
-
-                auto *physBox = m_currentTarget->Cast<APhysBox>();
-                if (physBox) {
-                    physBox->AddImpulse(glm::normalize(m_lastHitPosition - position) * 10.0f);
-                }
+                static_cast<Actor *>(hit.actor->userData)->Use(this, hit);
             }
         } else {
             m_lastHitPosition = {};

@@ -22,6 +22,8 @@ public:
 
     void Draw(Renderer &renderer) override;
 
+    void Use(APlayer *player, const physx::PxRaycastHit &hit) override;
+
     void AddImpulse(const glm::vec3 &force);
 
 private:

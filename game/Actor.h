@@ -11,6 +11,12 @@
 #include <haru/math/Transform.h>
 #include <haru/render/Renderer.h>
 
+namespace physx {
+    struct PxRaycastHit;
+}
+
+class APlayer;
+
 #define DEFINE_ACTOR_CLASS(className) \
     NO_MOVE_OR_COPY(className) \
     static inline const std::string &ClassName = #className; \
@@ -42,13 +48,14 @@ public:
 
     virtual void Draw(Renderer &renderer) {}
 
+    virtual void Use(APlayer *player, const physx::PxRaycastHit &hit) {}
+
     bool IsPendingDestroy() const { return m_pendingDestroy; }
 
     void Destroy() { m_pendingDestroy = true; }
 
     const Transform &GetTransform() const { return m_transform; }
 
-protected:
     Transform &GetTransform() { return m_transform; }
 
 private:
