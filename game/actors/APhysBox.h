@@ -22,6 +22,8 @@ public:
 
     void Draw(Renderer &renderer) override;
 
+    void AddImpulse(const glm::vec3 &force);
+
 private:
     glm::vec3 m_halfSize{};
 

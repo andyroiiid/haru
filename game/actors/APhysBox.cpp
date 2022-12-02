@@ -50,3 +50,7 @@ void APhysBox::Update(const float deltaTime) {
 void APhysBox::Draw(Renderer &renderer) {
     renderer.DrawMesh(m_mesh, m_modelMatrix, nullptr);
 }
+
+void APhysBox::AddImpulse(const glm::vec3 &force) {
+    m_rigidbody->addForce({force.x, force.y, force.z}, physx::PxForceMode::eIMPULSE);
+}

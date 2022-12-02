@@ -10,6 +10,7 @@
 #include <PxQueryReport.h>
 
 #include "haru/core/MoveOnly.h"
+#include "haru/physics/PhysicsLayer.h"
 
 class PhysicsSystem;
 
@@ -45,23 +46,39 @@ public:
 
     [[nodiscard]] float GetFixedUpdateTimeError() const { return m_timeSinceLastTick; }
 
-    physx::PxController *CreateController(const glm::vec3 &position, float radius, float height);
+    physx::PxController *CreateController(
+            const glm::vec3 &position,
+            float radius,
+            float height,
+            PhysicsLayer queryLayer = PHYSICS_LAYER_1
+    );
 
-    physx::PxRigidStatic *CreateStatic(const physx::PxTransform &transform, const physx::PxGeometry &geometry);
+    physx::PxRigidStatic *CreateStatic(
+            const physx::PxTransform &transform,
+            const physx::PxGeometry &geometry,
+            PhysicsLayer queryLayer = PHYSICS_LAYER_0
+    );
 
-    physx::PxRigidDynamic *CreateDynamic(const physx::PxTransform &transform, const physx::PxGeometry &geometry, float density = 1.0f);
+    physx::PxRigidDynamic *CreateDynamic(
+            const physx::PxTransform &transform,
+            const physx::PxGeometry &geometry,
+            PhysicsLayer queryLayer = PHYSICS_LAYER_0,
+            float density = 1.0f
+    );
 
     [[nodiscard]] physx::PxRaycastBuffer Raycast(
             const physx::PxVec3 &origin,
             const physx::PxVec3 &unitDir,
-            float distance
+            float distance,
+            PhysicsLayer layer
     ) const;
 
     [[nodiscard]] physx::PxSweepBuffer Sweep(
             const physx::PxGeometry &geometry,
             const physx::PxTransform &pose,
             const physx::PxVec3 &unitDir,
-            float distance
+            float distance,
+            PhysicsLayer layer
     ) const;
 
 private:

@@ -31,6 +31,11 @@ public:
         return T::ClassName == GetActorClassName();
     }
 
+    template<class T>
+    T *Cast() {
+        return IsClass<T>() ? reinterpret_cast<T *>(this) : nullptr;
+    }
+
     virtual void Update(float deltaTime) {}
 
     virtual void FixedUpdate(float fixedDeltaTime) {}

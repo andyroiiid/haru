@@ -53,7 +53,7 @@ bool PhysicsScene::Update(const float deltaTime, const float timeScale) {
     return true;
 }
 
-physx::PxController *PhysicsScene::CreateController(const glm::vec3 &position, float radius, float height) {
+physx::PxController *PhysicsScene::CreateController(const glm::vec3 &position, float radius, float height, PhysicsLayer queryLayer) {
     physx::PxCapsuleControllerDesc desc;
     desc.position = {position.x, position.y, position.z};
     desc.invisibleWallHeight = height;
@@ -65,14 +65,22 @@ physx::PxController *PhysicsScene::CreateController(const glm::vec3 &position, f
     desc.radius = radius;
     desc.height = height - radius * 2.0f;
     desc.climbingMode = physx::PxCapsuleClimbingMode::eCONSTRAINED;
-    return m_controllerManager->createController(desc);
+
+    physx::PxController *controller = m_controllerManager->createController(desc);
+
+    physx::PxRigidDynamic *rigidbody = controller->getActor();
+    PhysicsSetQueryLayer(rigidbody, queryLayer);
+
+    return controller;
 }
 
 physx::PxRigidStatic *PhysicsScene::CreateStatic(
         const physx::PxTransform &transform,
-        const physx::PxGeometry &geometry
+        const physx::PxGeometry &geometry,
+        PhysicsLayer queryLayer
 ) {
     physx::PxRigidStatic *actor = PxCreateStatic(*m_physics, transform, geometry, *m_defaultMaterial);
+    PhysicsSetQueryLayer(actor, queryLayer);
     m_scene->addActor(*actor);
     return actor;
 }
@@ -80,9 +88,11 @@ physx::PxRigidStatic *PhysicsScene::CreateStatic(
 physx::PxRigidDynamic *PhysicsScene::CreateDynamic(
         const physx::PxTransform &transform,
         const physx::PxGeometry &geometry,
+        PhysicsLayer queryLayer,
         float density
 ) {
     physx::PxRigidDynamic *actor = PxCreateDynamic(*m_physics, transform, geometry, *m_defaultMaterial, density);
+    PhysicsSetQueryLayer(actor, queryLayer);
     m_scene->addActor(*actor);
     return actor;
 }
@@ -90,10 +100,14 @@ physx::PxRigidDynamic *PhysicsScene::CreateDynamic(
 physx::PxRaycastBuffer PhysicsScene::Raycast(
         const physx::PxVec3 &origin,
         const physx::PxVec3 &unitDir,
-        const float distance
+        const float distance,
+        PhysicsLayer layer
 ) const {
+    physx::PxQueryFilterData queryFilterData;
+    queryFilterData.data = PhysicsFilterDataFromLayer(layer);
+
     physx::PxRaycastBuffer buffer;
-    m_scene->raycast(origin, unitDir, distance, buffer);
+    m_scene->raycast(origin, unitDir, distance, buffer, physx::PxHitFlag::eDEFAULT, queryFilterData);
     return buffer;
 }
 
@@ -101,9 +115,13 @@ physx::PxSweepBuffer PhysicsScene::Sweep(
         const physx::PxGeometry &geometry,
         const physx::PxTransform &pose,
         const physx::PxVec3 &unitDir,
-        float distance
+        float distance,
+        PhysicsLayer layer
 ) const {
+    physx::PxQueryFilterData queryFilterData;
+    queryFilterData.data = PhysicsFilterDataFromLayer(layer);
+
     physx::PxSweepBuffer buffer;
-    m_scene->sweep(geometry, pose, unitDir, distance, buffer);
+    m_scene->sweep(geometry, pose, unitDir, distance, buffer, physx::PxHitFlag::eDEFAULT, queryFilterData);
     return buffer;
 }

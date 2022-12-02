@@ -38,8 +38,10 @@ add_library(engine
         src/render/DeferredShaders.cpp
         src/render/DeferredRenderer.cpp
 
+        include/haru/physics/PhysicsLayer.h
         include/haru/physics/PhysicsScene.h
         include/haru/physics/PhysicsSystem.h
+        src/physics/PhysicsLayer.cpp
         src/physics/PhysicsScene.cpp
         src/physics/PhysicsSystem.cpp)
 

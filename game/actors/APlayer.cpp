@@ -1,6 +1,6 @@
 ﻿#include "actors/APlayer.h"
 
-#include <PxRigidActor.h>
+#include <PxRigidDynamic.h>
 #include <characterkinematic/PxController.h>
 #include <foundation/PxAllocator.h>
 
@@ -9,13 +9,14 @@
 
 #include "Scene.h"
 #include "GameStatics.h"
+#include "actors/APhysBox.h"
 
 APlayer::APlayer(
         const glm::vec3 &position, float yaw,
         float mouseSpeed
 ) : m_controller(GameStatics::GetPhysicsScene()->CreateController({position.x, position.y, position.z}, 0.4f, 1.8f)),
     m_mouseSpeed(mouseSpeed) {
-    m_controller->setUserData(this);
+    m_controller->getActor()->userData = this;
     GetTransform().SetPosition(position).RotateY(yaw);
     m_previousPosition = position;
 }
@@ -55,6 +56,45 @@ void APlayer::Update(const float deltaTime) {
         };
         GetTransform().SetPosition(predictedPosition + glm::vec3{0.0f, 0.5f, 0.0f}); // + 0.5 for the eye height
     }
+
+    // raycast for current target
+    bool currLmb = GameStatics::GetWindow()->IsMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT);
+    if (!m_prevLmb && currLmb) {
+        const glm::vec3 position = GetTransform().GetPosition();
+        const glm::vec3 forward = GetTransform().GetForwardVector();
+
+        physx::PxRaycastBuffer buffer = GameStatics::GetPhysicsScene()->Raycast(
+                {position.x, position.y, position.z},
+                {forward.x, forward.y, forward.z},
+                10.0f,
+                PHYSICS_LAYER_0
+        );
+
+        if (buffer.hasBlock) {
+            const physx::PxRaycastHit &hit = buffer.block;
+
+            if (hit.actor) {
+                m_currentTarget = static_cast<Actor *>(hit.actor->userData);
+
+                auto *physBox = m_currentTarget->Cast<APhysBox>();
+                if (physBox) {
+                    physBox->AddImpulse({0.0f, 10.0f, 0.0f});
+                }
+            }
+
+            m_lastHitPosition.x = hit.position.x;
+            m_lastHitPosition.y = hit.position.y;
+            m_lastHitPosition.z = hit.position.z;
+
+            m_lastHitNormal.x = hit.normal.x;
+            m_lastHitNormal.y = hit.normal.y;
+            m_lastHitNormal.z = hit.normal.z;
+        } else {
+            m_lastHitPosition = {};
+            m_lastHitNormal = {};
+        }
+    }
+    m_prevLmb = currLmb;
 }
 
 void APlayer::CalcHorizontalAcceleration(const glm::vec3 &direction, float acceleration, float drag) {
@@ -97,4 +137,14 @@ void APlayer::Draw(Renderer &renderer) {
             {0.4f, 0.4f, 0.4f},
             64.0f
     );
+
+    m_hitLine.UpdateData(
+            {
+                    {{0.0f, 0.0f, 0.0f}},
+                    {m_lastHitPosition},
+                    {m_lastHitPosition},
+                    {m_lastHitPosition + m_lastHitNormal},
+            }
+    );
+    renderer.DrawLines(m_hitLine, {1.0f, 0.0f, 0.0f, 1.0f});
 }
