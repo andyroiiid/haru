@@ -4,6 +4,7 @@
 
 #include "haru/physics/PhysicsSystem.h"
 
+#include <vector>
 #include <PxPhysicsAPI.h>
 
 #include "haru/core/Debug.h"
@@ -55,4 +56,27 @@ physx::PxConvexMesh *PhysicsSystem::CreateConvexMesh(physx::PxU32 count, const p
 
     physx::PxDefaultMemoryInputData input(buffer.getData(), buffer.getSize());
     return m_physics->createConvexMesh(input);
+}
+
+physx::PxTriangleMesh *PhysicsSystem::CreateTriangleMesh(physx::PxU32 count, const physx::PxVec3 *vertices) {
+    physx::PxTriangleMeshDesc desc;
+    desc.points.count = count;
+    desc.points.stride = sizeof(physx::PxVec3);
+    desc.points.data = vertices;
+    desc.triangles.count = count / 3;
+    desc.triangles.stride = 3 * sizeof(physx::PxU32);
+    std::vector<physx::PxU32> trianglesData(count);
+    for (int i = 0; i < count; i++) {
+        trianglesData[i] = i;
+    }
+    desc.triangles.data = trianglesData.data();
+
+    physx::PxDefaultMemoryOutputStream buffer;
+    if (!m_cooking->cookTriangleMesh(desc, buffer)) {
+        DebugLog("Failed to create triangle mesh!");
+        return nullptr;
+    }
+
+    physx::PxDefaultMemoryInputData input(buffer.getData(), buffer.getSize());
+    return m_physics->createTriangleMesh(input);
 }

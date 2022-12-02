@@ -247,3 +247,12 @@ VertexBase MdlLoader::GenerateVertex(const std::vector<trivertx_t> &vertices, co
 
     return {position, normal, textureCoords};
 }
+
+std::vector<physx::PxVec3> MdlLoader::GetColliderTriangles() {
+    std::vector<physx::PxVec3> triangles;
+    for (const VertexBase &vertex: m_meshVertices) {
+        const glm::vec3 &position = vertex.Position;
+        triangles.emplace_back(position.x, position.y, position.z);
+    }
+    return triangles;
+}

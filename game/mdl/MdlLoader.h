@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <glm/vec3.hpp>
+#include <foundation/PxVec3.h>
 
 #include <haru/render/Texture.h>
 #include <haru/render/MeshBase.h>
@@ -16,6 +17,8 @@
 class MdlLoader {
 public:
     explicit MdlLoader(const std::string &filename);
+
+    [[nodiscard]] std::vector<physx::PxVec3> GetColliderTriangles();
 
     [[nodiscard]] Texture GetTexture() const {
         return {{m_skinWidth, m_skinHeight}, m_textureData.data()};

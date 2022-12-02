@@ -20,6 +20,8 @@ namespace physx {
     class PxCooking;
 
     class PxConvexMesh;
+
+    class PxTriangleMesh;
 }
 
 class PhysicsSystem {
@@ -35,6 +37,11 @@ public:
             const physx::PxVec3 *vertices,
             // The number of vertices and faces of a convex mesh in PhysX is limited to 255.
             physx::PxU16 vertexLimit = 255
+    );
+
+    physx::PxTriangleMesh *CreateTriangleMesh(
+            physx::PxU32 count,
+            const physx::PxVec3 *vertices
     );
 
 private:
