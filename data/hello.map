@@ -484,22 +484,28 @@
 "classname" "prop_static"
 "origin" "0 -64 16"
 "model" "models/suzanne.mdl"
-"frame" "0"
-"skin" "0"
 }
 // entity 3
 {
 "classname" "prop_static"
 "origin" "64 -64 0"
 "model" "models/desk.mdl"
-"frame" "0"
-"skin" "0"
 }
 // entity 4
 {
 "classname" "prop_static"
 "origin" "112 -64 0"
 "model" "models/desk.mdl"
-"frame" "0"
-"skin" "0"
+}
+// entity 5
+{
+"classname" "light_point"
+"origin" "-144 -144 48"
+}
+// entity 6
+{
+"classname" "light_point"
+"origin" "-480 96 224"
+"range" "64"
+"color" "1.0 1.0 0.0"
 }

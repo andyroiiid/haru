@@ -9,6 +9,7 @@
 #include "GameStatics.h"
 #include "Scene.h"
 #include "actors/AWorldSpawn.h"
+#include "actors/ALightPoint.h"
 #include "actors/APropStatic.h"
 
 void LoadWorldSpawn(const EntityDefinition &definition) {
@@ -16,6 +17,19 @@ void LoadWorldSpawn(const EntityDefinition &definition) {
 }
 
 void LoadInfoPlayerStart(const EntityDefinition &definition) {
+}
+
+void LoadLightPoint(const EntityDefinition &definition) {
+    glm::vec3 origin;
+    DebugCheckCritical(definition.GetPropertyPosition("origin", origin), "light_point doesn't have a valid origin!");
+
+    glm::vec3 color{1.0f, 1.0f, 1.0f};
+    (void) definition.GetPropertyColor("color", color);
+
+    int range = 20;
+    (void) definition.GetPropertyInteger("range", range);
+
+    GameStatics::GetScene()->CreateActor<ALightPoint>(origin, color, static_cast<float>(range));
 }
 
 void LoadPropStatic(const EntityDefinition &definition) {
@@ -33,6 +47,7 @@ typedef void (*EntityLoader)(const EntityDefinition &definition);
 static const std::map<std::string, EntityLoader> s_EntityLoaders{
         {"worldspawn",        LoadWorldSpawn},
         {"info_player_start", LoadInfoPlayerStart},
+        {"light_point",       LoadLightPoint},
         {"prop_static",       LoadPropStatic}
 };
 

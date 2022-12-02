@@ -9,7 +9,7 @@ add_executable(game
         actors/APlayerNoClip.cpp actors/APlayerNoClip.h
         actors/APlayer.cpp actors/APlayer.h
         actors/APhysBox.cpp actors/APhysBox.h
-        actors/APointLight.cpp actors/APointLight.h
+        actors/ALightPoint.cpp actors/ALightPoint.h
         actors/AWorldSpawn.cpp actors/AWorldSpawn.h
         actors/APropStatic.cpp actors/APropStatic.h
 

@@ -14,6 +14,19 @@ const std::string &EntityDefinition::GetProperty(const std::string &key, const s
     return pair->second;
 }
 
+bool EntityDefinition::GetPropertyInteger(const std::string &key, int &value) const {
+    const std::string &literal = GetProperty(key);
+    if (literal.empty()) return false;
+
+    std::stringstream literalStream(literal);
+    int x;
+    literalStream >> x;
+    if (literalStream.bad()) return false;
+
+    value = x;
+    return true;
+}
+
 bool EntityDefinition::GetPropertyVec3(const std::string &key, glm::vec3 &value) const {
     const std::string &literal = GetProperty(key);
     if (literal.empty()) return false;

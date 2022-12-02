@@ -1,4 +1,4 @@
-5
+7
 2
 _tb_textures
 textures
@@ -481,39 +481,43 @@ info_player_start
 origin
 0 0 32
 0
-5
+3
 classname
 prop_static
-frame
-0
 model
 models/suzanne.mdl
 origin
 0 -64 16
-skin
 0
-0
-5
+3
 classname
 prop_static
-frame
-0
 model
 models/desk.mdl
 origin
 64 -64 0
-skin
 0
-0
-5
+3
 classname
 prop_static
-frame
-0
 model
 models/desk.mdl
 origin
 112 -64 0
-skin
 0
+2
+classname
+light_point
+origin
+-144 -144 48
+0
+4
+classname
+light_point
+color
+1.0 1.0 0.0
+origin
+-480 96 224
+range
+64
 0

@@ -25,6 +25,12 @@ struct EntityDefinition {
 
     [[nodiscard]] const std::string &GetProperty(const std::string &key, const std::string &fallback = "") const;
 
+    [[nodiscard]] bool GetPropertyInteger(const std::string &key, int &value) const;
+
+    [[nodiscard]] bool GetPropertyColor(const std::string &key, glm::vec3 &value) const {
+        return GetPropertyVec3(key, value);
+    }
+
     [[nodiscard]] bool GetPropertyDirection(const std::string &key, glm::vec3 &value) const {
         if (!GetPropertyVec3(key, value)) return false;
         value = {value.x, value.z, -value.y}; // convert from quake direction to haru direction
