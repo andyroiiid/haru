@@ -77,12 +77,6 @@ void Game::Update(const float deltaTime) {
         Window->Close();
     }
 
-    if (Window->IsKeyDown(GLFW_KEY_DELETE)) {
-        if (const auto box = m_scene->FindFirstActorOfClass<APhysBox>()) {
-            box->Destroy();
-        }
-    }
-
     if (Window->IsKeyDown(GLFW_KEY_TAB)) {
         m_timeScale = 0.2f;
     } else {
