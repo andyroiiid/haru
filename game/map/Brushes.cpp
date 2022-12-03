@@ -12,9 +12,31 @@
 
 #include "GameStatics.h"
 
+static glm::vec3 CalculateOrigin(const EntityBrushes &brushes) {
+    float numVertices = 0;
+    glm::vec3 sum{0.0f};
+    for (const auto &collider: brushes.Colliders) {
+        for (const auto &vertex: collider) {
+            numVertices += 1.0f;
+            sum.x += vertex.x;
+            sum.y += vertex.y;
+            sum.z += vertex.z;
+        }
+    }
+    return sum / numVertices;
+}
+
 Brushes::Brushes(const EntityBrushes &brushes, PhysicsLayer layer) {
+    glm::vec3 origin = CalculateOrigin(brushes);
+    physx::PxVec3 physxOrigin{origin.x, origin.y, origin.z};
+    m_origin = origin;
+
     for (const auto &[textureName, vertices]: brushes.TextureToVertices) {
-        m_facesAndTextures.emplace_back(vertices, textureName);
+        std::vector<VertexBase> localVertices = vertices;
+        for (VertexBase &vertex: localVertices) {
+            vertex.Position -= origin;
+        }
+        m_facesAndTextures.emplace_back(localVertices, textureName);
     }
 
     PhysicsSystem *physicsSystem = GameStatics::GetPhysicsSystem();
@@ -23,7 +45,12 @@ Brushes::Brushes(const EntityBrushes &brushes, PhysicsLayer layer) {
     const physx::PxFilterData filterData = PhysicsFilterDataFromLayer(layer);
 
     for (const auto &collider: brushes.Colliders) {
-        physx::PxConvexMesh *brushCollider = physicsSystem->CreateConvexMesh(collider.size(), collider.data());
+        std::vector<physx::PxVec3> localCollider = collider;
+        for (physx::PxVec3 &vertex: localCollider) {
+            vertex -= physxOrigin;
+        }
+
+        physx::PxConvexMesh *brushCollider = physicsSystem->CreateConvexMesh(localCollider.size(), localCollider.data());
         m_brushColliders.push_back(brushCollider);
 
         physx::PxShape *brushShape = physicsScene->CreateShape(physx::PxConvexMeshGeometry(brushCollider), true);

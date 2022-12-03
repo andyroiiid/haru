@@ -31,7 +31,11 @@ public:
 
     void Draw(Renderer &renderer, const glm::mat4 &modelMatrix);
 
+    [[nodiscard]] const glm::vec3 &GetOrigin() const { return m_origin; }
+
 private:
+    MoveOnly<glm::vec3> m_origin;
+
     std::vector<FacesAndTexture> m_facesAndTextures;
     std::vector<physx::PxConvexMesh *> m_brushColliders;
     std::vector<physx::PxShape *> m_brushShapes;

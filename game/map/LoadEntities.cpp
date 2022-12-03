@@ -13,6 +13,7 @@
 #include "actors/ALightPoint.h"
 #include "actors/APropStatic.h"
 #include "actors/AFuncBrush.h"
+#include "actors/AFuncPhys.h"
 
 void LoadWorldSpawn(const EntityDefinition &definition) {
     GameStatics::GetScene()->CreateActor<AWorldSpawn>(definition.Brushes);
@@ -48,6 +49,10 @@ void LoadFuncBrush(const EntityDefinition &definition) {
     GameStatics::GetScene()->CreateActor<AFuncBrush>(definition.Brushes);
 }
 
+void LoadFuncPhys(const EntityDefinition &definition) {
+    GameStatics::GetScene()->CreateActor<AFuncPhys>(definition.Brushes);
+}
+
 typedef void (*EntityLoader)(const EntityDefinition &definition);
 
 static const std::map<std::string, EntityLoader> s_EntityLoaders{
@@ -55,7 +60,8 @@ static const std::map<std::string, EntityLoader> s_EntityLoaders{
         {"info_player_start", LoadInfoPlayerStart},
         {"light_point",       LoadLightPoint},
         {"prop_static",       LoadPropStatic},
-        {"func_brush",        LoadFuncBrush}
+        {"func_brush",        LoadFuncBrush},
+        {"func_phys",         LoadFuncPhys}
 };
 
 void LoadEntities(const std::vector<EntityDefinition> &entities) {
