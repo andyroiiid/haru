@@ -20,7 +20,7 @@ AFuncPhys::AFuncPhys(const EntityBrushes &brushes) {
 
     m_brushesRigidbody = GameStatics::GetPhysicsScene()->CreateDynamic(physx::PxTransform(brushesOrigin.x, brushesOrigin.y, brushesOrigin.z));
     m_brushes.AttachToRigidActor(m_brushesRigidbody);
-    physx::PxRigidBodyExt::updateMassAndInertia(*m_brushesRigidbody, 10.0f);
+    physx::PxRigidBodyExt::updateMassAndInertia(*m_brushesRigidbody, 1.0f);
 
     m_brushesRigidbody->userData = this;
 }
