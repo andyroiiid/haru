@@ -4,10 +4,12 @@
 
 #pragma once
 
+#include <string>
 #include <haru/core/MoveOnly.h>
 #include <haru/render/MeshBase.h>
 #include <haru/render/Renderer.h>
-#include <haru/render/Texture.h>
+
+class Texture;
 
 class FacesAndTexture {
 public:
@@ -19,5 +21,5 @@ public:
 
 private:
     MeshBase m_mesh;
-    Texture m_texture;
+    Texture *m_texture;
 };

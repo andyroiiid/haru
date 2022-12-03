@@ -4,8 +4,12 @@
 
 #include "haru/render/Texture.h"
 
+#include <map>
+
 #include "haru/core/Debug.h"
 #include "haru/system/ImageFile.h"
+
+static std::map<std::string, Texture> s_textureCache;
 
 Texture::Texture(const glm::ivec2 &size, const unsigned char *data, Wrap wrap, bool filter, bool mipmaps) {
     m_size = size;
@@ -48,8 +52,20 @@ Texture Texture::FromFile(const std::string &filename, Texture::Wrap wrap, bool 
         DebugLog("Failed to load texture from file: %s", filename.c_str());
         return {};
     }
-    DebugLog("Loaded texture from file: %s", filename.c_str());
     return {image.Size(), image.Data(), wrap, filter, mipmaps};
+}
+
+void Texture::ClearCache() {
+    s_textureCache.clear();
+}
+
+Texture *Texture::LoadToCache(const std::string &filename) {
+    auto pair = s_textureCache.find(filename);
+    if (pair == s_textureCache.end()) {
+        DebugLog("Caching texture: %s", filename.c_str());
+        pair = s_textureCache.emplace(filename, FromFile(filename)).first;
+    }
+    return &pair->second;
 }
 
 Texture::~Texture() {

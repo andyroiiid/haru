@@ -37,6 +37,10 @@ public:
             bool mipmaps = false
     );
 
+    static void ClearCache();
+
+    static Texture *LoadToCache(const std::string &filename);
+
     ~Texture();
 
     [[nodiscard]] const glm::ivec2 &Size() const { return m_size; }

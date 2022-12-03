@@ -6,6 +6,7 @@
 
 #include <haru/core/Debug.h>
 #include <haru/render/DeferredRenderer.h>
+#include <haru/render/Texture.h>
 #include <tracy/Tracy.hpp>
 
 #include "GameStatics.h"
@@ -58,6 +59,8 @@ void Game::Shutdown() {
     Window->SetCursorEnabled(true);
 
     DestroyEssentials();
+
+    Texture::ClearCache();
 
     DebugLog("Game shutdown");
 }
