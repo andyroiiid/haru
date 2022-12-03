@@ -48,7 +48,6 @@ private:
 
     bool m_prevLmb = false;
 
-    Actor *m_currentTarget = nullptr;
     glm::vec3 m_lastHitPosition{};
     glm::vec3 m_lastHitNormal{};
     MeshPositionOnly m_hitLine{GL_LINES};

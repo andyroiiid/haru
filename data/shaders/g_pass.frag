@@ -21,12 +21,12 @@ float LightDiffuse(vec3 worldNormal, vec3 worldPosition, vec3 lightPosition, flo
     return diffuse / attenuation;
 }
 
-float BlurShadow(vec3 shadowCoord, int layer, float bias) {
+float BlurShadow(vec3 shadowCoord, int layer) {
     const vec2 texelSize = 1.0 / textureSize(uShadowMap, 0).xy;
     float shadow = 0.0;
     for (int x = -2; x <= 2; x++) {
         for (int y = -2; y <= 2; y++) {
-            vec4 coord = vec4(shadowCoord.xy + vec2(x, y) * texelSize, layer, shadowCoord.z - bias);
+            vec4 coord = vec4(shadowCoord.xy + vec2(x, y) * texelSize, layer, shadowCoord.z);
             shadow += texture(uShadowMap, coord);
         }
     }
@@ -50,8 +50,7 @@ float ReadShadowMap(vec4 viewSpacePos, vec4 worldPos, vec3 worldNormal)
     vec4 lightSpacePos = uShadowMatrices[layer] * worldPos;
     vec3 shadowCoord = lightSpacePos.xyz / lightSpacePos.w;
     shadowCoord = shadowCoord * 0.5 + 0.5;
-    float bias = max(0.01 * (1.0 - dot(worldNormal, uDirectionalLight)), 0.005);
-    return shadowCoord.z > 1.0 ? 0.0 : BlurShadow(shadowCoord, layer, bias);
+    return shadowCoord.z > 1.0 ? 0.0 : BlurShadow(shadowCoord, layer);
 }
 
 vec3 ACESToneMapping(vec3 color) {
