@@ -12,6 +12,7 @@ add_executable(game
         actors/ALightPoint.cpp actors/ALightPoint.h
         actors/AWorldSpawn.cpp actors/AWorldSpawn.h
         actors/APropStatic.cpp actors/APropStatic.h
+        actors/AFuncBrush.cpp actors/AFuncBrush.h
 
         map/Entity.h map/Entity.cpp
         map/ParseMap.cpp map/ParseMap.h
