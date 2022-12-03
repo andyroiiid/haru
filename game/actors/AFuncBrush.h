@@ -11,6 +11,8 @@
 namespace physx {
     class PxConvexMesh;
 
+    class PxShape;
+
     class PxRigidStatic;
 }
 
@@ -29,5 +31,6 @@ public:
 private:
     std::vector<FacesAndTexture> m_facesAndTextures;
     std::vector<physx::PxConvexMesh *> m_brushColliders;
-    std::vector<physx::PxRigidStatic *> m_brushRigidbodies;
+    std::vector<physx::PxShape *> m_brushShapes;
+    physx::PxRigidStatic *m_brushesRigidbody;
 };

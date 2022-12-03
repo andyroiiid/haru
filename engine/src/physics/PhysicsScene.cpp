@@ -74,6 +74,16 @@ physx::PxController *PhysicsScene::CreateController(const glm::vec3 &position, f
     return controller;
 }
 
+physx::PxShape *PhysicsScene::CreateShape(const physx::PxGeometry &geometry, bool isExclusive) {
+    return m_physics->createShape(geometry, *m_defaultMaterial, isExclusive);
+}
+
+physx::PxRigidStatic *PhysicsScene::CreateStatic(const physx::PxTransform &transform) {
+    physx::PxRigidStatic *actor = m_physics->createRigidStatic(transform);
+    m_scene->addActor(*actor);
+    return actor;
+}
+
 physx::PxRigidStatic *PhysicsScene::CreateStatic(
         const physx::PxTransform &transform,
         const physx::PxGeometry &geometry,
@@ -81,6 +91,12 @@ physx::PxRigidStatic *PhysicsScene::CreateStatic(
 ) {
     physx::PxRigidStatic *actor = PxCreateStatic(*m_physics, transform, geometry, *m_defaultMaterial);
     PhysicsSetQueryLayer(actor, queryLayer);
+    m_scene->addActor(*actor);
+    return actor;
+}
+
+physx::PxRigidDynamic *PhysicsScene::CreateDynamic(const physx::PxTransform &transform) {
+    physx::PxRigidDynamic *actor = m_physics->createRigidDynamic(transform);
     m_scene->addActor(*actor);
     return actor;
 }

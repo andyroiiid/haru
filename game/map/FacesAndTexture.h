@@ -21,5 +21,5 @@ public:
 
 private:
     MeshBase m_mesh;
-    Texture *m_texture;
+    MoveOnly<Texture *> m_texture;
 };

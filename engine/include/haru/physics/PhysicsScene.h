@@ -53,10 +53,23 @@ public:
             PhysicsLayer queryLayer = PHYSICS_LAYER_1
     );
 
+    physx::PxShape *CreateShape(
+            const physx::PxGeometry &geometry,
+            bool isExclusive
+    );
+
+    physx::PxRigidStatic *CreateStatic(
+            const physx::PxTransform &transform
+    );
+
     physx::PxRigidStatic *CreateStatic(
             const physx::PxTransform &transform,
             const physx::PxGeometry &geometry,
             PhysicsLayer queryLayer = PHYSICS_LAYER_0
+    );
+
+    physx::PxRigidDynamic *CreateDynamic(
+            const physx::PxTransform &transform
     );
 
     physx::PxRigidDynamic *CreateDynamic(

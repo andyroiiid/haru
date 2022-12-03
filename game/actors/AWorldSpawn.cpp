@@ -14,9 +14,12 @@
 #include "GameStatics.h"
 
 AWorldSpawn::AWorldSpawn(const EntityBrushes &brushes) {
-    const physx::PxTransform rigidbodyTransform(physx::PxVec3{0.0f, 0.0f, 0.0f});
     PhysicsSystem *physicsSystem = GameStatics::GetPhysicsSystem();
     PhysicsScene *physicsScene = GameStatics::GetPhysicsScene();
+
+    m_brushesRigidbody = physicsScene->CreateStatic(physx::PxTransform(0.0f, 0.0f, 0.0f));
+    m_brushesRigidbody->userData = this;
+    const physx::PxFilterData filterData = PhysicsFilterDataFromLayer(PHYSICS_LAYER_0);
 
     for (const auto &collider: brushes.Colliders) {
         for (const auto &vertex: collider) {
@@ -31,9 +34,11 @@ AWorldSpawn::AWorldSpawn(const EntityBrushes &brushes) {
         physx::PxConvexMesh *brushCollider = physicsSystem->CreateConvexMesh(collider.size(), collider.data());
         m_brushColliders.push_back(brushCollider);
 
-        physx::PxRigidStatic *brushRigidbody = physicsScene->CreateStatic(rigidbodyTransform, physx::PxConvexMeshGeometry(brushCollider));
-        brushRigidbody->userData = this;
-        m_brushRigidbodies.push_back(brushRigidbody);
+        physx::PxShape *brushShape = physicsScene->CreateShape(physx::PxConvexMeshGeometry(brushCollider), true);
+        brushShape->setQueryFilterData(filterData);
+        m_brushShapes.push_back(brushShape);
+
+        m_brushesRigidbody->attachShape(*brushShape);
     }
 
     for (const auto &[textureName, vertices]: brushes.TextureToVertices) {
@@ -42,13 +47,15 @@ AWorldSpawn::AWorldSpawn(const EntityBrushes &brushes) {
 }
 
 AWorldSpawn::~AWorldSpawn() {
-    for (physx::PxRigidStatic *rigidbody: m_brushRigidbodies) {
-        PX_RELEASE(rigidbody)
+    for (physx::PxShape *shape: m_brushShapes) {
+        PX_RELEASE(shape)
     }
 
     for (physx::PxConvexMesh *collider: m_brushColliders) {
         PX_RELEASE(collider)
     }
+
+    PX_RELEASE(m_brushesRigidbody)
 }
 
 void AWorldSpawn::Draw(Renderer &renderer) {
