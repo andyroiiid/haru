@@ -15,6 +15,7 @@ add_executable(game
         actors/AFuncBrush.cpp actors/AFuncBrush.h
 
         map/Entity.h map/Entity.cpp
+        map/FacesAndTexture.cpp map/FacesAndTexture.h
         map/ParseMap.cpp map/ParseMap.h
         map/LoadEntities.cpp map/LoadEntities.h
 

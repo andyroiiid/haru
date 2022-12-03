@@ -37,7 +37,7 @@ AWorldSpawn::AWorldSpawn(const EntityBrushes &brushes) {
     }
 
     for (const auto &[textureName, vertices]: brushes.TextureToVertices) {
-        m_meshesAndMaterials.emplace_back(vertices, textureName);
+        m_facesAndTextures.emplace_back(vertices, textureName);
     }
 }
 
@@ -54,17 +54,7 @@ AWorldSpawn::~AWorldSpawn() {
 void AWorldSpawn::Draw(Renderer &renderer) {
     renderer.SetWorldBounds(m_geomMin, m_geomMax);
     const glm::mat4 modelMatrix = GetTransform().GetMatrix();
-    for (auto &meshAndMaterial: m_meshesAndMaterials) {
-        meshAndMaterial.Draw(renderer, modelMatrix);
+    for (auto &facesAndTexture: m_facesAndTextures) {
+        facesAndTexture.Draw(renderer, modelMatrix);
     }
-}
-
-AWorldSpawn::MeshAndTexture::MeshAndTexture(const std::vector<VertexBase> &vertices, const std::string &textureName)
-        : m_mesh(vertices, GL_TRIANGLES),
-          m_texture(Texture::FromFile("textures/" + textureName + ".png")) {
-}
-
-void AWorldSpawn::MeshAndTexture::Draw(Renderer &renderer, const glm::mat4 &modelMatrix) {
-    Material material{&m_texture};
-    renderer.DrawMesh(m_mesh, modelMatrix, &material);
 }
