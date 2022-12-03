@@ -21,6 +21,7 @@ add_library(engine
         include/haru/render/UniformBuffer.h
         include/haru/render/Mesh.h
         include/haru/render/MeshPositionOnly.h
+        include/haru/render/MeshPositionColor.h
         include/haru/render/MeshBase.h
         include/haru/render/MeshUtilities.h
         include/haru/render/Shader.h

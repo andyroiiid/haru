@@ -12,6 +12,7 @@
 #include "haru/render/Framebuffer.h"
 #include "haru/render/Material.h"
 #include "haru/render/Mesh.h"
+#include "haru/render/MeshPositionColor.h"
 #include "haru/render/Renderer.h"
 #include "haru/render/ShadowMap.h"
 #include "haru/render/ShadowMatrixCalculator.h"
@@ -65,7 +66,7 @@ public:
 
     void DrawPointLight(const glm::vec3 &position, const glm::vec3 &color, float linear, float quadratic) override;
 
-    void DrawLines(const MeshPositionOnly &lines, const glm::vec4 &color) override;
+    void DrawLine(const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &color) override;
 
     void DrawMesh(const MeshBase &mesh, const glm::mat4 &model, const Material *material) override;
 
@@ -102,6 +103,9 @@ private:
 
     std::vector<PointLightData> m_pendingPointLightData;
 
+    std::vector<VertexPositionColor> m_pendingLines;
+    MeshPositionColor m_linesMesh{GL_LINES};
+
     struct DrawCallBase {
         const MeshBase &Mesh;
         glm::mat4 Model{1.0f};
@@ -109,11 +113,4 @@ private:
     };
 
     std::vector<DrawCallBase> m_pendingBaseDrawCalls;
-
-    struct DrawCallLines {
-        const MeshPositionOnly &Mesh;
-        glm::vec4 Color;
-    };
-
-    std::vector<DrawCallLines> m_pendingLinesDrawCalls;
 };

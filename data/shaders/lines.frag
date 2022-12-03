@@ -1,7 +1,7 @@
+layout(location = 0) in vec3 vColor;
+
 layout(location = 0) out vec4 fColor;
 
-layout(location = 0) uniform vec4 uColor;
-
 void main() {
-    fColor = uColor;
+    fColor = vec4(vColor, 1);
 }

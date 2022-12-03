@@ -95,8 +95,8 @@ void DeferredRenderer::BeginDraw() {
     ZoneScoped;
 
     m_pendingPointLightData.clear();
+    m_pendingLines.clear();
     m_pendingBaseDrawCalls.clear();
-    m_pendingLinesDrawCalls.clear();
 
     m_shaderGlobals.Map();
     m_lightGlobals.Map();
@@ -116,8 +116,9 @@ void DeferredRenderer::DrawPointLight(const glm::vec3 &position, const glm::vec3
     m_pendingPointLightData.push_back({position, linear, color, quadratic});
 }
 
-void DeferredRenderer::DrawLines(const MeshPositionOnly &lines, const glm::vec4 &color) {
-    m_pendingLinesDrawCalls.push_back({lines, color});
+void DeferredRenderer::DrawLine(const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &color) {
+    m_pendingLines.push_back({p0, color});
+    m_pendingLines.push_back({p1, color});
 }
 
 void DeferredRenderer::DrawMesh(const MeshBase &mesh, const glm::mat4 &model, const Material *material) {
@@ -220,10 +221,8 @@ void DeferredRenderer::DrawForwardPass() {
 
     // draw lines
     m_linesShader.Use();
-    for (const auto &linesDrawCall: m_pendingLinesDrawCalls) {
-        m_linesShader.SetColor(linesDrawCall.Color);
-        linesDrawCall.Mesh.BindAndDraw();
-    }
+    m_linesMesh.UpdateData(m_pendingLines);
+    m_linesMesh.BindAndDraw();
 
     glDepthFunc(GL_LEQUAL);
     m_skyboxShader.Use();

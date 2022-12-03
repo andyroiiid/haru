@@ -41,11 +41,6 @@ DeferredShaderLines::DeferredShaderLines() : Shader(FromFile(
         "shaders/lines.vert",
         "shaders/lines.frag"
 )) {
-    m_colorLocation = GetUniformLocation("uColor");
-}
-
-void DeferredShaderLines::SetColor(const glm::vec4 &color) {
-    SetUniform(m_colorLocation, color);
 }
 
 DeferredShaderSkybox::DeferredShaderSkybox() : Shader(FromFile(

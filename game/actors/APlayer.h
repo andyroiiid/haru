@@ -50,5 +50,4 @@ private:
 
     glm::vec3 m_lastHitPosition{};
     glm::vec3 m_lastHitNormal{};
-    MeshPositionOnly m_hitLine{GL_LINES};
 };

@@ -42,11 +42,6 @@ public:
     MOVE_ONLY(DeferredShaderLines)
 
     DeferredShaderLines();
-
-    void SetColor(const glm::vec4 &color);
-
-private:
-    GLint m_colorLocation = -1;
 };
 
 class DeferredShaderSkybox : public Shader {

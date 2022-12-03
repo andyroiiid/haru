@@ -63,7 +63,7 @@ public:
 
     virtual void DrawPointLight(const glm::vec3 &position, const glm::vec3 &color, float linear, float quadratic) = 0;
 
-    virtual void DrawLines(const MeshPositionOnly &lines, const glm::vec4 &color) = 0;
+    virtual void DrawLine(const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &color) = 0;
 
     virtual void DrawMesh(const MeshBase &mesh, const glm::mat4 &model, const Material *material) = 0;
 

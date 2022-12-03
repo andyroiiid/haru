@@ -126,13 +126,10 @@ void APlayer::FixedUpdate(float fixedDeltaTime) {
 }
 
 void APlayer::Draw(Renderer &renderer) {
-    m_hitLine.UpdateData(
-            {
-                    {{0.0f, 0.0f, 0.0f}},
-                    {m_lastHitPosition},
-                    {m_lastHitPosition},
-                    {m_lastHitPosition + m_lastHitNormal},
-            }
-    );
-    renderer.DrawLines(m_hitLine, {1.0f, 0.0f, 0.0f, 1.0f});
+    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition - glm::vec3{0.1f, 0.0f, 0.0f}, glm::vec3{1.0f, 0.0f, 0.0f});
+    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition + glm::vec3{0.1f, 0.0f, 0.0f}, glm::vec3{1.0f, 0.0f, 0.0f});
+    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition - glm::vec3{0.0f, 0.1f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
+    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition + glm::vec3{0.0f, 0.1f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
+    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition - glm::vec3{0.0f, 0.0f, 0.1f}, glm::vec3{0.0f, 0.0f, 1.0f});
+    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition + glm::vec3{0.0f, 0.0f, 0.1f}, glm::vec3{0.0f, 0.0f, 1.0f});
 }
