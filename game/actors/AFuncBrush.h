@@ -6,13 +6,9 @@
 
 #include "Actor.h"
 #include "map/Entity.h"
-#include "map/FacesAndTexture.h"
+#include "map/Brushes.h"
 
 namespace physx {
-    class PxConvexMesh;
-
-    class PxShape;
-
     class PxRigidStatic;
 }
 
@@ -29,8 +25,6 @@ public:
     void Use(APlayer *player, const physx::PxRaycastHit &hit) override;
 
 private:
-    std::vector<FacesAndTexture> m_facesAndTextures;
-    std::vector<physx::PxConvexMesh *> m_brushColliders;
-    std::vector<physx::PxShape *> m_brushShapes;
+    Brushes m_brushes;
     physx::PxRigidStatic *m_brushesRigidbody;
 };

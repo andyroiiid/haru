@@ -16,6 +16,7 @@ add_executable(game
 
         map/Entity.h map/Entity.cpp
         map/FacesAndTexture.cpp map/FacesAndTexture.h
+        map/Brushes.cpp map/Brushes.h
         map/ParseMap.cpp map/ParseMap.h
         map/LoadEntities.cpp map/LoadEntities.h
 
