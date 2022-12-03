@@ -36,6 +36,7 @@ add_library(engine
         src/render/MeshUtilities.cpp
         src/render/Shader.cpp
         src/render/Texture.cpp
+        src/render/Renderer.cpp
         src/render/DeferredShaders.cpp
         src/render/DeferredRenderer.cpp
 

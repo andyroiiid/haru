@@ -95,7 +95,7 @@ void DeferredRenderer::BeginDraw() {
     ZoneScoped;
 
     m_pendingPointLightData.clear();
-    m_pendingLines.clear();
+    m_pendingDebugLines.clear();
     m_pendingBaseDrawCalls.clear();
 
     m_shaderGlobals.Map();
@@ -116,9 +116,9 @@ void DeferredRenderer::DrawPointLight(const glm::vec3 &position, const glm::vec3
     m_pendingPointLightData.push_back({position, linear, color, quadratic});
 }
 
-void DeferredRenderer::DrawLine(const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &color) {
-    m_pendingLines.push_back({p0, color});
-    m_pendingLines.push_back({p1, color});
+void DeferredRenderer::DebugDrawLine(const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &color) {
+    m_pendingDebugLines.push_back({p0, color});
+    m_pendingDebugLines.push_back({p1, color});
 }
 
 void DeferredRenderer::DrawMesh(const MeshBase &mesh, const glm::mat4 &model, const Material *material) {
@@ -219,10 +219,10 @@ void DeferredRenderer::DrawForwardPass() {
 
     glEnable(GL_DEPTH_TEST);
 
-    // draw lines
+    // draw debug lines
     m_linesShader.Use();
-    m_linesMesh.UpdateData(m_pendingLines);
-    m_linesMesh.BindAndDraw();
+    m_debugLinesMesh.UpdateData(m_pendingDebugLines);
+    m_debugLinesMesh.BindAndDraw();
 
     glDepthFunc(GL_LEQUAL);
     m_skyboxShader.Use();

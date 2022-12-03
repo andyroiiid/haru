@@ -66,7 +66,7 @@ public:
 
     void DrawPointLight(const glm::vec3 &position, const glm::vec3 &color, float linear, float quadratic) override;
 
-    void DrawLine(const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &color) override;
+    void DebugDrawLine(const glm::vec3 &p0, const glm::vec3 &p1, const glm::vec3 &color) override;
 
     void DrawMesh(const MeshBase &mesh, const glm::mat4 &model, const Material *material) override;
 
@@ -103,8 +103,8 @@ private:
 
     std::vector<PointLightData> m_pendingPointLightData;
 
-    std::vector<VertexPositionColor> m_pendingLines;
-    MeshPositionColor m_linesMesh{GL_LINES};
+    std::vector<VertexPositionColor> m_pendingDebugLines;
+    MeshPositionColor m_debugLinesMesh{GL_LINES};
 
     struct DrawCallBase {
         const MeshBase &Mesh;

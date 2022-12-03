@@ -47,7 +47,6 @@ private:
     glm::vec3 m_previousPosition{};
 
     bool m_prevLmb = false;
-
-    glm::vec3 m_lastHitPosition{};
-    glm::vec3 m_lastHitNormal{};
+    glm::vec3 m_hitPosition{};
+    Actor *m_hitActor = nullptr;
 };

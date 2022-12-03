@@ -57,38 +57,38 @@ void APlayer::Update(const float deltaTime) {
     }
 
     // raycast for current target
-    bool currLmb = GameStatics::GetWindow()->IsMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT);
-    if (!m_prevLmb && currLmb) {
+    {
+        bool currLmb = GameStatics::GetWindow()->IsMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT);
+
         const glm::vec3 position = GetTransform().GetPosition();
         const glm::vec3 forward = GetTransform().GetForwardVector();
 
         physx::PxRaycastBuffer buffer = GameStatics::GetPhysicsScene()->Raycast(
                 {position.x, position.y, position.z},
                 {forward.x, forward.y, forward.z},
-                10.0f,
+                2.0f,
                 PHYSICS_LAYER_0
         );
 
+        m_hitActor = nullptr;
         if (buffer.hasBlock) {
             const physx::PxRaycastHit &hit = buffer.block;
 
-            m_lastHitPosition.x = hit.position.x;
-            m_lastHitPosition.y = hit.position.y;
-            m_lastHitPosition.z = hit.position.z;
-
-            m_lastHitNormal.x = hit.normal.x;
-            m_lastHitNormal.y = hit.normal.y;
-            m_lastHitNormal.z = hit.normal.z;
+            m_hitPosition.x = hit.position.x;
+            m_hitPosition.y = hit.position.y;
+            m_hitPosition.z = hit.position.z;
 
             if (hit.actor) {
-                static_cast<Actor *>(hit.actor->userData)->Use(this, hit);
+                m_hitActor = static_cast<Actor *>(hit.actor->userData);
+
+                if (!m_prevLmb && currLmb && m_hitActor) {
+                    m_hitActor->Use(this, hit);
+                }
             }
-        } else {
-            m_lastHitPosition = {};
-            m_lastHitNormal = {};
         }
+
+        m_prevLmb = currLmb;
     }
-    m_prevLmb = currLmb;
 }
 
 void APlayer::CalcHorizontalAcceleration(const glm::vec3 &direction, float acceleration, float drag) {
@@ -126,10 +126,7 @@ void APlayer::FixedUpdate(float fixedDeltaTime) {
 }
 
 void APlayer::Draw(Renderer &renderer) {
-    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition - glm::vec3{0.1f, 0.0f, 0.0f}, glm::vec3{1.0f, 0.0f, 0.0f});
-    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition + glm::vec3{0.1f, 0.0f, 0.0f}, glm::vec3{1.0f, 0.0f, 0.0f});
-    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition - glm::vec3{0.0f, 0.1f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
-    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition + glm::vec3{0.0f, 0.1f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
-    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition - glm::vec3{0.0f, 0.0f, 0.1f}, glm::vec3{0.0f, 0.0f, 1.0f});
-    renderer.DrawLine(m_lastHitPosition, m_lastHitPosition + glm::vec3{0.0f, 0.0f, 0.1f}, glm::vec3{0.0f, 0.0f, 1.0f});
+    if (m_hitActor) {
+        renderer.DebugDrawMarker(m_hitPosition, 0.1f);
+    }
 }
