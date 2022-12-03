@@ -30,7 +30,3 @@ AFuncBrush::~AFuncBrush() {
 void AFuncBrush::Draw(Renderer &renderer) {
     m_brushes.Draw(renderer, GetTransform().GetMatrix());
 }
-
-void AFuncBrush::Use(APlayer *player, const physx::PxRaycastHit &hit) {
-    Destroy();
-}
