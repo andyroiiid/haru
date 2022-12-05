@@ -9,9 +9,9 @@
 Framebuffer::Framebuffer(
         const glm::ivec2 &size,
         const std::initializer_list<GLenum> &formats,
-        const bool depthIsTexture
+        const FramebufferDepthOption depthOption
 ) : m_size(size),
-    m_depthIsTexture(depthIsTexture) {
+    m_depthOption(depthOption) {
     glCreateFramebuffers(1, &m_fbo);
     CreateColorAttachments(formats);
     CreateDepthStencilAttachment();
@@ -52,20 +52,23 @@ void Framebuffer::CreateColorAttachments(const std::initializer_list<GLenum> &fo
 }
 
 void Framebuffer::CreateDepthStencilAttachment() {
-    if (m_depthIsTexture) {
+    switch (m_depthOption) {
+    case FramebufferDepthOption::NoDepth:
+        break;
+    case FramebufferDepthOption::DepthIsRenderBuffer:
+        glCreateRenderbuffers(1, &m_depthStencilAttachment);
+        glNamedRenderbufferStorage(m_depthStencilAttachment, GL_DEPTH24_STENCIL8, m_size->x, m_size->y);
+        glNamedFramebufferRenderbuffer(m_fbo, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_depthStencilAttachment);
+        break;
+    case FramebufferDepthOption::DepthIsTexture:
         glCreateTextures(GL_TEXTURE_2D, 1, &m_depthStencilAttachment);
         glTextureStorage2D(m_depthStencilAttachment, 1, GL_DEPTH24_STENCIL8, m_size->x, m_size->y);
         glTextureParameteri(m_depthStencilAttachment, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTextureParameteri(m_depthStencilAttachment, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTextureParameteri(m_depthStencilAttachment, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTextureParameteri(m_depthStencilAttachment, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
         glNamedFramebufferTexture(m_fbo, GL_DEPTH_STENCIL_ATTACHMENT, m_depthStencilAttachment, 0);
-    } else {
-        glCreateRenderbuffers(1, &m_depthStencilAttachment);
-        glNamedRenderbufferStorage(m_depthStencilAttachment, GL_DEPTH24_STENCIL8, m_size->x, m_size->y);
-
-        glNamedFramebufferRenderbuffer(m_fbo, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_depthStencilAttachment);
+        break;
     }
 }
 
@@ -78,12 +81,15 @@ Framebuffer::~Framebuffer() {
             glDeleteTextures(1, &texture);
         }
     }
-    if (m_depthStencilAttachment) {
-        if (m_depthIsTexture) {
-            glDeleteTextures(1, &m_depthStencilAttachment);
-        } else {
-            glDeleteRenderbuffers(1, &m_depthStencilAttachment);
-        }
+    switch (m_depthOption) {
+    case FramebufferDepthOption::NoDepth:
+        break;
+    case FramebufferDepthOption::DepthIsRenderBuffer:
+        glDeleteRenderbuffers(1, &m_depthStencilAttachment);
+        break;
+    case FramebufferDepthOption::DepthIsTexture:
+        glDeleteTextures(1, &m_depthStencilAttachment);
+        break;
     }
 }
 
@@ -108,7 +114,7 @@ void Framebuffer::BindColorTexture(const GLuint unit, const GLuint attachment) {
 }
 
 void Framebuffer::BindDepthStencilTexture(const GLuint unit) {
-    if (!m_depthIsTexture) return;
+    if (m_depthOption != FramebufferDepthOption::DepthIsTexture) return;
     glBindTextureUnit(unit, m_depthStencilAttachment);
 }
 
@@ -123,7 +129,7 @@ void Framebuffer::UnbindAllTextures() {
     for (int i = 0; i < m_numColorAttachments; i++) {
         glBindTextureUnit(i, 0);
     }
-    if (!m_depthIsTexture) return;
+    if (m_depthOption != FramebufferDepthOption::DepthIsTexture) return;
     glBindTextureUnit(m_numColorAttachments, 0);
 }
 

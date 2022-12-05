@@ -74,7 +74,8 @@ void DeferredRenderer::OnResize(const glm::ivec2 &size) {
                     GL_RGBA32F, // WorldNormal
                     GL_RGBA8, // Color
                     GL_RGBA8 // Emissive
-            }
+            },
+            FramebufferDepthOption::DepthIsRenderBuffer
     );
 }
 

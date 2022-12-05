@@ -54,8 +54,24 @@ public:
         return &m_value;
     }
 
+    const T *operator&() const { // NOLINT(google-runtime-operator)
+        return &m_value;
+    }
+
     T *operator->() {
         return &m_value;
+    }
+
+    const T *operator->() const {
+        return &m_value;
+    }
+
+    bool operator==(const T &val) const {
+        return m_value == val;
+    }
+
+    bool operator!=(const T &val) const {
+        return m_value != val;
     }
 
 private:

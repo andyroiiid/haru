@@ -10,13 +10,22 @@
 
 #include "haru/core/MoveOnly.h"
 
+enum class FramebufferDepthOption {
+    NoDepth,
+    DepthIsRenderBuffer,
+    DepthIsTexture
+};
+
 class Framebuffer {
 public:
     MOVE_ONLY(Framebuffer)
 
     Framebuffer() = default;
 
-    Framebuffer(const glm::ivec2 &size, const std::initializer_list<GLenum> &formats, bool depthIsTexture = false);
+    Framebuffer(const glm::ivec2 &size, const std::initializer_list<GLenum> &formats, FramebufferDepthOption depthOption);
+
+    Framebuffer(const glm::ivec2 &size, GLenum format, FramebufferDepthOption depthOption)
+            : Framebuffer(size, {format}, depthOption) {}
 
     ~Framebuffer();
 
@@ -37,7 +46,7 @@ public:
     void UnbindAllTextures();
 
     [[nodiscard]] int GetTextureCount() const {
-        return m_depthIsTexture ? m_numColorAttachments + 1 : m_numColorAttachments;
+        return m_depthOption == FramebufferDepthOption::DepthIsTexture ? m_numColorAttachments + 1 : m_numColorAttachments;
     }
 
     void BlitDepthStencilToScreen(const glm::ivec2 &screenSize);
@@ -58,6 +67,6 @@ private:
     MoveOnly<GLsizei> m_numColorAttachments;
     ColorAttachmentsArray m_colorAttachments;
 
-    MoveOnly<bool> m_depthIsTexture;
+    MoveOnly<FramebufferDepthOption> m_depthOption;
     MoveOnly<GLuint> m_depthStencilAttachment;
 };
