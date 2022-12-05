@@ -25,26 +25,39 @@ public:
     void Draw(Renderer &renderer) override;
 
 private:
-    void ReadMovementInput();
+    void GroundCheck();
 
     void CalcHorizontalAcceleration(const glm::vec3 &direction, float acceleration, float drag);
 
     void UpdateAcceleration();
 
+    static constexpr float CAPSULE_RADIUS = 0.4f;
+    static constexpr float CAPSULE_HALF_HEIGHT = 0.8f;
+
+    static constexpr float INTERACTION_DISTANCE = 2.0f;
+
+    static constexpr float GRAVITY = 20.0f;
+    static constexpr float GROUND_ACCELERATION = 50.0f;
+    static constexpr float GROUND_DRAG = 10.0f;
+    static constexpr float GROUND_STEP_OFFSET = 0.3f;
+    static constexpr float AIR_ACCELERATION = 10.0f;
+    static constexpr float AIR_DRAG = 2.0f;
+    static constexpr float AIR_STEP_OFFSET = 0.0f;
+    static constexpr float JUMP_VELOCITY = 7.0f;
+
     physx::PxController *m_controller;
 
     float m_mouseSpeed;
-
-    float m_groundAcceleration = 50.0f;
-    float m_gravity = 20.0f;
-    float m_groundDrag = 10.0f;
-
     glm::vec3 m_movementInput{};
+
+    bool m_isOnGround = false;
 
     glm::vec3 m_velocity{};
     glm::vec3 m_acceleration{};
 
     glm::vec3 m_previousPosition{};
+
+    bool m_prevSpace = false;
 
     bool m_prevLmb = false;
     glm::vec3 m_hitPosition{};

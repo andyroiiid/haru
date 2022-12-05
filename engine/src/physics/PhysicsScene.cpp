@@ -56,15 +56,10 @@ bool PhysicsScene::Update(const float deltaTime, const float timeScale) {
 physx::PxController *PhysicsScene::CreateController(const glm::vec3 &position, float radius, float height, PhysicsLayer queryLayer) {
     physx::PxCapsuleControllerDesc desc;
     desc.position = {position.x, position.y, position.z};
-    desc.invisibleWallHeight = height;
-    desc.maxJumpHeight = height;
-    desc.stepOffset = 0.3f;
-    desc.nonWalkableMode = physx::PxControllerNonWalkableMode::ePREVENT_CLIMBING;
     desc.material = m_defaultMaterial;
     // https://nvidia-omniverse.github.io/PhysX/physx/5.1.0/docs/CharacterControllers.html#character-volume
     desc.radius = radius;
     desc.height = height - radius * 2.0f;
-    desc.climbingMode = physx::PxCapsuleClimbingMode::eCONSTRAINED;
 
     physx::PxController *controller = m_controllerManager->createController(desc);
 

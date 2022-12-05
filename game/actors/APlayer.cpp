@@ -13,7 +13,11 @@
 APlayer::APlayer(
         const glm::vec3 &position, float yaw,
         float mouseSpeed
-) : m_controller(GameStatics::GetPhysicsScene()->CreateController({position.x, position.y, position.z}, 0.4f, 1.8f)),
+) : m_controller(GameStatics::GetPhysicsScene()->CreateController(
+        {position.x, position.y, position.z},
+        CAPSULE_RADIUS,
+        CAPSULE_HALF_HEIGHT * 2.0f
+)),
     m_mouseSpeed(mouseSpeed) {
     m_controller->getActor()->userData = this;
     GetTransform().SetPosition(position).RotateY(yaw);
@@ -24,49 +28,61 @@ APlayer::~APlayer() {
     PX_RELEASE(m_controller)
 }
 
-void APlayer::ReadMovementInput() {
-    Window *window = GameStatics::GetWindow();
-    Transform &transform = GetTransform();
-    m_movementInput =
-            transform.GetHorizontalRightVector() * window->GetKeyAxis(GLFW_KEY_D, GLFW_KEY_A) +
-            transform.GetHorizontalForwardVector() * window->GetKeyAxis(GLFW_KEY_W, GLFW_KEY_S);
-}
-
 void APlayer::Update(const float deltaTime) {
+    Window *window = GameStatics::GetWindow();
+    PhysicsScene *physicsScene = GameStatics::GetPhysicsScene();
+
     // turn
     {
-        const glm::vec2 &deltaMousePos = GameStatics::GetWindow()->GetMouseDeltaPosition();
+        const glm::vec2 &deltaMousePos = window->GetMouseDeltaPosition();
         GetTransform()
                 .RotateX(m_mouseSpeed * -deltaMousePos.y)
                 .RotateY(m_mouseSpeed * -deltaMousePos.x)
                 .ClampPitch();
     }
 
-    ReadMovementInput();
+    // move
+    {
+        Transform &transform = GetTransform();
+        m_movementInput =
+                transform.GetHorizontalRightVector() * window->GetKeyAxis(GLFW_KEY_D, GLFW_KEY_A) +
+                transform.GetHorizontalForwardVector() * window->GetKeyAxis(GLFW_KEY_W, GLFW_KEY_S);
+    }
 
     // sync position
     {
         const physx::PxVec3 position = toVec3(m_controller->getPosition());
-        const float timeError = GameStatics::GetPhysicsScene()->GetFixedUpdateTimeError();
+        const float timeError = glm::min(physicsScene->GetFixedTimestep(), physicsScene->GetFixedUpdateTimeError());
         const glm::vec3 predictedPosition{
                 position.x + m_velocity.x * timeError,
                 position.y + m_velocity.y * timeError,
                 position.z + m_velocity.z * timeError
         };
-        GetTransform().SetPosition(predictedPosition + glm::vec3{0.0f, 0.5f, 0.0f}); // + 0.5 for the eye height
+        GetTransform().SetPosition(predictedPosition + glm::vec3{0.0f, CAPSULE_HALF_HEIGHT - CAPSULE_RADIUS, 0.0f});
+    }
+
+    // jump
+    {
+        bool currSpace = window->IsKeyDown(GLFW_KEY_SPACE);
+
+        if (!m_prevSpace && currSpace && m_isOnGround) {
+            m_velocity.y = JUMP_VELOCITY;
+        }
+
+        m_prevSpace = currSpace;
     }
 
     // raycast for current target
     {
-        bool currLmb = GameStatics::GetWindow()->IsMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT);
+        bool currLmb = window->IsMouseButtonDown(GLFW_MOUSE_BUTTON_LEFT);
 
         const glm::vec3 position = GetTransform().GetPosition();
         const glm::vec3 forward = GetTransform().GetForwardVector();
 
-        physx::PxRaycastBuffer buffer = GameStatics::GetPhysicsScene()->Raycast(
+        physx::PxRaycastBuffer buffer = physicsScene->Raycast(
                 {position.x, position.y, position.z},
                 {forward.x, forward.y, forward.z},
-                2.0f,
+                INTERACTION_DISTANCE,
                 PHYSICS_LAYER_0
         );
 
@@ -91,6 +107,25 @@ void APlayer::Update(const float deltaTime) {
     }
 }
 
+void APlayer::GroundCheck() {
+    static const physx::PxCapsuleGeometry QUERY_GEOMETRY(CAPSULE_RADIUS, CAPSULE_HALF_HEIGHT);
+    static const physx::PxQuat QUERY_ROTATION(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
+    static const physx::PxVec3 QUERY_DIRECTION(0.0f, -1.0f, 0.0f);
+
+    physx::PxSweepBuffer buffer = GameStatics::GetPhysicsScene()->Sweep(
+            QUERY_GEOMETRY,
+            physx::PxTransform(toVec3(m_controller->getPosition()), QUERY_ROTATION),
+            QUERY_DIRECTION,
+            m_controller->getStepOffset(),
+            PHYSICS_LAYER_0
+    );
+
+    m_isOnGround = buffer.hasBlock;
+
+    // reduce step offset when the player is in air
+    m_controller->setStepOffset(m_isOnGround ? GROUND_STEP_OFFSET : AIR_STEP_OFFSET);
+}
+
 void APlayer::CalcHorizontalAcceleration(const glm::vec3 &direction, float acceleration, float drag) {
     m_acceleration.x = direction.x * acceleration - m_velocity.x * drag;
     m_acceleration.z = direction.z * acceleration - m_velocity.z * drag;
@@ -98,19 +133,23 @@ void APlayer::CalcHorizontalAcceleration(const glm::vec3 &direction, float accel
 
 void APlayer::UpdateAcceleration() {
     m_acceleration = {};
-    CalcHorizontalAcceleration(m_movementInput, m_groundAcceleration, m_groundDrag);
-    m_acceleration.y = -m_gravity;
+    float acceleration = m_isOnGround ? GROUND_ACCELERATION : AIR_ACCELERATION;
+    float drag = m_isOnGround ? GROUND_DRAG : AIR_DRAG;
+    CalcHorizontalAcceleration(m_movementInput, acceleration, drag);
+    m_acceleration.y = -GRAVITY;
 }
 
 void APlayer::FixedUpdate(float fixedDeltaTime) {
-    // move character controller
+    GroundCheck();
+
     UpdateAcceleration();
 
+    // move character controller
     m_velocity += m_acceleration * fixedDeltaTime;
     const glm::vec3 displacement = m_velocity * fixedDeltaTime;
-    physx::PxControllerCollisionFlags flags = m_controller->move(
+    m_controller->move(
             {displacement.x, displacement.y, displacement.z},
-            0.01f,
+            0.001f,
             fixedDeltaTime,
             physx::PxControllerFilters()
     );
@@ -119,9 +158,6 @@ void APlayer::FixedUpdate(float fixedDeltaTime) {
     const physx::PxVec3 pos = toVec3(m_controller->getPosition());
     const glm::vec3 currentPosition{pos.x, pos.y, pos.z};
     m_velocity = (currentPosition - m_previousPosition) / fixedDeltaTime;
-    if (flags.isSet(physx::PxControllerCollisionFlag::eCOLLISION_DOWN)) {
-        m_velocity.y = 0.0f;
-    }
     m_previousPosition = currentPosition;
 }
 
