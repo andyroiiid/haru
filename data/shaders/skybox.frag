@@ -1,6 +1,9 @@
 layout(location = 0) in vec3 vPosition;
 
-layout(location = 0) out vec4 fColor;
+layout(location = 0) out vec4 fWorldPosition;
+layout(location = 1) out vec4 fWorldNormal;
+layout(location = 2) out vec4 fDiffuse;
+layout(location = 3) out vec4 fEmissive;
 
 // https://github.com/wwwtyro/glsl-atmosphere
 
@@ -104,5 +107,9 @@ void main()
     0.758// Mie preferred scattering direction
     );
     color = 1.0 - exp(-1.0 * color);
-    fColor = vec4(color, 1);
+
+    fWorldPosition = vec4(sign(vPosition) * INF, 1);
+    fWorldNormal = vec4(0, 0, 0, 0);
+    fDiffuse = vec4(0, 0, 0, 1);
+    fEmissive = vec4(color, 1);
 }

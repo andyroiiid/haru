@@ -9,6 +9,6 @@ layout(location = 3) out vec4 fEmissive;
 void main() {
     fWorldPosition = vWorldPosition;
     fWorldNormal = vec4(0, 0, 0, 0);
-    fDiffuse = vec4(0, 0, 0, 0);
+    fDiffuse = vec4(0, 0, 0, 1);
     fEmissive = vec4(vColor, 1);
 }

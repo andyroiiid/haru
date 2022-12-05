@@ -26,3 +26,4 @@ layout(std140, binding = 1) uniform LightGlobals {
 
 #define PI      3.141592653589793
 #define TWO_PI  6.283185307179586
+#define INF     (1.0 / 0.0)

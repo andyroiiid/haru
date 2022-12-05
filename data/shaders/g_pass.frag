@@ -18,7 +18,7 @@ float LightDiffuse(vec3 worldNormal, vec3 worldPosition, vec3 lightPosition, flo
     const float diffuse = LightDiffuse(worldNormal, delta);
     const float dist = length(delta);
     // point light attenuation from https://wiki.ogre3d.org/-Point+Light+Attenuation
-    const float attenuation = 1.0 + linear * dist + quadratic * dist * dist;
+    const float attenuation = fma(fma(quadratic, dist, linear), dist, 1.0);
     return diffuse / attenuation;
 }
 
@@ -55,12 +55,12 @@ float ReadShadowMap(vec4 viewSpacePos, vec4 worldPos, vec3 worldNormal)
 }
 
 vec3 ACESToneMapping(vec3 color) {
-    const float A = 2.51;
-    const float B = 0.03;
-    const float C = 2.43;
-    const float D = 0.59;
-    const float E = 0.14;
-    return (color * (A * color + B)) / (color * (C * color + D) + E);
+    const vec3 A = vec3(2.51);
+    const vec3 B = vec3(0.03);
+    const vec3 C = vec3(2.43);
+    const vec3 D = vec3(0.59);
+    const vec3 E = vec3(0.14);
+    return color * fma(color, A, B) / fma(color, fma(color, C, D), E);
 }
 
 void main() {
@@ -96,9 +96,8 @@ void main() {
     color.rgb = layerVis[layer];
     */
 
-    color.rgb *= lighting;
-
-    color.rgb += emissive.rgb;
+    // collect all lighting
+    color.rgb = fma(color.rgb, lighting, emissive.rgb);
 
     color.rgb = ACESToneMapping(color.rgb);
 

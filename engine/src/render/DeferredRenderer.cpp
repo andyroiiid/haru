@@ -212,6 +212,14 @@ void DeferredRenderer::DrawToGBuffers() {
     m_debugLinesMesh.UpdateData(m_pendingDebugLines);
     m_debugLinesMesh.BindAndDraw();
 
+    // draw skybox
+    glDepthFunc(GL_LEQUAL);
+
+    m_skyboxShader.Use();
+    m_skyboxCube.BindAndDraw();
+
+    glDepthFunc(GL_LESS);
+
     glBindVertexArray(0);
     glBindTextureUnit(0, 0);
     glUseProgram(0);
@@ -241,15 +249,4 @@ void DeferredRenderer::DrawForwardPass() {
 
     // blit depth & stencil from g-buffers to screen
     m_gBuffers.BlitDepthStencilToScreen(GetSize());
-
-    glEnable(GL_DEPTH_TEST);
-
-    glDepthFunc(GL_LEQUAL);
-    m_skyboxShader.Use();
-    m_skyboxCube.BindAndDraw();
-    glBindVertexArray(0);
-    glUseProgram(0);
-    glDepthFunc(GL_LESS);
-
-    glDisable(GL_DEPTH_TEST);
 }
