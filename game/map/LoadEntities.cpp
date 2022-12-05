@@ -10,6 +10,8 @@
 #include "GameStatics.h"
 #include "Scene.h"
 #include "actors/AWorldSpawn.h"
+#include "actors/ACamera.h"
+#include "actors/APlayer.h"
 #include "actors/ALightPoint.h"
 #include "actors/APropStatic.h"
 #include "actors/AFuncBrush.h"
@@ -21,6 +23,17 @@ void LoadWorldSpawn(const EntityDefinition &definition) {
 }
 
 void LoadInfoPlayerStart(const EntityDefinition &definition) {
+    glm::vec3 origin;
+    DebugCheckCritical(definition.GetPropertyPosition("origin", origin), "info_player_start doesn't have a valid origin!");
+
+    int angle = 0;
+    (void) definition.GetPropertyInteger("angle", angle);
+    angle -= 90; // the direction in Trenchbroom is biased
+
+    Scene *scene = GameStatics::GetScene();
+    auto *camera = scene->CreateActor<ACamera>();
+    auto *player = scene->CreateActor<APlayer>(origin, glm::radians(static_cast<float>(angle)));
+    camera->SetTargetActor(player);
 }
 
 void LoadLightPoint(const EntityDefinition &definition) {

@@ -12,8 +12,6 @@
 #include "GameStatics.h"
 
 #include "actors/AWorldLight.h"
-#include "actors/ACamera.h"
-#include "actors/APlayer.h"
 
 #include "map/ParseMap.h"
 #include "map/LoadEntities.h"
@@ -37,10 +35,6 @@ void Game::Init() {
             glm::vec3{1.0f, 1.0f, 1.0f},
             glm::vec3{0.2f, 0.2f, 0.2f}
     );
-
-    auto *camera = m_scene->CreateActor<ACamera>();
-    auto *player = m_scene->CreateActor<APlayer>(glm::vec3{0.0f, 1.0f, 0.0f}, glm::radians(180.0f));
-    camera->SetTargetActor(player);
 }
 
 void Game::Shutdown() {
