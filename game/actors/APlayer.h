@@ -25,7 +25,7 @@ public:
     void Draw(Renderer &renderer) override;
 
 private:
-    void GroundCheck();
+    void UpdateGround();
 
     void CalcHorizontalAcceleration(const glm::vec3 &direction, float acceleration, float drag);
 

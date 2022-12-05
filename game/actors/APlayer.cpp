@@ -107,7 +107,7 @@ void APlayer::Update(const float deltaTime) {
     }
 }
 
-void APlayer::GroundCheck() {
+void APlayer::UpdateGround() {
     // https://nvidia-omniverse.github.io/PhysX/physx/5.1.1/docs/Geometry.html#capsules
     static const physx::PxCapsuleGeometry QUERY_GEOMETRY(CAPSULE_RADIUS, CAPSULE_HALF_HEIGHT);
     static const physx::PxQuat QUERY_ROTATION(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
@@ -142,7 +142,7 @@ void APlayer::UpdateAcceleration() {
 }
 
 void APlayer::FixedUpdate(float fixedDeltaTime) {
-    GroundCheck();
+    UpdateGround();
 
     UpdateAcceleration();
 
@@ -161,6 +161,9 @@ void APlayer::FixedUpdate(float fixedDeltaTime) {
     const glm::vec3 currentPosition{pos.x, pos.y, pos.z};
     m_velocity = (currentPosition - m_previousPosition) / fixedDeltaTime;
     m_previousPosition = currentPosition;
+
+    // clamp vertical speed (this is a hack)
+    m_velocity.y = glm::min(m_velocity.y, JUMP_VELOCITY);
 }
 
 void APlayer::Draw(Renderer &renderer) {
