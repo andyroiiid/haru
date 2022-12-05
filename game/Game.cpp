@@ -34,7 +34,7 @@ void Game::Init() {
     m_scene->CreateActor<AWorldLight>(
             glm::radians(30.0f),
             glm::radians(45.0f),
-            glm::vec3{0.8f, 0.8f, 0.8f},
+            glm::vec3{1.0f, 1.0f, 1.0f},
             glm::vec3{0.2f, 0.2f, 0.2f}
     );
 

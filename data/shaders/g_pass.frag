@@ -67,39 +67,30 @@ void main() {
     vec4 worldPosition = texture(uWorldPosition, vTexCoord);
     vec4 viewSpacePosition = uView * worldPosition;
     vec3 worldNormal = normalize(texture(uWorldNormal, vTexCoord).xyz);
-    vec4 diffuse = texture(uDiffuse, vTexCoord);
-    vec4 emissive = texture(uEmissive, vTexCoord);
+    vec3 diffuse = texture(uDiffuse, vTexCoord).rgb;
+    vec3 emissive = texture(uEmissive, vTexCoord).rgb;
 
-    vec3 lighting = uAmbientColor;
+    vec3 diffuseLighting = vec3(0.0);
 
+    // directional shadow
     float shadow = ReadShadowMap(viewSpacePosition, worldPosition, worldNormal);
-    lighting += (1 - shadow) * LightDiffuse(worldNormal, uDirectionalLight) * uDirectionalColor;
 
+    // directional light
+    diffuseLighting += mix(uAmbientColor, uDirectionalColor, (1 - shadow) * LightDiffuse(worldNormal, uDirectionalLight));
+
+    // point lights
     for (int i = 0; i < 32; i++) {
         PointLightData pointLightData = uPointLightData[i];
         if (pointLightData.color.r > 0 || pointLightData.color.g > 0 || pointLightData.color.b > 0) {
             float intensity = LightDiffuse(worldNormal, worldPosition.xyz, pointLightData.position, pointLightData.linear, pointLightData.quadratic);
-            lighting += pointLightData.color * intensity;
+            diffuseLighting += pointLightData.color * intensity;
         }
     }
 
-    vec4 color = diffuse;
-
-    /* CSM splits visualization
-    int layer = GetShadowLayer(viewSpacePosition);
-    vec3 layerVis[4] = vec3[](
-        vec3(1.0, 1.0, 1.0),
-        vec3(1.0, 0.8, 0.8),
-        vec3(0.8, 1.0, 0.8),
-        vec3(0.8, 0.8, 1.0)
-    );
-    color.rgb = layerVis[layer];
-    */
-
     // collect all lighting
-    color.rgb = fma(color.rgb, lighting, emissive.rgb);
+    vec3 color = fma(diffuse, diffuseLighting, emissive);
 
-    color.rgb = ACESToneMapping(color.rgb);
+    color = ACESToneMapping(color);
 
-    fColor = color;
+    fColor = vec4(color, 1);
 }
