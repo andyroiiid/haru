@@ -4,7 +4,6 @@ layout(location = 0) out vec4 fColor;
 
 // https://github.com/wwwtyro/glsl-atmosphere
 
-#define PI 3.141592
 #define iSteps 16
 #define jSteps 8
 

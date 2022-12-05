@@ -37,6 +37,6 @@ APropStatic::~APropStatic() {
 }
 
 void APropStatic::Draw(Renderer &renderer) {
-    Material material{&m_texture};
+    Material material{nullptr, &m_texture};
     renderer.DrawMesh(m_mesh, GetTransform().GetMatrix(), &material);
 }

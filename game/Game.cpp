@@ -76,6 +76,7 @@ void Game::Update(const float deltaTime) {
         m_timeScale = 1.0f;
     }
 
+    m_renderer->Update(deltaTime * m_timeScale);
     m_scene->Update(deltaTime * m_timeScale);
 }
 

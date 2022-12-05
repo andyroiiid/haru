@@ -1,6 +1,7 @@
 layout(std140, binding = 0) uniform ShaderGlobals {
     mat4 uView;
     mat4 uProjection;
+    float uTime;
 };
 
 struct PointLightData {
@@ -22,3 +23,6 @@ layout(std140, binding = 1) uniform LightGlobals {
     mat4 uShadowMatrices[4];
     PointLightData uPointLightData[32];
 };
+
+#define PI      3.141592653589793
+#define TWO_PI  6.283185307179586

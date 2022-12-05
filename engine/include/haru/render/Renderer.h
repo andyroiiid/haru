@@ -41,6 +41,8 @@ public:
         return m_screenSize;
     }
 
+    virtual void Update(float deltaTime) = 0;
+
     virtual void SetCameraInfo(const glm::mat4 &view, float fov, float near, float far) = 0;
 
     virtual void SetWorldLight(

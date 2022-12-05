@@ -23,6 +23,7 @@ class DeferredRenderer final : public Renderer {
     struct ShaderGlobals {
         glm::mat4 View{1.0f};
         glm::mat4 Projection{1.0f};
+        float Time = 0.0f;
     };
 
     struct PointLightData {
@@ -54,6 +55,8 @@ public:
 
     void OnResize(const glm::ivec2 &size) override;
 
+    void Update(float deltaTime) override;
+
     void SetCameraInfo(const glm::mat4 &view, float fov, float near, float far) override;
 
     void SetWorldLight(const glm::vec3 &lightDirection, const glm::vec3 &lightColor, const glm::vec3 &ambientColor) override;
@@ -71,7 +74,7 @@ public:
     void DrawMesh(const MeshBase &mesh, const glm::mat4 &model, const Material *material) override;
 
 private:
-    void FlushUniformBuffers();
+    void UpdateUniformBuffers();
 
     void DrawToShadowMap();
 
@@ -85,6 +88,7 @@ private:
     UniformBuffer<ShaderGlobals> m_shaderGlobals;
     UniformBuffer<LightGlobals> m_lightGlobals;
 
+    float m_time = 0.0f;
     ShadowMatrixCalculator m_shadowMatrixCalculator;
 
     DeferredShaderShadowPass m_shadowShader;
@@ -97,8 +101,10 @@ private:
     MeshPositionOnly m_skyboxCube;
 
     Texture m_defaultDiffuseTexture;
+    Texture m_defaultEmissiveTexture;
     Material m_defaultMaterial{
-            &m_defaultDiffuseTexture
+            &m_defaultDiffuseTexture,
+            &m_defaultEmissiveTexture
     };
 
     std::vector<PointLightData> m_pendingPointLightData;

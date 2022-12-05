@@ -5,7 +5,8 @@ layout(location = 0) out vec4 fColor;
 layout(binding = 0) uniform sampler2D uWorldPosition;
 layout(binding = 1) uniform sampler2D uWorldNormal;
 layout(binding = 2) uniform sampler2D uDiffuse;
-layout(binding = 3) uniform sampler2DArrayShadow uShadowMap;
+layout(binding = 3) uniform sampler2D uEmissive;
+layout(binding = 4) uniform sampler2DArrayShadow uShadowMap;
 
 float LightDiffuse(vec3 worldNormal, vec3 lightDirection) {
     return max(0, dot(worldNormal, normalize(lightDirection)));
@@ -67,6 +68,7 @@ void main() {
     vec4 viewSpacePosition = uView * worldPosition;
     vec3 worldNormal = normalize(texture(uWorldNormal, vTexCoord).xyz);
     vec4 diffuse = texture(uDiffuse, vTexCoord);
+    vec4 emissive = texture(uEmissive, vTexCoord);
 
     vec3 lighting = uAmbientColor;
 
@@ -95,6 +97,9 @@ void main() {
     */
 
     color.rgb *= lighting;
+
+    color.rgb += emissive.rgb;
+
     color.rgb = ACESToneMapping(color.rgb);
 
     fColor = color;

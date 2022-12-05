@@ -50,6 +50,15 @@ DeferredRenderer::DeferredRenderer() {
             0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
     };
     m_defaultDiffuseTexture = Texture({DEFAULT_DIFFUSE_TEXTURE_SIZE, DEFAULT_DIFFUSE_TEXTURE_SIZE}, DEFAULT_DIFFUSE_TEXTURE_DATA);
+
+    static constexpr int DEFAULT_EMISSIVE_TEXTURE_SIZE = 4;
+    static constexpr unsigned char DEFAULT_EMISSIVE_TEXTURE_DATA[DEFAULT_EMISSIVE_TEXTURE_SIZE * DEFAULT_EMISSIVE_TEXTURE_SIZE * 4] = {
+            0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF,
+            0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF,
+            0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF,
+            0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0xFF,
+    };
+    m_defaultEmissiveTexture = Texture({DEFAULT_EMISSIVE_TEXTURE_SIZE, DEFAULT_EMISSIVE_TEXTURE_SIZE}, DEFAULT_EMISSIVE_TEXTURE_DATA);
 }
 
 DeferredRenderer::~DeferredRenderer() {
@@ -63,9 +72,14 @@ void DeferredRenderer::OnResize(const glm::ivec2 &size) {
             {
                     GL_RGBA32F, // WorldPosition
                     GL_RGBA32F, // WorldNormal
-                    GL_RGBA8 // Color
+                    GL_RGBA8, // Color
+                    GL_RGBA8 // Emissive
             }
     );
+}
+
+void DeferredRenderer::Update(float deltaTime) {
+    m_time += deltaTime;
 }
 
 void DeferredRenderer::SetCameraInfo(const glm::mat4 &view, float fov, float near, float far) {
@@ -105,7 +119,7 @@ void DeferredRenderer::BeginDraw() {
 void DeferredRenderer::EndDraw() {
     ZoneScoped;
 
-    FlushUniformBuffers();
+    UpdateUniformBuffers();
     DrawToShadowMap();
     DrawToGBuffers();
     DrawForwardPass();
@@ -125,8 +139,10 @@ void DeferredRenderer::DrawMesh(const MeshBase &mesh, const glm::mat4 &model, co
     m_pendingBaseDrawCalls.push_back({mesh, model, material ? *material : m_defaultMaterial});
 }
 
-void DeferredRenderer::FlushUniformBuffers() {
+void DeferredRenderer::UpdateUniformBuffers() {
     ZoneScoped;
+
+    m_shaderGlobals->Time = m_time;
 
     m_shaderGlobals.Unmap();
 
@@ -183,7 +199,10 @@ void DeferredRenderer::DrawToGBuffers() {
     m_baseShader.Use();
     for (const auto &baseDrawCall: m_pendingBaseDrawCalls) {
         m_baseShader.SetModel(baseDrawCall.Model);
-        baseDrawCall.material.Diffuse->Bind(0);
+        baseDrawCall.material.Bind(
+                m_defaultDiffuseTexture,
+                m_defaultEmissiveTexture
+        );
         baseDrawCall.Mesh.BindAndDraw();
     }
 
