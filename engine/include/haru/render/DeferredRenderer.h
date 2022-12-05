@@ -93,8 +93,8 @@ private:
 
     DeferredShaderShadowPass m_shadowShader;
     DeferredShaderBase m_baseShader;
-    DeferredShaderGPass m_gPassShader;
     DeferredShaderLines m_linesShader;
+    DeferredShaderGPass m_gPassShader;
     DeferredShaderSkybox m_skyboxShader;
 
     MeshPositionOnly m_fullscreenQuad;

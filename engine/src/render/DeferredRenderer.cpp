@@ -206,6 +206,11 @@ void DeferredRenderer::DrawToGBuffers() {
         baseDrawCall.Mesh.BindAndDraw();
     }
 
+    // draw debug lines
+    m_linesShader.Use();
+    m_debugLinesMesh.UpdateData(m_pendingDebugLines);
+    m_debugLinesMesh.BindAndDraw();
+
     glBindVertexArray(0);
     glBindTextureUnit(0, 0);
     glUseProgram(0);
@@ -238,14 +243,11 @@ void DeferredRenderer::DrawForwardPass() {
 
     glEnable(GL_DEPTH_TEST);
 
-    // draw debug lines
-    m_linesShader.Use();
-    m_debugLinesMesh.UpdateData(m_pendingDebugLines);
-    m_debugLinesMesh.BindAndDraw();
-
     glDepthFunc(GL_LEQUAL);
     m_skyboxShader.Use();
     m_skyboxCube.BindAndDraw();
+    glBindVertexArray(0);
+    glUseProgram(0);
     glDepthFunc(GL_LESS);
 
     glDisable(GL_DEPTH_TEST);
