@@ -32,9 +32,11 @@ private:
     void UpdateAcceleration();
 
     static constexpr float CAPSULE_RADIUS = 0.4f;
-    static constexpr float CAPSULE_HALF_HEIGHT = 0.8f;
+    static constexpr float CAPSULE_HALF_HEIGHT = 0.4f;
+    static constexpr float CAPSULE_HEIGHT = CAPSULE_HALF_HEIGHT * 2.0f;
 
     static constexpr float INTERACTION_DISTANCE = 2.0f;
+    static constexpr float GROUND_CHECK_DISTANCE = 0.3f;
 
     static constexpr float GRAVITY = 20.0f;
     static constexpr float GROUND_ACCELERATION = 50.0f;

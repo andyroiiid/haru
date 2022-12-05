@@ -59,7 +59,7 @@ physx::PxController *PhysicsScene::CreateController(const glm::vec3 &position, f
     desc.material = m_defaultMaterial;
     // https://nvidia-omniverse.github.io/PhysX/physx/5.1.0/docs/CharacterControllers.html#character-volume
     desc.radius = radius;
-    desc.height = height - radius * 2.0f;
+    desc.height = height;
 
     physx::PxController *controller = m_controllerManager->createController(desc);
 

@@ -16,7 +16,7 @@ APlayer::APlayer(
 ) : m_controller(GameStatics::GetPhysicsScene()->CreateController(
         {position.x, position.y, position.z},
         CAPSULE_RADIUS,
-        CAPSULE_HALF_HEIGHT * 2.0f
+        CAPSULE_HEIGHT
 )),
     m_mouseSpeed(mouseSpeed) {
     m_controller->getActor()->userData = this;
@@ -58,7 +58,7 @@ void APlayer::Update(const float deltaTime) {
                 position.y + m_velocity.y * timeError,
                 position.z + m_velocity.z * timeError
         };
-        GetTransform().SetPosition(predictedPosition + glm::vec3{0.0f, CAPSULE_HALF_HEIGHT - CAPSULE_RADIUS, 0.0f});
+        GetTransform().SetPosition(predictedPosition + glm::vec3{0.0f, CAPSULE_HALF_HEIGHT, 0.0f});
     }
 
     // jump
@@ -108,6 +108,7 @@ void APlayer::Update(const float deltaTime) {
 }
 
 void APlayer::GroundCheck() {
+    // https://nvidia-omniverse.github.io/PhysX/physx/5.1.1/docs/Geometry.html#capsules
     static const physx::PxCapsuleGeometry QUERY_GEOMETRY(CAPSULE_RADIUS, CAPSULE_HALF_HEIGHT);
     static const physx::PxQuat QUERY_ROTATION(physx::PxHalfPi, physx::PxVec3(0.0f, 0.0f, 1.0f));
     static const physx::PxVec3 QUERY_DIRECTION(0.0f, -1.0f, 0.0f);
@@ -116,11 +117,12 @@ void APlayer::GroundCheck() {
             QUERY_GEOMETRY,
             physx::PxTransform(toVec3(m_controller->getPosition()), QUERY_ROTATION),
             QUERY_DIRECTION,
-            m_controller->getStepOffset(),
+            GROUND_CHECK_DISTANCE,
             PHYSICS_LAYER_0
     );
 
-    m_isOnGround = buffer.hasBlock;
+    // check is touching ground and ground is not too steep
+    m_isOnGround = buffer.hasBlock && buffer.block.normal.y >= m_controller->getSlopeLimit();
 
     // reduce step offset when the player is in air
     m_controller->setStepOffset(m_isOnGround ? GROUND_STEP_OFFSET : AIR_STEP_OFFSET);
@@ -149,7 +151,7 @@ void APlayer::FixedUpdate(float fixedDeltaTime) {
     const glm::vec3 displacement = m_velocity * fixedDeltaTime;
     m_controller->move(
             {displacement.x, displacement.y, displacement.z},
-            0.001f,
+            0.0001f,
             fixedDeltaTime,
             physx::PxControllerFilters()
     );
