@@ -13,7 +13,7 @@
 
 PhysicsScene::PhysicsScene(PhysicsSystem *physicsSystem) : m_physics(physicsSystem->m_physics) {
     m_defaultCpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
-    m_defaultMaterial = m_physics->createMaterial(0.8f, 0.8f, 0.2f);
+    m_defaultMaterial = m_physics->createMaterial(0.8f, 0.4f, 0.2f);
 
     physx::PxSceneDesc sceneDesc(m_physics->getTolerancesScale());
     sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);

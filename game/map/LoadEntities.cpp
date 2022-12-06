@@ -15,7 +15,7 @@
 #include "actors/ALightPoint.h"
 #include "actors/APropStatic.h"
 #include "actors/AFuncBrush.h"
-#include "actors/AFuncTest.h"
+#include "actors/AFuncMove.h"
 #include "actors/AFuncPhys.h"
 
 void LoadWorldSpawn(const EntityDefinition &definition) {
@@ -24,7 +24,7 @@ void LoadWorldSpawn(const EntityDefinition &definition) {
 
 void LoadInfoPlayerStart(const EntityDefinition &definition) {
     glm::vec3 origin;
-    DebugCheckCritical(definition.GetPropertyPosition("origin", origin), "info_player_start doesn't have a valid origin!");
+    DebugCheckCritical(definition.GetPropertyVector("origin", origin), "info_player_start doesn't have a valid origin!");
 
     int angle = 0;
     (void) definition.GetPropertyInteger("angle", angle);
@@ -38,7 +38,7 @@ void LoadInfoPlayerStart(const EntityDefinition &definition) {
 
 void LoadLightPoint(const EntityDefinition &definition) {
     glm::vec3 origin;
-    DebugCheckCritical(definition.GetPropertyPosition("origin", origin), "light_point doesn't have a valid origin!");
+    DebugCheckCritical(definition.GetPropertyVector("origin", origin), "light_point doesn't have a valid origin!");
 
     glm::vec3 color{1.0f, 1.0f, 1.0f};
     (void) definition.GetPropertyColor("color", color);
@@ -54,7 +54,7 @@ void LoadPropStatic(const EntityDefinition &definition) {
     DebugCheckCritical(!model.empty(), "prop_static doesn't have a valid model!");
 
     glm::vec3 origin;
-    DebugCheckCritical(definition.GetPropertyPosition("origin", origin), "prop_static doesn't have a valid origin!");
+    DebugCheckCritical(definition.GetPropertyVector("origin", origin), "prop_static doesn't have a valid origin!");
 
     GameStatics::GetScene()->CreateActor<APropStatic>(model, origin);
 }
@@ -63,8 +63,14 @@ void LoadFuncBrush(const EntityDefinition &definition) {
     GameStatics::GetScene()->CreateActor<AFuncBrush>(definition.Brushes);
 }
 
-void LoadFuncTest(const EntityDefinition &definition) {
-    GameStatics::GetScene()->CreateActor<AFuncTest>(definition.Brushes);
+void LoadFuncMove(const EntityDefinition &definition) {
+    glm::vec3 moveSpeed;
+    DebugCheckCritical(definition.GetPropertyVector("move_speed", moveSpeed), "func_move doesn't have a valid move_speed!");
+
+    float moveTime;
+    DebugCheckCritical(definition.GetPropertyFloat("move_time", moveTime), "func_move doesn't have a valid move_time!");
+
+    GameStatics::GetScene()->CreateActor<AFuncMove>(definition.Brushes, moveSpeed, moveTime);
 }
 
 void LoadFuncPhys(const EntityDefinition &definition) {
@@ -79,7 +85,7 @@ static const std::map<std::string, EntityLoader> s_EntityLoaders{
         {"light_point",       LoadLightPoint},
         {"prop_static",       LoadPropStatic},
         {"func_brush",        LoadFuncBrush},
-        {"func_test",         LoadFuncTest},
+        {"func_move",         LoadFuncMove},
         {"func_phys",         LoadFuncPhys}
 };
 

@@ -27,6 +27,23 @@ AFuncBrush::~AFuncBrush() {
     PX_RELEASE(m_brushesRigidbody)
 }
 
+void AFuncBrush::FixedUpdate(float fixedDeltaTime) {
+    const physx::PxTransform transform = m_brushesRigidbody->getGlobalPose();
+    const glm::vec3 position{transform.p.x, transform.p.y, transform.p.z};
+    const glm::quat rotation{transform.q.w, transform.q.x, transform.q.y, transform.q.z};
+
+    m_modelMatrix = GetTransform().SetPosition(position).GetTranslationMatrix() * mat4_cast(rotation);
+}
+
 void AFuncBrush::Draw(Renderer &renderer) {
-    m_brushes.Draw(renderer, GetTransform().GetMatrix());
+    m_brushes.Draw(renderer, m_modelMatrix);
+}
+
+void AFuncBrush::Move(const glm::vec3 &deltaPosition) {
+    physx::PxTransform pose = m_brushesRigidbody->getGlobalPose();
+    physx::PxVec3 &position = pose.p;
+    position.x += deltaPosition.x;
+    position.y += deltaPosition.y;
+    position.z += deltaPosition.z;
+    m_brushesRigidbody->setGlobalPose(pose);
 }

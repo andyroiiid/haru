@@ -12,7 +12,7 @@ add_executable(game
         actors/AWorldSpawn.cpp actors/AWorldSpawn.h
         actors/APropStatic.cpp actors/APropStatic.h
         actors/AFuncBrush.cpp actors/AFuncBrush.h
-        actors/AFuncTest.cpp actors/AFuncTest.h
+        actors/AFuncMove.cpp actors/AFuncMove.h
         actors/AFuncPhys.cpp actors/AFuncPhys.h
 
         map/Entity.h map/Entity.cpp

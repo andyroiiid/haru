@@ -27,17 +27,13 @@ struct EntityDefinition {
 
     [[nodiscard]] bool GetPropertyInteger(const std::string &key, int &value) const;
 
+    [[nodiscard]] bool GetPropertyFloat(const std::string &key, float &value) const;
+
     [[nodiscard]] bool GetPropertyColor(const std::string &key, glm::vec3 &value) const {
         return GetPropertyVec3(key, value);
     }
 
-    [[nodiscard]] bool GetPropertyDirection(const std::string &key, glm::vec3 &value) const {
-        if (!GetPropertyVec3(key, value)) return false;
-        value = {value.x, value.z, -value.y}; // convert from quake direction to haru direction
-        return true;
-    }
-
-    [[nodiscard]] bool GetPropertyPosition(const std::string &key, glm::vec3 &value) const {
+    [[nodiscard]] bool GetPropertyVector(const std::string &key, glm::vec3 &value) const {
         if (!GetPropertyVec3(key, value)) return false;
         value = glm::vec3{value.x, value.z, -value.y} / 32.0f; // convert from quake direction to haru direction
         return true;

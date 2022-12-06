@@ -27,6 +27,19 @@ bool EntityDefinition::GetPropertyInteger(const std::string &key, int &value) co
     return true;
 }
 
+bool EntityDefinition::GetPropertyFloat(const std::string &key, float &value) const {
+    const std::string &literal = GetProperty(key);
+    if (literal.empty()) return false;
+
+    std::stringstream literalStream(literal);
+    float x;
+    literalStream >> x;
+    if (literalStream.bad()) return false;
+
+    value = x;
+    return true;
+}
+
 bool EntityDefinition::GetPropertyVec3(const std::string &key, glm::vec3 &value) const {
     const std::string &literal = GetProperty(key);
     if (literal.empty()) return false;

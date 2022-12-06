@@ -20,9 +20,15 @@ public:
 
     ~AFuncBrush() override;
 
+    void FixedUpdate(float fixedDeltaTime) override;
+
     void Draw(Renderer &renderer) override;
+
+    void Move(const glm::vec3 &deltaPosition);
 
 private:
     Brushes m_brushes;
     physx::PxRigidStatic *m_brushesRigidbody;
+
+    glm::mat4 m_modelMatrix{1.0f};
 };

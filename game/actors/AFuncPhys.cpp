@@ -11,6 +11,7 @@
 #include <haru/physics/PhysicsScene.h>
 
 #include "GameStatics.h"
+#include "actors/APlayer.h"
 
 AFuncPhys::AFuncPhys(const EntityBrushes &brushes) {
     m_brushes = Brushes(brushes, PHYSICS_LAYER_0);
@@ -39,4 +40,15 @@ void AFuncPhys::FixedUpdate(float fixedDeltaTime) {
 
 void AFuncPhys::Draw(Renderer &renderer) {
     m_brushes.Draw(renderer, m_modelMatrix);
+}
+
+void AFuncPhys::Use(APlayer *player, const physx::PxRaycastHit &hit) {
+    const glm::vec3 &playerPosition = player->GetTransform().GetPosition();
+    const physx::PxVec3 &hitPosition = hit.position;
+    const physx::PxVec3 force = physx::PxVec3{
+            hitPosition.x - playerPosition.x,
+            hitPosition.y - playerPosition.y,
+            hitPosition.z - playerPosition.z,
+    }.getNormalized() * 10.0f;
+    physx::PxRigidBodyExt::addForceAtPos(*m_brushesRigidbody, force, hitPosition, physx::PxForceMode::eIMPULSE);
 }

@@ -24,6 +24,8 @@ public:
 
     void Draw(Renderer &renderer) override;
 
+    void Use(APlayer *player, const physx::PxRaycastHit &hit) override;
+
 private:
     Brushes m_brushes;
     physx::PxRigidDynamic *m_brushesRigidbody;
