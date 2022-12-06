@@ -31,6 +31,8 @@ private:
 
     void UpdateAcceleration();
 
+    glm::vec3 m_respawnPoint{};
+
     static constexpr float CAPSULE_RADIUS = 0.4f;
     static constexpr float CAPSULE_HALF_HEIGHT = 0.4f;
     static constexpr float CAPSULE_HEIGHT = CAPSULE_HALF_HEIGHT * 2.0f;

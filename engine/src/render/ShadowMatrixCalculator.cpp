@@ -69,7 +69,6 @@ glm::mat4 ShadowMatrixCalculator::GetLightProjection(const std::array<glm::vec4,
 
     for (const glm::vec4 &worldCorner: m_worldCorners) {
         const glm::vec4 lightSpaceWorldCorner = lightView * worldCorner;
-        zFar = glm::min(zFar, lightSpaceWorldCorner.z);
         zNear = glm::max(zNear, lightSpaceWorldCorner.z);
     }
 

@@ -19,8 +19,9 @@ APlayer::APlayer(
         CAPSULE_HEIGHT
 )),
     m_mouseSpeed(mouseSpeed) {
+    m_respawnPoint = position;
     m_controller->getActor()->userData = this;
-    GetTransform().SetPosition(position).RotateY(yaw);
+    GetTransform().RotateY(yaw);
     m_previousPosition = position;
 }
 
@@ -31,6 +32,18 @@ APlayer::~APlayer() {
 void APlayer::Update(const float deltaTime) {
     Window *window = GameStatics::GetWindow();
     PhysicsScene *physicsScene = GameStatics::GetPhysicsScene();
+
+    // sync position
+    {
+        const physx::PxVec3 position = toVec3(m_controller->getPosition());
+        const float timeError = glm::min(physicsScene->GetFixedTimestep(), physicsScene->GetFixedUpdateTimeError());
+        const glm::vec3 predictedPosition{
+                position.x + m_velocity.x * timeError,
+                position.y + m_velocity.y * timeError,
+                position.z + m_velocity.z * timeError
+        };
+        GetTransform().SetPosition(predictedPosition + glm::vec3{0.0f, CAPSULE_HALF_HEIGHT, 0.0f});
+    }
 
     // turn
     {
@@ -47,18 +60,6 @@ void APlayer::Update(const float deltaTime) {
         m_movementInput =
                 transform.GetHorizontalRightVector() * window->GetKeyAxis(GLFW_KEY_D, GLFW_KEY_A) +
                 transform.GetHorizontalForwardVector() * window->GetKeyAxis(GLFW_KEY_W, GLFW_KEY_S);
-    }
-
-    // sync position
-    {
-        const physx::PxVec3 position = toVec3(m_controller->getPosition());
-        const float timeError = glm::min(physicsScene->GetFixedTimestep(), physicsScene->GetFixedUpdateTimeError());
-        const glm::vec3 predictedPosition{
-                position.x + m_velocity.x * timeError,
-                position.y + m_velocity.y * timeError,
-                position.z + m_velocity.z * timeError
-        };
-        GetTransform().SetPosition(predictedPosition + glm::vec3{0.0f, CAPSULE_HALF_HEIGHT, 0.0f});
     }
 
     // jump
@@ -164,6 +165,15 @@ void APlayer::FixedUpdate(float fixedDeltaTime) {
 
     // clamp vertical speed (this is a hack)
     m_velocity.y = glm::min(m_velocity.y, JUMP_VELOCITY);
+
+    // check respawn
+    if (currentPosition.y < -100.0f) {
+        // just teleport player back
+        m_controller->setPosition({m_respawnPoint.x, m_respawnPoint.y, m_respawnPoint.z});
+        m_velocity = {};
+        m_acceleration = {};
+        m_previousPosition = m_respawnPoint;
+    }
 }
 
 void APlayer::Draw(Renderer &renderer) {

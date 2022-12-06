@@ -26,7 +26,7 @@ void Game::Init() {
     Window->SetCursorEnabled(false);
 
     std::vector<EntityDefinition> entities;
-    ParseMap("hello.haru", entities);
+    ParseMap("climb.haru", entities);
     LoadEntities(entities);
 
     m_scene->CreateActor<AWorldLight>(
