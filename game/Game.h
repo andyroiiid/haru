@@ -13,6 +13,8 @@
 
 class Game final : public App {
 public:
+    explicit Game(std::string startMap) : m_startMap(std::move(startMap)) {}
+
     void Init() override;
 
     void Shutdown() override;
@@ -32,6 +34,8 @@ private:
     std::unique_ptr<PhysicsSystem> m_physics;
     std::unique_ptr<PhysicsScene> m_physicsScene;
     std::unique_ptr<Scene> m_scene;
+
+    std::string m_startMap;
 
     float m_timeScale = 1.0f;
 };

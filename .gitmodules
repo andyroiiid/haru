@@ -13,3 +13,6 @@
 [submodule "engine/dependencies/tracy"]
 	path = engine/dependencies/tracy
 	url = https://github.com/wolfpld/tracy.git
+[submodule "engine/dependencies/simdjson"]
+	path = engine/dependencies/simdjson
+	url = https://github.com/simdjson/simdjson.git

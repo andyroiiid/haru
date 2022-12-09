@@ -19,7 +19,7 @@ static void FramebufferSizeCallback(GLFWwindow *window, int width, int height) {
     app->Resize({width, height});
 }
 
-Window::Window() {
+Window::Window(const std::string &name, const glm::ivec2 &size, bool maximized) {
     ZoneScoped;
 
     glfwSetErrorCallback(ErrorCallback);
@@ -31,7 +31,8 @@ Window::Window() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    m_window = glfwCreateWindow(1366, 768, "Haru", nullptr, nullptr);
+    glfwWindowHint(GLFW_MAXIMIZED, maximized ? GLFW_TRUE : GLFW_FALSE);
+    m_window = glfwCreateWindow(size.x, size.y, name.c_str(), nullptr, nullptr);
     DebugCheckCritical(m_window != nullptr, "Failed to create window");
 
     glfwMakeContextCurrent(m_window);

@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <string>
 #include <GLFW/glfw3.h>
 #include <glm/vec2.hpp>
 
@@ -35,7 +36,7 @@ class Window {
 public:
     MOVE_ONLY(Window)
 
-    Window();
+    Window(const std::string &name, const glm::ivec2 &size, bool maximized);
 
     ~Window();
 

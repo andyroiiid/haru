@@ -28,5 +28,8 @@ set(PHYSFS_BUILD_DOCS FALSE CACHE BOOL "" FORCE)
 add_subdirectory(physfs EXCLUDE_FROM_ALL)
 set_msvc_runtime_library(physfs-static)
 
+add_subdirectory(simdjson EXCLUDE_FROM_ALL)
+set_msvc_runtime_library(simdjson)
+
 add_subdirectory(tracy EXCLUDE_FROM_ALL)
 set_msvc_runtime_library(TracyClient)
