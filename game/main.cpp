@@ -17,20 +17,30 @@ __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
 __declspec(dllexport) unsigned long AmdPowerXpressRequestHighPerformance = 0x00000001;
 }
 
+struct GameConfig {
+    explicit GameConfig(const std::string &filename) {
+        JsonFile gameJson(filename);
+        name = gameJson.GetField<std::string>("name");
+        size = {gameJson.GetField<double>("width"), gameJson.GetField<double>("height")};
+        maximized = gameJson.GetField<bool>("maximized");
+        startMap = gameJson.GetField<std::string>("startMap");
+    }
+
+    std::string name;
+    glm::ivec2 size{};
+    bool maximized;
+    std::string startMap;
+};
+
 int main() {
     FileSystem fileSystem;
     fileSystem.Mount("data", "/");
 
-    JsonFile gameJson("game.json");
-    auto name = gameJson.FindField<std::string>("name");
-    auto width = gameJson.FindField<double>("width");
-    auto height = gameJson.FindField<double>("height");
-    auto maximized = gameJson.FindField<bool>("maximized");
-    auto startMap = gameJson.FindField<std::string>("startMap");
+    GameConfig config("game.json");
 
-    Window window{name, glm::ivec2{width, height}, maximized};
+    Window window{config.name, config.size, config.maximized};
 
-    Game game{startMap};
+    Game game{config.startMap};
 
     window.MainLoop(game);
 }

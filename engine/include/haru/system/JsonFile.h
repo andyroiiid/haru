@@ -21,7 +21,7 @@ T UnpackJsonValue(simdjson::ondemand::value &value, const std::string &name) {
 }
 
 template<class T>
-T FindJsonField(simdjson::ondemand::object &object, const std::string &key) {
+T GetJsonField(simdjson::ondemand::object &object, const std::string &key) {
     simdjson::ondemand::value value;
     simdjson::error_code error = object.find_field(key).get(value);
     DebugCheckCritical(
@@ -34,8 +34,8 @@ T FindJsonField(simdjson::ondemand::object &object, const std::string &key) {
 }
 
 template<>
-std::string FindJsonField(simdjson::ondemand::object &object, const std::string &key) {
-    return std::string{FindJsonField<std::string_view>(object, key)};
+std::string GetJsonField(simdjson::ondemand::object &object, const std::string &key) {
+    return std::string{GetJsonField<std::string_view>(object, key)};
 }
 
 class JsonFile {
@@ -50,7 +50,7 @@ public:
     }
 
     template<class T>
-    T FindField(const std::string &key) {
+    T GetField(const std::string &key) {
         simdjson::ondemand::object object;
         simdjson::error_code error = m_document.get(object);
         DebugCheckCritical(
@@ -58,7 +58,7 @@ public:
                 "Json document is not a valid object: %s",
                 simdjson::error_message(error)
         );
-        return FindJsonField<T>(object, key);
+        return GetJsonField<T>(object, key);
     }
 
 private:
