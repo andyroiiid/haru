@@ -11,6 +11,7 @@ add_library(engine
         include/haru/system/Window.h
         include/haru/system/FileSystem.h
         include/haru/system/ImageFile.h
+        include/haru/system/JsonFile.h
         src/system/Window.cpp
         src/system/FileSystem.cpp
         src/system/ImageFile.cpp
