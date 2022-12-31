@@ -9,7 +9,7 @@ void main() {
     for (int i = 0; i < 3; i++) {
         gl_Layer = gl_InvocationID;
         gl_Position = uShadowMatrices[gl_InvocationID] * gl_in[i].gl_Position;
-        gWorldNormal = (uShadowMatrices[gl_InvocationID] * vNormal[i]).xyz;
+        gWorldNormal = vNormal[i].xyz;
         EmitVertex();
     }
     EndPrimitive();
